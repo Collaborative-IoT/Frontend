@@ -112,7 +112,7 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
               {numFollowing}
             </span>
             <span className="text-primary-300 ml-1.5 lowercase">
-              {numFollowers}
+              {"Following"}
             </span>
         </div>
         <div className="flex transition duration-200 ease-in-out hover:bg-primary-700 px-2 py-1 rounded-8">
@@ -121,7 +121,7 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
               {numFollowers}
             </span>
             <span className="text-primary-300 ml-1.5 lowercase">
-              {numFollowing}
+              {"Followers"}
             </span>
         </div>
       </div>

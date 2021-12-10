@@ -39,16 +39,34 @@ const Page = ({
   const prefetch = useTypeSafePrefetch();
   const { t } = useTypeSafeTranslation();
   const shouldAlert = useDownloadAlertStore().shouldAlert;
-  const { isLoading, data } = useTypeSafeQuery(
-    ["getTopPublicRooms", cursor],
-    {
-      staleTime: Infinity,
-      enabled: !isServer,
-      refetchOnMount: "always",
-      refetchInterval: 10000,
-    },
-    [cursor]
-  );
+  const data = {
+    rooms:[
+      {id:"222",
+       name:"To the moon",
+       peoplePreviewList: [{
+        id: "222",
+        displayName: "tester",
+        numFollowers: 2,
+        avatarUrl: "",
+      }],
+      numPeopleInside:1
+      }
+
+    ]
+
+
+  }
+  const loading = false;
+  //const { isLoading, data } = useTypeSafeQuery(
+   // ["getTopPublicRooms", cursor],
+    //{
+    //  staleTime: Infinity,
+    //  enabled: !isServer,
+     // refetchOnMount: "always",
+      //refetchInterval: 10000,
+    //},
+    //[cursor]
+  //);
 
   // useEffect(() => {
   //   if (shouldAlert && !isElectron()) {
@@ -69,7 +87,7 @@ const Page = ({
   //   }
   // }, []);
 
-  if (isLoading) {
+  if (loading) {
     return <CenterLoader />;
   }
 
@@ -92,7 +110,6 @@ const Page = ({
           onClick={() => {
             if (room.id !== currentRoomId) {
               useRoomChatStore.getState().reset();
-              prefetch(["joinRoomAndGetInfo", room.id], [room.id]);
             }
 
             push(`/room/[id]`, `/room/${room.id}`);
@@ -119,18 +136,6 @@ const Page = ({
           tags={[]}
         />
       ))}
-      {isLastPage && data.nextCursor ? (
-        <div className={`flex justify-center py-5`}>
-          <Button
-            size="small"
-            onClick={() => {
-              onLoadMore(data.nextCursor!);
-            }}
-          >
-            {t("common.loadMore")}
-          </Button>
-        </div>
-      ) : null}
     </>
   );
 };
@@ -226,11 +231,11 @@ const  data:ScheduledRoom  = {
     <MiddlePanel
       stickyChildren={
         <FeedHeader
-          actionTitle={"besttt"}
+          actionTitle={"Create Room"}
           onActionClicked={() => {
             setRoomModal(true);
           }}
-          title={"nice"}
+          title={"Current Rooms"}
         />
       }
     >
