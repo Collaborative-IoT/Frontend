@@ -12,7 +12,7 @@ export const DashboardPage: PageComponent<LoungePageProps> = ({}) => {
   const { t } = useTypeSafeTranslation();
   return (
       <>
-      <HeaderController embed={{}} title={"Collaborate on iot"} />
+      <HeaderController embed={{}} title={"Collab on IoT"} />
       <DefaultDesktopLayout>
         <FeedController />
       </DefaultDesktopLayout>

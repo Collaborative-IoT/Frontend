@@ -28,18 +28,14 @@ export const FollowerOnline: React.FC<UserWithFollowInfo> = ({
   currentRoom,
 }) => (
   <div className="flex py-3 w-full">
-    <ApiPreloadLink route="profile" data={{ username }}>
       <SingleUser
         size="sm"
         isOnline={online}
         src={avatar}
         username={username}
       />
-    </ApiPreloadLink>
     <div className="flex ml-3 flex-col overflow-hidden justify-center">
-      <ApiPreloadLink route="profile" data={{ username }}>
         <h5 className="text-primary-100 font-bold">{username}</h5>
-      </ApiPreloadLink>
       {currentRoom ? (
         <Link href={`/room/[id]`} as={`/room/${currentRoom.id}`}>
           <a className={`hover:underline text-primary-300 truncate block`}>

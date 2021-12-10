@@ -1,3 +1,4 @@
+import { Room, UserPreview, UserWithFollowInfo } from "@dogehouse/kebab";
 import React, { useState } from "react";
 import { useConn } from "../../shared-hooks/useConn";
 import { useTypeSafeQuery } from "../../shared-hooks/useTypeSafeQuery";
@@ -11,6 +12,48 @@ import { InfoText } from "../../ui/InfoText";
 
 interface FriendsOnlineControllerProps {}
 
+
+const userPreview: UserPreview = {
+  id: "222",
+  displayName: "tester",
+  numFollowers: 2,
+  avatarUrl: "",
+};
+const room:Room = {
+
+    id: "222",
+    numPeopleInside: 2,
+    voiceServerId: "222",
+    creatorId: "23423",
+    peoplePreviewList: [userPreview],
+    autoSpeaker: false,
+    inserted_at: "2",
+    chatMode: "default",
+    name: "test room 445",
+    chatThrottle: 2000,
+    isPrivate: false,
+    description: "test desc"
+
+}
+const data :UserWithFollowInfo = {
+  followsYou :true,
+  youAreFollowing:true,
+  iBlockedThem:false,
+  id:"2342",
+  bio:"test",
+  displayName:"topdawg",
+  avatarUrl:"",
+  bannerUrl:"",
+  numFollowers:10,
+  numFollowing:1000,
+  currentRoom:room,
+  contributions:200,
+  staff:true,
+  online:true,
+  username:"top",
+  lastOnline:new Date().toString() 
+}
+
 const Page: React.FC<{
   cursor: number;
   onLoadMore: (cursor: number) => void;
@@ -18,26 +61,17 @@ const Page: React.FC<{
   isOnlyPage: boolean;
 }> = ({ cursor, isLastPage, isOnlyPage, onLoadMore }) => {
   const { t } = useTypeSafeTranslation();
-  const { data, isLoading } = useTypeSafeQuery(
-    ["getMyFollowing", cursor],
-    {
-      refetchOnMount: "always",
-    },
-    [cursor]
-  );
 
-  if (isOnlyPage && !isLoading && !data?.users.length) {
-    return <InfoText>{t("components.followingOnline.noOnline")}</InfoText>;
-  }
+
 
   return (
     <>
-      {data?.users.map((u) => (
-        <FollowerOnline {...u} key={u.id} />
-      ))}
-      {isLastPage && data?.nextCursor ? (
+      {
+        <FollowerOnline {...data} />
+}
+      {isLastPage  ? (
         <FollowersOnlineShowMore
-          onClick={() => onLoadMore(data!.nextCursor!)}
+          onClick={() => {}}
         />
       ) : null}
     </>
@@ -46,11 +80,11 @@ const Page: React.FC<{
 
 export const FollowingOnlineController: React.FC<FriendsOnlineControllerProps> = ({}) => {
   const [cursors, setCursors] = useState<number[]>([0]);
-  const conn = useConn();
+  //const conn = useConn();
 
-  if (!conn) {
-    return null;
-  }
+  //if (!conn) {
+   // return null;
+ // }
 
   return (
     <FollowersOnlineWrapper>
@@ -59,7 +93,7 @@ export const FollowingOnlineController: React.FC<FriendsOnlineControllerProps> =
           key={c}
           cursor={c}
           onLoadMore={(nc) => setCursors([...cursors, nc])}
-          isLastPage={i === cursors.length - 1}
+          isLastPage={false}
           isOnlyPage={cursors.length === 1}
         />
       ))}

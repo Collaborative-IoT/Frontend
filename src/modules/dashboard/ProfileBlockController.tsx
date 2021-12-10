@@ -26,11 +26,11 @@ export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}
     username:"test",
     botOwnerId:1,
     staff:true,
-    avatarUrl:"",
+    avatarUrl:"https://avatars.githubusercontent.com/u/35206353?v=4",
     numFollowers:10,
     numFollowing:100,
     bio:"godlike",
-    displayName:"",
+    displayName:"RonTheGod",
     id:""
     }}
 
@@ -47,7 +47,7 @@ export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}
   const { t } = useTypeSafeTranslation();
 
   const badges: badge[] = [];
-  if (conn.user.staff) {
+
     badges.push({
       content: <StaffBadge />,
       variant: "primary",
@@ -55,9 +55,9 @@ export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}
       title: t("components.userBadges.dhStaff"),
       naked: true,
     });
-  }
+  
 
-  if (conn.user.contributions > 0) {
+
     badges.push({
       content: <ContributorBadge contributions={conn.user.contributions} />,
       variant: "primary",
@@ -65,16 +65,16 @@ export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}
       title: `${t("components.userBadges.dhContributor")} (${conn.user.contributions} ${t("pages.admin.contributions")})`,
       naked: true,
     });
-  }
+  
 
-  if (conn.user.botOwnerId) {
+
     badges.push({
       content: t("pages.viewUser.bot"),
       variant: "primary",
       color: "white",
       title: t("pages.viewUser.bot"),
     });
-  }
+  
 
   useEffect(() => {
     if (height && height < 780) {

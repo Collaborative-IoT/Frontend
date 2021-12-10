@@ -55,10 +55,10 @@ export const MiddlePanel: React.FC<
 };
 
 export const RightPanel: React.FC<LeftPanelProps> = ({ children }) => {
-  const { conn } = useContext(WebSocketContext);
+
   return (
     <FixedGridPanel>
-      <HeaderWrapper>{conn ? <RightHeader /> : null}</HeaderWrapper>
+      <HeaderWrapper>{<RightHeader /> }</HeaderWrapper>
       {children}
     </FixedGridPanel>
   );

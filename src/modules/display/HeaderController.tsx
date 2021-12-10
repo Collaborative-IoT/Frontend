@@ -12,32 +12,32 @@ export interface HeaderControllerProps {
 
 export const HeaderController: NextPage<HeaderControllerProps> = ({
   title,
-  description = "Dogehouse is taking voice conversations to the moon 🚀",
+  description = "Collaborative IoT🚀",
   owner,
   additionalKeywords = [],
   embed,
 }) => {
   return (
     <Header>
-      {title ? <title>{title} | DogeHouse</title> : <title>DogeHouse</title>}
+      {title ? <title>{title} | Collaborative-IoT</title> : <title>Collaborative</title>}
       <meta name="description" content={description} />
       {owner ? <meta name="author" content={owner} /> : ""}
       <meta
         name="keywords"
-        content={`DogeHouse, Doge${additionalKeywords?.map((k) => `, ${k}`)}`}
+        content={``}
       />
       <meta name="theme-color" content={embed?.hexColor || "#EFE7DD"} />
       {embed ? (
         <>
-          <meta name="og:title" content={title || "DogeHouse"} />
+          <meta name="og:title" content={title || "Collab-IoT"} />
           <meta
             name="og:type"
             content={owner ? "music.radio_station" : "website"}
           />
           {owner ? <meta name="music:creator" content={owner} /> : ""}
           <meta name="og:description" content={description} />
-          <meta name="og:site_name" content="DogeHouse" />
-          <meta name="og:image" content={embed.image ? embed.image : `${baseUrl}/img/doge.png`} />
+          <meta name="og:site_name" content="Collab-IoT" />
+          <meta name="og:image" content={``} />
         </>
       ) : (
         ""

@@ -10,13 +10,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({}) => {
   return (
     <Link href="/dash">
       <a data-testid="logo-link" className="w-full">
-        {screenType === "3-cols" ? (
-          <LgLogo />
-        ) : (
-          <div className="flex justify-center w-full">
-            <LogoIcon width={40} height={40} color="#EFE7DC" />
-          </div>
-        )}
+        <h4 style={{color:"#ffffff"}}>Collaborative-IoT 🚀</h4>
       </a>
     </Link>
   );

@@ -46,8 +46,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   onRequestClose,
   onEdit,
 }) => {
-  const { conn, setUser } = useContext(WebSocketContext);
-  const { mutateAsync } = useTypeSafeMutation("editProfile");
+  //const { conn, setUser } = useContext(WebSocketContext);
+  //const { mutateAsync } = useTypeSafeMutation("editProfile");
   const { t } = useTypeSafeTranslation();
 
   useEffect(() => {
@@ -62,50 +62,21 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     }
   }, [isOpen]);
 
-  if (!conn) {
-    return null;
-  }
-
-  const { user } = conn;
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
       {isOpen ? (
         <Formik
           initialValues={{
-            displayName: user.displayName,
-            username: user.username,
-            bio: user.bio || "",
-            avatarUrl: user.avatarUrl,
-            bannerUrl: user.bannerUrl || "",
+            displayName: "displayName",
+            username: "username",
+            bio: "bio",
+            avatarUrl: "avatarurl",
+            bannerUrl: "bannerurl",
           }}
           validateOnChange={false}
-          validate={(values) => {
-            return validateFn({
-              ...values,
-              bannerUrl: values.bannerUrl || undefined,
-              displayName: values.displayName.trim(),
-            });
-          }}
-          onSubmit={async (data) => {
-            const { isUsernameTaken } = await mutateAsync([data]);
-            if (isUsernameTaken) {
-              showErrorToast(
-                t("components.modals.editProfileModal.usernameTaken")
-              );
-            } else {
-              if (conn) {
-                setUser({
-                  ...conn?.user,
-                  ...data,
-                  bio: data.bio.trim(),
-                  displayName: data.displayName.trim(),
-                });
-              }
-              onEdit?.(data);
-              onRequestClose();
-            }
-          }}
+          validate={()=>{}}
+          onSubmit={async()=>{}}
         >
           {({ isSubmitting }) => (
             <Form className={`flex-col w-full`}>
