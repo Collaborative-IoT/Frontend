@@ -1,5 +1,5 @@
 <p align="center">
-    <img height=100 src="https://github.com/Collaborative-IoT/Web-Frontend/blob/master/rocket.png"/>
+    <img width="100" src="https://github.com/Collaborative-IoT/Web-Frontend/blob/master/rocket.png"/>
 </p>
 
 <p align="center">
