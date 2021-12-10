@@ -42,12 +42,12 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   const screenType = useScreenType();
   const conn = useConn()!;
   const me = conn ? conn.user : undefined;
-  const mHeader = mobileHeader || (
-    <ProfileHeader
-      avatar={me ? me.avatarUrl : "https://dogehouse.tv/favicon.ico"}
-      onSearchClick={() => router.push("/search")}
-    />
-  );
+ // const mHeader = mobileHeader || (
+   // <ProfileHeader
+   //   avatar={me ? me.avatarUrl : "https://dogehouse.tv/favicon.ico"}
+   //   onSearchClick={() => router.push("/search")}
+///   // />
+ // );
 
   const items = [
     { icon: <SolidHome />, targetPath: "/dash" },
@@ -99,7 +99,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
     case "fullscreen":
       prepend = (
         <>
-          {mHeader}
+          {}
           <MobileNav items={items}></MobileNav>
         </>
       );

@@ -19,7 +19,22 @@ interface ProfileBlockControllerProps {}
 export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}) => {
   const [upcomingCount, setUpcomingCount] = useState(3);
   const { currentRoomId } = useCurrentRoomIdStore();
-  const conn = useConn();
+
+  //useConn();
+  const conn = {user:{
+    contributions:40,
+    username:"test",
+    botOwnerId:1,
+    staff:true,
+    avatarUrl:"",
+    numFollowers:10,
+    numFollowing:100,
+    bio:"godlike",
+    displayName:"",
+    id:""
+    }}
+
+
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [
     showCreateScheduleRoomModal,
@@ -77,26 +92,8 @@ export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}
       />
       {showCreateScheduleRoomModal ? (
         <CreateScheduleRoomModal
-          onScheduledRoom={(srData, resp) => {
-            update(["getScheduledRooms", ""], (d) => {
-              return {
-                rooms: [
-                  {
-                    roomId: null,
-                    creator: conn.user!,
-                    creatorId: conn.user!.id,
-                    description: srData.description,
-                    id: resp.scheduledRoom.id,
-                    name: srData.name,
-                    numAttending: 0,
-                    scheduledFor: srData.scheduledFor.toISOString(),
-                  },
-                  ...(d?.rooms || []),
-                ],
-                nextCursor: d?.nextCursor,
-              };
-            });
-          }}
+          onScheduledRoom={()=>{}
+          }
           onRequestClose={() => setShowCreateScheduleRoomModal(false)}
         />
       ) : null}
@@ -118,20 +115,7 @@ export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}
         bottom={
           <UpcomingRoomsCard
             onCreateScheduledRoom={() => setShowCreateScheduleRoomModal(true)}
-            rooms={
-              data?.rooms.slice(0, upcomingCount).map((sr) => ({
-                onClick: () => {
-                  push(`/scheduled-room/[id]`, `/scheduled-room/${sr.id}`);
-                },
-                id: sr.id,
-                scheduledFor: new Date(sr.scheduledFor),
-                title: sr.name,
-                speakersInfo: {
-                  avatars: [sr.creator.avatarUrl],
-                  speakers: [sr.creator.username],
-                },
-              })) || []
-            }
+            rooms={[]}
           />
         }
       />

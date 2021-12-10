@@ -11,12 +11,12 @@ interface LoungePageProps {}
 export const DashboardPage: PageComponent<LoungePageProps> = ({}) => {
   const { t } = useTypeSafeTranslation();
   return (
-    <WaitForWsAndAuth>
-      <HeaderController embed={{}} title={t("header.dashboard")} />
+      <>
+      <HeaderController embed={{}} title={"Collaborate on iot"} />
       <DefaultDesktopLayout>
         <FeedController />
       </DefaultDesktopLayout>
-    </WaitForWsAndAuth>
+      </>
   );
 };
 

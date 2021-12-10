@@ -1,6 +1,8 @@
+import { Room, ScheduledRoom, User, UserPreview } from "@dogehouse/kebab";
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
+import { number } from "superstruct";
 import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";
 import { useDownloadAlertStore } from "../../global-stores/useDownloadAlertStore";
 import { isServer } from "../../lib/isServer";
@@ -47,26 +49,6 @@ const Page = ({
     },
     [cursor]
   );
-  useEffect(() => {
-    if (isElectron()) {
-      const ipcRenderer = window.require("electron").ipcRenderer;
-      ipcRenderer.send("@rpc/page", {
-        page: "home",
-        opened: true,
-        modal: false,
-        data: data?.rooms.length,
-      });
-
-      return () => {
-        ipcRenderer.send("@rpc/page", {
-          page: "home",
-          opened: false,
-          modal: false,
-          data: data?.rooms.length,
-        });
-      };
-    }
-  }, [data]);
 
   // useEffect(() => {
   //   if (shouldAlert && !isElectron()) {
@@ -157,17 +139,72 @@ const Page = ({
 
 export const FeedController: React.FC<FeedControllerProps> = ({}) => {
   const [cursors, setCursors] = useState([0]);
-  const { conn } = useContext(WebSocketContext);
-  const { t } = useTypeSafeTranslation();
-  const [roomModal, setRoomModal] = useState(false);
-  const { data } = useTypeSafeQuery("getMyScheduledRoomsAboutToStart", {
-    enabled: !!conn,
-    refetchOnMount: "always",
-  });
-  const updater = useTypeSafeUpdateQuery();
-  const screenType = useScreenType();
-  const { currentRoomId } = useCurrentRoomIdStore();
+  //const { conn } = useContext(WebSocketContext);
+  //const { t } = useTypeSafeTranslation();
+  const  [roomModal, setRoomModal] = useState(false);
 
+
+const userPreview: UserPreview = {
+  id: "222",
+  displayName: "tester",
+  numFollowers: 2,
+  avatarUrl: "",
+};
+
+
+const room:Room = {
+
+    id: "222",
+    numPeopleInside: 2,
+    voiceServerId: "222",
+    creatorId: "23423",
+    peoplePreviewList: [userPreview],
+    autoSpeaker: false,
+    inserted_at: "2",
+    chatMode: "default",
+    name: "test room 445",
+    chatThrottle: 2000,
+    isPrivate: false,
+    description: "test desc"
+
+}
+const user:User = {
+  youAreFollowing: true,
+    username: "test",
+    online: true,
+    numFollowing: 2,
+    numFollowers: 2,
+    lastOnline: "test",
+    id: "223232",
+    followsYou: true,
+    botOwnerId: "test",
+    contributions: 2,
+    staff: true,
+    displayName: "test",
+    currentRoomId: "23323",
+    currentRoom: room,
+    bio: "test",
+    avatarUrl: "test",
+    bannerUrl: "test",
+    whisperPrivacySetting: "on"
+
+
+}
+const  data:ScheduledRoom  = {    
+  roomId: "55",
+  description: "test2",
+  scheduledFor: new Date().toString(),
+  numAttending: 2,
+  name: 'test',
+  id: "321",
+  creatorId: "34",
+  creator: user }
+//  const updater = useTypeSafeUpdateQuery();
+ // const screenType = useScreenType();
+  //const { currentRoomId } = useCurrentRoomIdStore();
+
+  const currentRoomId = 20;
+  const screenType = "fullscreen";
   let mb = "mb-7";
   if (screenType === "fullscreen") {
     if (currentRoomId) {
@@ -176,72 +213,45 @@ export const FeedController: React.FC<FeedControllerProps> = ({}) => {
       mb = "mb-8";
     }
   }
+  //  }
+  //}
   // useEffect(() => {
   //   if (isElectron() && isMac) {
   //     modalAlert(t("common.requestPermissions"));
   //   }
   // }, [t]);
 
-  if (!conn) {
-    return null;
-  }
 
   return (
     <MiddlePanel
       stickyChildren={
         <FeedHeader
-          actionTitle={t("pages.home.createRoom")}
+          actionTitle={"besttt"}
           onActionClicked={() => {
             setRoomModal(true);
           }}
-          title={t("modules.feed.yourFeed")}
+          title={"nice"}
         />
       }
     >
       <div className={`flex flex-1 flex-col ${mb}`} data-testid="feed">
         <div className="flex flex-col space-y-4">
-          {data?.scheduledRooms?.map((sr) => (
+          {
             <EditScheduleRoomModalController
-              key={sr.id}
+              key={data.id}
               onScheduledRoom={(_, editedRoomData) => {
-                updater("getMyScheduledRoomsAboutToStart", (x) => {
-                  return !x
-                    ? x
-                    : {
-                        scheduledRooms: x.scheduledRooms.map((y) =>
-                          y.id === sr.id
-                            ? {
-                                ...sr,
-                                name: editedRoomData.name,
-                                description: editedRoomData.description,
-                                scheduledFor: editedRoomData.scheduledFor.toISOString(),
-                              }
-                            : y
-                        ),
-                      };
-                });
               }}
             >
               {({ onEdit }) => (
                 <ScheduledRoomCard
-                  info={sr}
-                  onDeleteComplete={() =>
-                    updater("getMyScheduledRoomsAboutToStart", (x) =>
-                      !x
-                        ? x
-                        : {
-                            scheduledRooms: x.scheduledRooms.filter(
-                              (y) => y.id !== sr.id
-                            ),
-                          }
-                    )
-                  }
-                  onEdit={() => onEdit({ cursor: "", scheduleRoomToEdit: sr })}
+                  info={data}
+                  onDeleteComplete={()=>{}}
+                  onEdit={() => onEdit({ cursor: "", scheduleRoomToEdit: data })}
                   noCopyLinkButton
                 />
               )}
             </EditScheduleRoomModalController>
-          ))}
+          }
           {cursors.map((cursor, i) => (
             <Page
               key={cursor}

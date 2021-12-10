@@ -75,7 +75,6 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
   onClick,
   displayName,
   username,
-  badges,
   numFollowers,
   numFollowing,
   bio,
@@ -103,31 +102,27 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
               @{username}
             </span>
             <span className="flex mt-1">
-              <Badges badges={badges} />
             </span>
           </div>
         </div>
       </button>
       <div className="flex mt-3">
         <div className="flex transition duration-200 ease-in-out hover:bg-primary-700 px-2 py-1 rounded-8">
-          <ApiPreloadLink route="followers" data={{ username }}>
             <span className="text-primary-100 font-bold">
-              {kFormatter(numFollowers)}
+              {numFollowing}
             </span>
             <span className="text-primary-300 ml-1.5 lowercase">
-              {t("pages.viewUser.followers")}
+              {numFollowers}
             </span>
-          </ApiPreloadLink>
         </div>
         <div className="flex transition duration-200 ease-in-out hover:bg-primary-700 px-2 py-1 rounded-8">
-          <ApiPreloadLink route="following" data={{ username }}>
+
             <span className="text-primary-100 font-bold">
-              {kFormatter(numFollowing)}
+              {numFollowers}
             </span>
             <span className="text-primary-300 ml-1.5 lowercase">
-              {t("pages.viewUser.following")}
+              {numFollowing}
             </span>
-          </ApiPreloadLink>
         </div>
       </div>
       <div

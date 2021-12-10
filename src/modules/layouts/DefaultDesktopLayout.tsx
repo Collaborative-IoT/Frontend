@@ -15,7 +15,7 @@ export const DefaultDesktopLayout: React.FC<DefaultDesktopLayoutProps> = ({
   mobileHeader = undefined,
 }) => {
   return (
-    <WaitForWsAndAuth>
+
       <MainLayout
         floatingRoomInfo={<FloatingRoomInfo />}
         tabletSidebar={<TabletSidebar />}
@@ -25,6 +25,6 @@ export const DefaultDesktopLayout: React.FC<DefaultDesktopLayoutProps> = ({
       >
         {children}
       </MainLayout>
-    </WaitForWsAndAuth>
+
   );
 };
