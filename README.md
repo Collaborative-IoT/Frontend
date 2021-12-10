@@ -9,4 +9,4 @@
 <p align="center">
     <img src="https://img.shields.io/github/contributors/Collaborative-IoT/Web-Frontend"/>
 </p>
-<br/>
+<img src = "https://github.com/Collaborative-IoT/Web-Frontend/blob/master/frontend_show.png"/>
