@@ -34,86 +34,14 @@ const Page = ({
   const vars: [string, boolean, number] = [username, isFollowing, cursor];
   const [shouldLoadMore, setShouldLoadMore] = useState(false);
 
-  useEffect(() => {
-    setShouldLoadMore(!!entry?.isIntersecting);
-  }, [entry?.isIntersecting]);
-
-  useEffect(() => {
-    if (shouldLoadMore && data?.nextCursor) {
-      onLoadMore(data.nextCursor!);
-      setShouldLoadMore(false);
-    }
-  }, [data?.nextCursor, entry?.isIntersecting, onLoadMore, shouldLoadMore]);
-
-  if (isLoading) {
-    return <CenterLoader />;
-  }
-
-  if (!data || data.users.length === 0) {
     const styles = "text-primary-200 text-center";
-    if (isFollowing) return <div className={styles}>{t("pages.followList.followingNone")}</div>;
+    if (true) return <div className={styles}>{t("pages.followList.followingNone")}</div>;
     else return <div className={styles}>{t("pages.followList.noFollowers")}</div>;
-  }
+  
 
   return (
     <>
-      {data.users.map((user) => (
-        <div key={user.id} className="flex items-center mb-6">
-          <div className="flex">
-            <SingleUser size="md" src={user.avatarUrl} />
-          </div>
-          <div className="flex px-4 flex-1">
-            <ApiPreloadLink route="profile" data={{ username: user.username }}>
-              <div className="flex flex-col w-full">
-                <div className="block max-w-md text-primary-100 truncate w-full">
-                  {user.displayName}
-                </div>
-                <div className="flex text-primary-200">@{user.username}</div>
-              </div>
-            </ApiPreloadLink>
-          </div>
-          <div className="flex">
-            {conn.user.username !== user.username && (
-              <Button
-                loading={followLoading && variables?.[0] === user.id}
-                onClick={async () => {
-                  await mutateAsync([user.id, !user.youAreFollowing]);
-                  updater(["getFollowList", ...vars], (x) =>
-                    !x
-                      ? x
-                      : {
-                          ...x,
-                          users: x.users.map((u) =>
-                            u.id === user.id
-                              ? {
-                                  ...u,
-                                  numFollowers:
-                                    u.numFollowers +
-                                    (user.youAreFollowing ? -1 : 1),
-                                  youAreFollowing: !user.youAreFollowing,
-                                }
-                              : u
-                          ),
-                        }
-                  );
-                }}
-                size="small"
-                color={user.youAreFollowing ? "secondary" : "primary"}
-                icon={user.youAreFollowing ? null : <SolidFriends />}
-              >
-                {user.youAreFollowing
-                  ? t("pages.viewUser.unfollow")
-                  : t("pages.viewUser.followHim")}
-              </Button>
-            )}
-          </div>
-        </div>
-      ))}
-      {isLastPage && data.nextCursor && (
-        <div ref={setNode} className={`flex justify-center py-5`}>
-          <Spinner />
-        </div>
-      )}
+
     </>
   );
 };

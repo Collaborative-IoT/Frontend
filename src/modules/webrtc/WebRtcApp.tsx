@@ -13,7 +13,6 @@ import { joinRoom } from "./utils/joinRoom";
 import { receiveVoice } from "./utils/receiveVoice";
 import { sendVoice } from "./utils/sendVoice";
 
-interface App2Props {}
 
 export function closeVoiceConnections(_roomId: string | null) {
   const { roomId, mic, nullify } = useVoiceStore.getState();
@@ -28,7 +27,7 @@ export function closeVoiceConnections(_roomId: string | null) {
   }
 }
 
-export const WebRtcApp: React.FC<App2Props> = () => {
+export const WebRtcApp: React.FC = () => {
   const { mic } = useVoiceStore();
   const { micId } = useMicIdStore();
   const { muted } = useMuteStore();
@@ -45,7 +44,7 @@ export const WebRtcApp: React.FC<App2Props> = () => {
   }, [micId]);
   const consumerQueue = useRef<{ roomId: string; d: any }[]>([]);
 
-  function flushConsumerQueue(_roomId: string) {
+  function flushConsumerQueue(_roomId: string) {}
 
   return (
     <>
@@ -53,5 +52,5 @@ export const WebRtcApp: React.FC<App2Props> = () => {
       <ActiveSpeakerListener />
     </>
   );
-  }
+  
 };

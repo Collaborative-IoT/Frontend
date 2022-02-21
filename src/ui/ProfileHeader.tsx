@@ -51,10 +51,6 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         onRequestClose={() => setShowEditProfileModal(false)}
         onEdit={(d) => {
           if (d.username !== username) {
-            preloadPush({
-              route: "profile",
-              data: { username: d.username },
-            });
           }
         }}
       />

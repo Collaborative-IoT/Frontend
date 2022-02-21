@@ -9,7 +9,7 @@ import {
 } from "../../ui/Search/GlobalSearch";
 
 import avatar from "../../img/avatar.png";
-import { Room, User } from "../../modules/ws/entities";;
+import { Room, User } from "../../modules/ws/entities";
 
 export default {
   title: "Search/GlobalSearch",

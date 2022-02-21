@@ -15,7 +15,7 @@ import { navigateThroughQueriedEmojis } from "./navigateThroughQueriedEmojis";
 import { useCurrentRoomIdStore } from "../../../global-stores/useCurrentRoomIdStore";
 import { useScreenType } from "../../../shared-hooks/useScreenType";
 import { useCurrentRoomFromCache } from "../../../shared-hooks/useCurrentRoomFromCache";
-import Dolma from '@dogehouse/dolma';
+import dolma from "./encoding/dolma/src";
 
 interface ChatInputProps {
   users: RoomUser[];
@@ -25,7 +25,7 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
   const { message, setMessage } = useRoomChatStore();
   const { setQueriedUsernames } = useRoomChatMentionStore();
   const { setOpen, open, queryMatches } = useEmojiPickerStore();
-  const dolma = new Dolma(customEmojis);
+  const dolma_type = new dolma(customEmojis);
   const inputRef = useRef<HTMLInputElement>(null);
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState<number>(0);
   const { t } = useTypeSafeTranslation();
@@ -62,7 +62,7 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
 
     const tmp = message;
     // const messageData = createChatMessage(tmp, users);
-    const messageData = dolma.encode(message);
+    const messageData = dolma_type.encode(message);
     console.log(messageData);
 
     messageData.whisperedTo = await Promise.all(messageData.whisperedTo.map(async (uname = "") => {

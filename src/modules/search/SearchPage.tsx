@@ -1,7 +1,6 @@
 import { Room, User } from "../ws/entities";
 import router from "next/router";
 import React, { useState } from "react";
-import { useWrappedConn } from "../../shared-hooks/useConn";
 import { useScreenType } from "../../shared-hooks/useScreenType";
 import { PageComponent } from "../../types/PageComponent";
 import { InfoText } from "../../ui/InfoText";
@@ -22,7 +21,6 @@ export const SearchPage: PageComponent<LoungePageProps> = ({}) => {
 
   const [results, setResults] = useState([] as (User | Room)[]);
   const [searchLoading, setSearchLoading] = useState(false);
-  const conn = useWrappedConn();
 
   return (
     <WaitForWsAndAuth>
@@ -31,12 +29,6 @@ export const SearchPage: PageComponent<LoungePageProps> = ({}) => {
         mobileHeader={
           <SearchHeader
             onSearchChange={(e) => {
-              console.log(e.target.value);
-              setSearchLoading(true);
-              conn.query.search(e.target.value).then((r) => {
-                setResults(r?.items);
-                setSearchLoading(false);
-              });
             }}
             searchPlaceholder="Search"
             onBackClick={() => router.back()}
@@ -45,26 +37,7 @@ export const SearchPage: PageComponent<LoungePageProps> = ({}) => {
         }
       >
         <div className="h-full w-full">
-          {results &&
-            results.map((userOrRoom, i) => {
-              if ("username" in userOrRoom) {
-                return (
-                  <UserSearchResult
-                    onClick={() => router.push(`/u/${userOrRoom.username}`)}
-                    key={i}
-                    user={userOrRoom}
-                  />
-                );
-              } else {
-                return (
-                  <RoomSearchResult
-                    onClick={() => router.push(`/room/${userOrRoom.id}`)}
-                    key={i}
-                    room={userOrRoom}
-                  />
-                );
-              }
-            })}
+          {}
           {!results?.length && (
             <InfoText className="pr-4 pl-5 py-3">no results</InfoText>
           )}

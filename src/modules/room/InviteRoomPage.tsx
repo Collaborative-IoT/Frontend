@@ -61,13 +61,11 @@ const Page = ({
 };
 
 export const InviteRoomPage: PageComponent<InviteRoomPageProps> = ({}) => {
-  const { data, isLoading } = useGetRoomByQueryParam();
   const { t } = useTypeSafeTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
   const [copied, setCopied] = useState(false);
   const [cursors, setCursors] = useState([0]);
 
-  if (isLoading || !data || "error" in data) {
     return (
       <DefaultDesktopLayout>
         <MiddlePanel>
@@ -75,60 +73,7 @@ export const InviteRoomPage: PageComponent<InviteRoomPageProps> = ({}) => {
         </MiddlePanel>
       </DefaultDesktopLayout>
     );
-  }
-
-  const { room } = data;
-  const url = window.location.origin + `/room/${room.id}`;
-
-  let buttonText = "copy";
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  if (navigator.share) {
-    buttonText = "share link to room";
-  } else if (copied) {
-    buttonText = "copied";
-  }
-
-  return (
-    <DefaultDesktopLayout>
-      <MiddlePanel>
-        <>
-          {!navigator.share ? (
-            <div className={`flex text-primary-100 font-bold text-2xl mb-2`}>
-              {t("pages.inviteList.shareRoomLink")}
-            </div>
-          ) : null}
-          <div data-testid="container" className={`mb-8 flex`}>
-            <Input readOnly ref={inputRef} value={url} className="mr-2" />
-            <Button
-              size="small"
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({ url });
-                } else {
-                  inputRef.current?.select();
-                  document.execCommand("copy");
-                  setCopied(true);
-                }
-              }}
-            >
-              {buttonText}
-            </Button>
-          </div>
-        </>
-        {cursors.map((cursor, i) => (
-          <Page
-            key={cursor}
-            cursor={cursor}
-            isOnlyPage={cursors.length === 1}
-            onLoadMore={(c) => setCursors([...cursors, c])}
-            isLastPage={i === cursors.length - 1}
-          />
-        ))}
-      </MiddlePanel>
-    </DefaultDesktopLayout>
-  );
+  
 };
 
 InviteRoomPage.ws = true;

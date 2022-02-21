@@ -183,7 +183,6 @@ export const AccountOverlay: React.FC<AccountOverlyProps> = ({}) => {
               />
             }
             onClick={() => {
-              conn.close();
               closeVoiceConnections(null);
               useCurrentRoomIdStore.getState().setCurrentRoomId(null);
               useTokenStore

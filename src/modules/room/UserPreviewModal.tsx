@@ -35,6 +35,7 @@ const UserPreview: React.FC<{
   const { t } = useTypeSafeTranslation();
   const bannedUserIdMap = useRoomChatStore((s) => s.bannedUserIdMap);
   const { debugAudio } = useDebugAudioStore();
+  const {user} = useConn();
 
   const canDoModStuffOnThisUser =
     !isMe &&

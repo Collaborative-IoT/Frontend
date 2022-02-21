@@ -5,7 +5,6 @@ import "../styles/banner-button.css";
 import "../styles/date-time-picker.css";
 import { AppProps } from "next/app";
 import { QueryClientProvider } from "react-query";
-import { WebSocketProvider } from "../modules/ws/WebSocketProvider";
 import { PageComponent } from "../types/PageComponent";
 import { queryClient } from "../lib/queryClient";
 import { isServer } from "../lib/isServer";
@@ -14,11 +13,10 @@ import { SoundEffectPlayer } from "../modules/sound-effects/SoundEffectPlayer";
 import ReactModal from "react-modal";
 import { ErrorToastController } from "../modules/errors/ErrorToastController";
 import { WebRtcApp } from "../modules/webrtc/WebRtcApp";
-import { MainWsHandlerProvider } from "../shared-hooks/useMainWsHandler";
+
 import NProgress from "nprogress";
 import Router from "next/router";
 import "nprogress/nprogress.css";
-import { KeybindListener } from "../modules/keyboard-shortcuts/KeybindListener";
 import { InvitedToJoinRoomModal } from "../shared-components/InvitedToJoinRoomModal";
 import { ConfirmModal } from "../shared-components/ConfirmModal";
 import isElectron from "is-electron";
@@ -70,11 +68,7 @@ function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <WebSocketProvider
-      shouldConnect={!!(Component as PageComponent<unknown>).ws}
-    >
       <QueryClientProvider client={queryClient}>
-        <MainWsHandlerProvider>
           <Head>
             <link rel="icon" href="/favicon.ico" type="image/x-icon" />
             <link rel="manifest" href="/manifest.json" />
@@ -89,12 +83,9 @@ function App({ Component, pageProps }: AppProps) {
           <SoundEffectPlayer />
           <ErrorToastController />
           <WebRtcApp />
-          <KeybindListener />
           <InvitedToJoinRoomModal />
           <ConfirmModal />
-        </MainWsHandlerProvider>
       </QueryClientProvider>
-    </WebSocketProvider>
   );
 }
 

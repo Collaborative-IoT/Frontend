@@ -10,6 +10,5 @@ export const RoomChatController: React.FC<RoomChatControllerProps> = ({}) => {
   if (!data || "error" in data) {
     return null;
   }
-
-  return <RoomChat {...data} />;
+  return null;
 };

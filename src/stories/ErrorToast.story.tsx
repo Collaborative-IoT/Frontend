@@ -22,5 +22,4 @@ Main.args = {
 Main.argTypes = {
   message: toStr(),
   button: toStr(),
-  autoClose: toBoolean(),
 };

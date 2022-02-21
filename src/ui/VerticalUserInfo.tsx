@@ -12,10 +12,27 @@ import { badge, Badges } from "./UserSummaryCard";
 import { ContributorBadge, StaffBadge } from "../icons/badges";
 
 interface VerticalUserInfoProps {
-  user: UserWithFollowInfo;
+
+  
 }
 
-export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({ user }) => {
+const user = {
+  contributions:40,
+  username:"test",
+  botOwnerId:1,
+  staff:true,
+  avatarUrl:"https://avatars.githubusercontent.com/u/35206353?v=4",
+  numFollowers:10,
+  numFollowing:100,
+  bio:"godlike",
+  displayName:"RonTheGod",
+  id:"",
+  online:true,
+  lastOnline:  Date().toString(),
+  bannerUrl:"test"
+  }
+
+export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({}) => {
   const { t } = useTypeSafeTranslation();
   const badges: badge[] = [];
   if (user.staff) {
@@ -46,7 +63,7 @@ export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({ user }) => {
     });
   }
 
-  if (user.followsYou) {
+  if (true) {
     badges.push({
       content: t("pages.viewUser.followsYou"),
       variant: "primary-700",

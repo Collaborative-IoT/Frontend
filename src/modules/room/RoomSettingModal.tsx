@@ -1,9 +1,7 @@
 import { ChatMode } from "../ws/entities";
 import React from "react";
-import { useWrappedConn } from "../../shared-hooks/useConn";
 import { useCurrentRoomFromCache } from "../../shared-hooks/useCurrentRoomFromCache";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
-import { useTypeSafeUpdateQuery } from "../../shared-hooks/useTypeSafeUpdateQuery";
 import { InfoText } from "../../ui/InfoText";
 import { Input } from "../../ui/Input";
 import { Modal } from "../../ui/Modal";
@@ -19,9 +17,7 @@ export const RoomSettingsModal: React.FC<RoomSettingsModalProps> = ({
   open,
   onRequestClose,
 }) => {
-  const conn = useWrappedConn();
   const data = useCurrentRoomFromCache();
-  const updater = useTypeSafeUpdateQuery();
   const { t } = useTypeSafeTranslation();
 
   const options = [
@@ -50,13 +46,6 @@ export const RoomSettingsModal: React.FC<RoomSettingsModalProps> = ({
             <input
               checked={!data.room.autoSpeaker}
               onChange={(e) => {
-                const autoSpeaker = !e.target.checked;
-                updater(["joinRoomAndGetInfo", data.room.id], (d) =>
-                  !d || "error" in d
-                    ? d
-                    : { ...d, room: { ...d.room, autoSpeaker } }
-                );
-                conn.mutation.roomUpdate({ autoSpeaker });
               }}
               id="auto-speaker"
               type="checkbox"
@@ -75,20 +64,9 @@ export const RoomSettingsModal: React.FC<RoomSettingsModalProps> = ({
               className={`rounded-8 bg-primary-700 h-6`}
               onBlur={(e) => {
                 const chatThrottle = Number(e.target.value);
-                if (chatThrottle >= 0) {
-                  updater(["joinRoomAndGetInfo", data.room.id], (d) =>
-                    !d ? d : { ...d, chatThrottle }
-                  );
-                  conn.mutation.roomUpdate({ chatThrottle });
-                }
               }}
               onChange={(e) => {
-                const chatThrottle = Number(e.target.value);
-                if (chatThrottle >= 0) {
-                  updater(["joinRoomAndGetInfo", data.room.id], (d) =>
-                    !d ? d : { ...d, chatThrottle }
-                  );
-                }
+                
               }}
               id="chat-cooldown"
               type="number"
@@ -103,13 +81,6 @@ export const RoomSettingsModal: React.FC<RoomSettingsModalProps> = ({
             <NativeSelect
               value={data.room.chatMode}
               onChange={(e) => {
-                const chatMode = e.target.value as ChatMode;
-                updater(["joinRoomAndGetInfo", data.room.id], (d) => {
-                  return !d || "error" in d
-                    ? d
-                    : { ...d, room: { ...d.room, chatMode } };
-                });
-                conn.mutation.roomUpdate({ chatMode });
               }}
               id="chat-mode"
             >

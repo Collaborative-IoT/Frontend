@@ -7,7 +7,6 @@ import { Form, Formik } from "formik";
 import React from "react";
 import { InputField } from "../../form-fields/InputField";
 import { showErrorToast } from "../../lib/showErrorToast";
-import { useWrappedConn } from "../../shared-hooks/useConn";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { Button } from "../../ui/Button";
 import { ButtonLink } from "../../ui/ButtonLink";
@@ -232,7 +231,6 @@ export const CreateScheduleRoomModal: React.FC<CreateRoomModalProps> = ({
   onRequestClose,
   editInfo,
 }) => {
-  const conn = useWrappedConn();
   const { t } = useTypeSafeTranslation();
   return (
     <ThemeProvider theme={theme}>
@@ -267,27 +265,6 @@ export const CreateScheduleRoomModal: React.FC<CreateRoomModalProps> = ({
               return errors;
             }}
             onSubmit={async (allData) => {
-              const { name, scheduledFor, ...data } = allData;
-              const scheduledForISO = scheduledFor.toISOString();
-              const resp = await (editInfo
-                ? conn.mutation.editScheduledRoom(editInfo.id, {
-                    name,
-                    scheduledFor: scheduledForISO,
-                    ...data,
-                  })
-                : conn.mutation.createScheduledRoom({
-                    name,
-                    scheduledFor: scheduledForISO,
-                    ...data,
-                  }));
-
-              if ("error" in resp && resp.error) {
-                showErrorToast(resp.error);
-                return;
-              } else {
-                onScheduledRoom(allData, resp);
-              }
-              onRequestClose();
             }}
           >
             {({ setFieldValue, values, errors, isSubmitting }) => (

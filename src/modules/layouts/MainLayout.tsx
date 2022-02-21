@@ -10,7 +10,6 @@ import {
   SolidPlus,
   SolidUser,
 } from "../../icons";
-import { useConn } from "../../shared-hooks/useConn";
 import { useScreenType } from "../../shared-hooks/useScreenType";
 import { MainInnerGrid } from "../../ui/MainGrid";
 import { AccountOverlay } from "../../ui/mobile/AccountOverlay";
@@ -40,8 +39,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   plusButtonURL,
 }) => {
   const screenType = useScreenType();
-  const conn = useConn()!;
-  const me = conn ? conn.user : undefined;
+  const me =undefined;
  // const mHeader = mobileHeader || (
    // <ProfileHeader
    //   avatar={me ? me.avatarUrl : "https://dogehouse.tv/favicon.ico"}
@@ -61,7 +59,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   if (me) {
     items.push({
       icon: <SolidUser />,
-      targetPath: `/u/${me.username}/following-online`,
+      targetPath: `/u/${"test22"}/following-online`,
     });
   }
 

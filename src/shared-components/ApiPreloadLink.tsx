@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";=
+import React from "react";
 
 const handlers = {
   following: ({ username }: { username: string }) => ({
@@ -43,6 +43,8 @@ export const ApiPreloadLink: React.FC<ValueOf<DifferentProps>> = ({
   data,
   ...props
 }) => {
+  return (<>
+  </>);
 };
 
 export const usePreloadPush = () => {
