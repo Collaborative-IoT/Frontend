@@ -1,4 +1,4 @@
-import { ScheduledRoom } from "@dogehouse/kebab";
+import { ScheduledRoom } from "../ws/entities";
 import React, { useState } from "react";
 import {
   CreateScheduleRoomModal,

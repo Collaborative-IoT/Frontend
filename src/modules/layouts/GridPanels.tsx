@@ -7,7 +7,6 @@ import { FixedGridPanel, GridPanel } from "../../ui/GridPanel";
 import LeftHeader from "../../ui/header/LeftHeader";
 import { MiddleHeader } from "../../ui/header/MiddleHeader";
 import RightHeader from "../../ui/header/RightHeader";
-import { WebSocketContext } from "../ws/WebSocketProvider";
 
 interface LeftPanelProps {}
 

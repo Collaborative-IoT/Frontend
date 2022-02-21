@@ -5,12 +5,11 @@ import { object, pattern, size, string, optional } from "superstruct";
 import { InputField } from "../../form-fields/InputField";
 import { showErrorToast } from "../../lib/showErrorToast";
 import { validateStruct } from "../../lib/validateStruct";
-import { useTypeSafeMutation } from "../../shared-hooks/useTypeSafeMutation";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { Button } from "../../ui/Button";
 import { ButtonLink } from "../../ui/ButtonLink";
 import { Modal } from "../../ui/Modal";
-import { WebSocketContext } from "../ws/WebSocketProvider";
+
 
 const profileStruct = object({
   displayName: size(string(), 2, 50),

@@ -1,4 +1,4 @@
-import { JoinRoomAndGetInfoResponse, wrap } from "@dogehouse/kebab";
+import { JoinRoomAndGetInfoResponse } from "../ws/entities";
 import React, { useContext } from "react";
 import { useMuteStore } from "../../global-stores/useMuteStore";
 import { useDeafStore } from "../../global-stores/useDeafStore";
@@ -89,7 +89,6 @@ export const useSplitUsersIntoSections = ({
         <BoxedIcon
           onClick={() => {
             modalConfirm("Would you like to ask to speak?", () => {
-              wrap(conn).mutation.askToSpeak();
             });
           }}
           style={{ width: 60, height: 60 }}

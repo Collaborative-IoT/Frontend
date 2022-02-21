@@ -1,4 +1,3 @@
-import { Connection } from "@dogehouse/kebab/lib/websocket/raw";
 import { TransportOptions } from "mediasoup-client/lib/types";
 import { useVoiceStore } from "../stores/useVoiceStore";
 

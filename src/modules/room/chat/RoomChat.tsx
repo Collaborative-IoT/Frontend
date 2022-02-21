@@ -1,4 +1,4 @@
-import { Room, RoomUser } from "@dogehouse/kebab";
+import { Room, RoomUser } from "../../ws/entities";
 import React, { useMemo } from "react";
 import { useCurrentRoomIdStore } from "../../../global-stores/useCurrentRoomIdStore";
 import { RoomChatInput } from "./RoomChatInput";

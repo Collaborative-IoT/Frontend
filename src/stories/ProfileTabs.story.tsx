@@ -1,4 +1,4 @@
-import { UserWithFollowInfo } from "@dogehouse/kebab";
+import { UserWithFollowInfo } from "../modules/ws/entities";;
 import { Story } from "@storybook/react";
 import { ProfileTabs, ProfileTabsProps } from "../ui/ProfileTabs";
 

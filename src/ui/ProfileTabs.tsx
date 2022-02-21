@@ -1,6 +1,5 @@
-import { UserWithFollowInfo } from "@dogehouse/kebab";
+import { UserWithFollowInfo } from "../modules/ws/entities";
 import React, { useState } from "react";
-import { useConn } from "../shared-hooks/useConn";
 import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";
 import { ProfileAbout } from "./ProfileAbout";
 import { ProfileAdmin } from "./ProfileAdmin";
@@ -34,7 +33,6 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState("about");
   const { t } = useTypeSafeTranslation();
-  const conn = useConn();
   return (
     <>
       <div
@@ -95,8 +93,7 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
 
         <button
           className={`py-1 text-primary-100 text-base font-bold border-b-2 border-primary-900 transition hover:border-accent focus:outline-no-chrome
-               ${activeTab === "admin" && `border-accent text-accent`} ${
-            conn.user.staff && conn.user.id !== user.id ? "" : "hidden"
+               ${activeTab === "admin" && `border-accent text-accent`} ${"hidden"
           }`}
           onClick={() => setActiveTab("admin")}
           data-testid={`user:${user.username}:tab:admin`}

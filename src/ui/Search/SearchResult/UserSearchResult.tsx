@@ -1,4 +1,4 @@
-import { User } from "@dogehouse/kebab";
+import { User } from "../../../modules/ws/entities";
 import React from "react";
 import { SingleUser } from "../../UserAvatar";
 

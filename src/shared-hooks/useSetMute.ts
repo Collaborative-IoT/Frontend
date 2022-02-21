@@ -1,9 +1,8 @@
-import { Wrapper } from "@dogehouse/kebab";
 import { useDeafStore } from "../global-stores/useDeafStore";
 import { useMuteStore } from "../global-stores/useMuteStore";
 import { useWrappedConn } from "./useConn";
 
-export const setMute = (conn: Wrapper, value: boolean) => {
+export const setMute = (conn: any, value: boolean) => {
   const { setInternalDeaf, deafened } = useDeafStore.getState();
   // auto undeafen on unmute
   if (deafened) {

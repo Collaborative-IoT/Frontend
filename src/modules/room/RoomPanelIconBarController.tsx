@@ -1,4 +1,4 @@
-import { JoinRoomAndGetInfoResponse, RoomUser, wrap } from "@dogehouse/kebab";
+import { JoinRoomAndGetInfoResponse, RoomUser } from "../ws/entities";
 import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -12,8 +12,6 @@ import { useLeaveRoom } from "../../shared-hooks/useLeaveRoom";
 import { useScreenType } from "../../shared-hooks/useScreenType";
 import { useSetDeaf } from "../../shared-hooks/useSetDeaf";
 import { useSetMute } from "../../shared-hooks/useSetMute";
-import { useTypeSafeMutation } from "../../shared-hooks/useTypeSafeMutation";
-import { useTypeSafePrefetch } from "../../shared-hooks/useTypeSafePrefetch";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { RoomPanelIconBar } from "../../ui/RoomPanelIconBar";
 import { RoomChatInput } from "./chat/RoomChatInput";
@@ -36,8 +34,6 @@ export const RoomPanelIconBarController: React.FC<JoinRoomAndGetInfoResponse> = 
   const { canSpeak, isCreator, canIAskToSpeak } = useCurrentRoomInfo();
   const { leaveRoom } = useLeaveRoom();
   const { push } = useRouter();
-  const prefetch = useTypeSafePrefetch();
-  const { mutateAsync: setListener } = useTypeSafeMutation("setListener");
   const { currentRoomId } = useCurrentRoomIdStore();
   const [roomId, setRoomId] = useState("");
   const [open, toggleOpen] = useRoomChatStore((s) => [s.open, s.toggleOpen]);
@@ -68,15 +64,14 @@ export const RoomPanelIconBarController: React.FC<JoinRoomAndGetInfoResponse> = 
           onRoomSettings={
             isCreator
               ? () => {
-                  prefetch(["getBlockedFromRoomUsers", 0]);
                   setRoomId(currentRoomId!);
                 }
               : undefined
           }
           askToSpeak={
-            canIAskToSpeak ? () => wrap(conn).mutation.askToSpeak() : undefined
+            canIAskToSpeak ? () => {return true} : undefined
           }
-          setListener={() => setListener([conn.user.id])}
+          setListener={() =>{}}
         />
       ) : (
         <RoomPanelIconBar
@@ -97,7 +92,6 @@ export const RoomPanelIconBarController: React.FC<JoinRoomAndGetInfoResponse> = 
           onRoomSettings={
             isCreator
               ? () => {
-                  prefetch(["getBlockedFromRoomUsers", 0]);
                   setRoomId(currentRoomId!);
                 }
               : undefined

@@ -5,10 +5,7 @@ import { isServer } from "../../lib/isServer";
 import { ApiPreloadLink } from "../../shared-components/ApiPreloadLink";
 import { useConn } from "../../shared-hooks/useConn";
 import { useIntersectionObserver } from "../../shared-hooks/useIntersectionObserver";
-import { useTypeSafeMutation } from "../../shared-hooks/useTypeSafeMutation";
-import { useTypeSafeQuery } from "../../shared-hooks/useTypeSafeQuery";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
-import { useTypeSafeUpdateQuery } from "../../shared-hooks/useTypeSafeUpdateQuery";
 import { Button } from "../../ui/Button";
 import { CenterLoader } from "../../ui/CenterLoader";
 import { Spinner } from "../../ui/Spinner";
@@ -32,26 +29,9 @@ const Page = ({
   onLoadMore: (o: number) => void;
 }) => {
   const conn = useConn();
-  const { setNode, entry } = useIntersectionObserver({});
-  const {
-    mutateAsync,
-    isLoading: followLoading,
-    variables,
-  } = useTypeSafeMutation("follow");
-
+  const { setNode, entry } = useIntersectionObserver({})
   const { t } = useTypeSafeTranslation();
-  const updater = useTypeSafeUpdateQuery();
   const vars: [string, boolean, number] = [username, isFollowing, cursor];
-  const { data, isLoading } = useTypeSafeQuery(
-    ["getFollowList", ...vars],
-    {
-      enabled: !!username && !isServer,
-      staleTime: Infinity,
-      refetchOnMount: "always",
-    },
-    vars
-  );
-
   const [shouldLoadMore, setShouldLoadMore] = useState(false);
 
   useEffect(() => {

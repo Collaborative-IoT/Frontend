@@ -1,4 +1,4 @@
-import { ChatMode } from "@dogehouse/kebab";
+import { ChatMode } from "../ws/entities";
 import React from "react";
 import { useWrappedConn } from "../../shared-hooks/useConn";
 import { useCurrentRoomFromCache } from "../../shared-hooks/useCurrentRoomFromCache";

@@ -1,4 +1,4 @@
-import { Room, User } from "@dogehouse/kebab";
+import { Room, User } from "../ws/entities";
 import router from "next/router";
 import React, { useState } from "react";
 import { useWrappedConn } from "../../shared-hooks/useConn";

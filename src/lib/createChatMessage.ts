@@ -1,7 +1,6 @@
-import { BaseUser } from "@dogehouse/kebab";
 import normalizeUrl from "normalize-url";
 import { linkRegex, codeBlockRegex, mentionRegex } from "./constants";
-
+import { BaseUser } from "../modules/ws/entities";
 export const createChatMessage = (
   message: string,
   roomUsers: BaseUser[] = []

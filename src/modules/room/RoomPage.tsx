@@ -1,4 +1,4 @@
-import { JoinRoomAndGetInfoResponse, Room } from "@dogehouse/kebab";
+import { JoinRoomAndGetInfoResponse, Room } from "../ws/entities";
 import router, { useRouter } from "next/router";
 import React, { useState } from "react";
 import { validate } from "uuid";

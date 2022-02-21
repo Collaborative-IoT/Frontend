@@ -1,4 +1,4 @@
-import { Room, User } from "@dogehouse/kebab";
+import { Room, User } from "../../modules/ws/entities";
 import React, { useState } from "react";
 import { SearchBar } from "./SearchBar";
 import SearchHistory from "./SearchHistory";

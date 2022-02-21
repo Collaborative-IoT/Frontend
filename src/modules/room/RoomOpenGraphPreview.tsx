@@ -1,4 +1,4 @@
-import { Room } from "@dogehouse/kebab";
+import { Room } from "../ws/entities";
 import React from "react";
 import { isServer } from "../../lib/isServer";
 import { HeaderController } from "../display/HeaderController";

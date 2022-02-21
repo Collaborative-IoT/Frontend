@@ -1,4 +1,4 @@
-import { Message, Room, RoomUser } from "@dogehouse/kebab";
+import { Message, Room, RoomUser } from "../../ws/entities";;
 import normalizeUrl from "normalize-url";
 import React, { useContext, useEffect, useRef } from "react";
 import { useVirtual, VirtualItem } from "react-virtual";

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useTypeSafeQuery } from "../../shared-hooks/useTypeSafeQuery";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { SearchBar } from "../../ui/Search/SearchBar";
 import { SearchOverlay } from "../../ui/Search/SearchOverlay";
 import Downshift from "downshift";
-import { Room, User } from "@dogehouse/kebab";
+import { Room, User } from "../ws/entities";
 import { useRouter } from "next/router";
 import { useDebounce } from "use-debounce";
 import { InfoText } from "../../ui/InfoText";
@@ -33,15 +32,7 @@ export const SearchBarController: React.FC<SearchControllerProps> = ({}) => {
     enabled = true;
   }
 
-  const { data, isLoading } = useTypeSafeQuery(
-    ["search", text],
-    {
-      enabled,
-    },
-    [text]
-  );
   const { push } = useRouter();
-  const results = data ? [...data.rooms, ...data.users] : [];
 
   return (
     <Downshift<Room | User>
@@ -90,7 +81,7 @@ export const SearchBarController: React.FC<SearchControllerProps> = ({}) => {
                 ? t("components.search.placeholderShort")
                 : t("components.search.placeholder")
             }
-            isLoading={isLoading}
+            isLoading={false}
           />
           {isOpen ? (
             <SearchOverlay
@@ -100,50 +91,9 @@ export const SearchBarController: React.FC<SearchControllerProps> = ({}) => {
                 className="w-full px-2 mb-2 mt-7 bg-primary-800 rounded-b-8 overflow-y-auto"
                 {...getMenuProps({ style: { top: 0 } })}
               >
-                {(data?.rooms.length === 0 && data?.users.length === 0) ||
-                !data ? (
-                  <InfoText className="p-3">no results</InfoText>
-                ) : null}
+                {null}
 
-                {results.map((item, index) =>
-                  "username" in item ? (
-                    // eslint-disable-next-line react/jsx-key
-                    <li
-                      data-testid={`search:user:${item.username}`}
-                      {...getItemProps({
-                        key: item.id,
-                        index,
-                        item,
-                      })}
-                    >
-                      <UserSearchResult
-                        user={item}
-                        className={
-                          highlightedIndex === index
-                            ? "bg-primary-700"
-                            : "bg-primary-800"
-                        }
-                      />
-                    </li>
-                  ) : (
-                    <li
-                      {...getItemProps({
-                        key: item.id,
-                        index,
-                        item,
-                      })}
-                    >
-                      <RoomSearchResult
-                        room={item}
-                        className={
-                          highlightedIndex === index
-                            ? "bg-primary-700"
-                            : "bg-primary-800"
-                        }
-                      />
-                    </li>
-                  )
-                )}
+      
               </ul>
             </SearchOverlay>
           ) : null}

@@ -1,32 +1,27 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
-import { useTypeSafePrefetch } from "../shared-hooks/useTypeSafePrefetch";
-
-type Prefetch = ReturnType<typeof useTypeSafePrefetch>;
+import React from "react";=
 
 const handlers = {
   following: ({ username }: { username: string }) => ({
     href: "/u/[username]/following",
     as: `/u/${username}/following`,
-    onClick: (prefetch: Prefetch) =>
-      prefetch("getFollowList", [username, true, 0]),
+    onClick:  ()=>{}
   }),
   followers: ({ username }: { username: string }) => ({
     href: "/u/[username]/followers",
     as: `/u/${username}/followers`,
-    onClick: (prefetch: Prefetch) =>
-      prefetch("getFollowList", [username, false, 0]),
+    onClick:  ()=>{}
   }),
   profile: ({ username }: { username: string }) => ({
     href: "/u/[username]",
     as: `/u/${username}`,
-    onClick: (prefetch: Prefetch) => prefetch("getUserProfile", [username]),
+    onClick: ()=>{}
   }),
   room: ({ id }: { id: string }) => ({
     href: "/room/[id]",
     as: `/room/${id}`,
-    onClick: (prefetch: Prefetch) => prefetch("joinRoomAndGetInfo", [id]),
+    onClick: ()=>{}
   }),
 };
 
@@ -48,25 +43,7 @@ export const ApiPreloadLink: React.FC<ValueOf<DifferentProps>> = ({
   data,
   ...props
 }) => {
-  const prefetch = useTypeSafePrefetch();
-
-  const { as, href, onClick } = handlers[route](data as any);
-
-  return (
-    <Link href={href} as={as}>
-      <a {...props} onClick={() => onClick(prefetch)}>
-        {children}
-      </a>
-    </Link>
-  );
 };
 
 export const usePreloadPush = () => {
-  const { push } = useRouter();
-  const prefetch = useTypeSafePrefetch();
-  return ({ route, data }: ValueOf<DifferentProps>) => {
-    const { as, href, onClick } = handlers[route](data as any);
-    onClick(prefetch);
-    push(href, as);
-  };
 };

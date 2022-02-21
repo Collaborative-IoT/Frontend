@@ -1,4 +1,4 @@
-import { User } from "@dogehouse/kebab";
+import { User } from "../ws/entities";
 import React from "react";
 import { apiBaseUrl } from "../../lib/constants";
 import { PageComponent } from "../../types/PageComponent";

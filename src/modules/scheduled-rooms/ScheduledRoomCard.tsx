@@ -1,15 +1,13 @@
-import { ScheduledRoom } from "@dogehouse/kebab";
+import { ScheduledRoom } from "../ws/entities";
 import { differenceInMilliseconds, isPast, isToday, sub } from "date-fns";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { SolidCalendar, SolidRocket } from "../../icons";
 import { modalConfirm } from "../../shared-components/ConfirmModal";
-import { useTypeSafeMutation } from "../../shared-hooks/useTypeSafeMutation";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { BoxedIcon } from "../../ui/BoxedIcon";
 import { Button } from "../../ui/Button";
 import { SingleUser } from "../../ui/UserAvatar";
-import { WebSocketContext } from "../ws/WebSocketProvider";
 import { CopyScheduleRoomLinkButton } from "./CopyScheduleRoomLinkButton";
 import { Edit, Trash } from "react-feather";
 import { AddToCalendar } from "./AddToCalendar";
@@ -30,22 +28,6 @@ export const ScheduledRoomCard: React.FC<ScheduledRoomCardProps> = ({
   info: { id, name, scheduledFor, creator, description, roomId },
 }) => {
   const { push } = useRouter();
-  const {
-    mutateAsync: mutateAsyncStartRoom,
-    isLoading: isLoadingStartRoom,
-  } = useTypeSafeMutation("createRoomFromScheduledRoom", {
-    onSuccess: ({ room }) => {
-      push("/room/" + room.id);
-    },
-  });
-  const { mutateAsync, isLoading } = useTypeSafeMutation(
-    "deleteScheduledRoom",
-    {
-      onSuccess: () => {
-        onDeleteComplete();
-      },
-    }
-  );
   const [, rerender] = useState(0);
   const dt = useMemo(() => new Date(scheduledFor), [scheduledFor]);
   const canStartRoom = useMemo(() => isPast(sub(dt, { minutes: 10 })), [dt]);
@@ -61,10 +43,8 @@ export const ScheduledRoomCard: React.FC<ScheduledRoomCardProps> = ({
       }
     };
   }, [dt]);
-  const { conn } = useContext(WebSocketContext);
-  const me = conn?.user;
   const { t } = useTypeSafeTranslation();
-  const isCreator = me?.id === creator.id;
+  const isCreator = true;
   const url = window.location.origin + `/scheduled-room/${id}`;
   return (
     <div className="flex">
@@ -111,7 +91,7 @@ export const ScheduledRoomCard: React.FC<ScheduledRoomCardProps> = ({
                       modalConfirm(
                         "Are you sure you want to delete this scheduled room?",
                         () => {
-                          mutateAsync([id]);
+
                         }
                       )
                     }
@@ -153,15 +133,8 @@ export const ScheduledRoomCard: React.FC<ScheduledRoomCardProps> = ({
           <div className={`flex mt-4`}>
             {isCreator ? (
               <Button
-                loading={isLoadingStartRoom}
+                loading={false}
                 onClick={() => {
-                  mutateAsyncStartRoom([
-                    {
-                      id,
-                      name,
-                      description,
-                    },
-                  ]);
                 }}
               >
                 {t("modules.scheduledRooms.startRoom")}
@@ -169,7 +142,7 @@ export const ScheduledRoomCard: React.FC<ScheduledRoomCardProps> = ({
             ) : (
               roomId && (
                 <Button
-                  loading={isLoadingStartRoom}
+                  loading={false}
                   onClick={() => {
                     push("/room/" + roomId);
                   }}

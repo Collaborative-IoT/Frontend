@@ -1,4 +1,4 @@
-import { Room, ScheduledRoom } from "@dogehouse/kebab";
+import { Room, ScheduledRoom } from "../modules/ws/entities";
 import React, { FC, MouseEventHandler, ReactNode } from "react";
 import { Button } from "./Button";
 

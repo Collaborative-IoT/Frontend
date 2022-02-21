@@ -1,4 +1,4 @@
-import { ScheduledRoom } from "@dogehouse/kebab";
+import { ScheduledRoom } from "../ws/entities";
 import router, { useRouter } from "next/router";
 import { validate } from "uuid";
 import React, { useState } from "react";

@@ -1,10 +1,9 @@
-import { JoinRoomAndGetInfoResponse } from "@dogehouse/kebab";
+import { JoinRoomAndGetInfoResponse } from "../ws/entities";
 import isElectron from "is-electron";
 import React, { useEffect, useContext } from "react";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { RoomSectionHeader } from "../../ui/RoomSectionHeader";
 import { useSplitUsersIntoSections } from "./useSplitUsersIntoSections";
-import { WebSocketContext } from "../../modules/ws/WebSocketProvider";
 import { useScreenType } from "../../shared-hooks/useScreenType";
 import { useMediaQuery } from "react-responsive";
 import { AudioDebugPanel } from "../debugging/AudioDebugPanel";
@@ -29,7 +28,7 @@ export const RoomUsersPanel: React.FC<RoomUsersPanelProps> = (props) => {
     canIAskToSpeak,
   } = useSplitUsersIntoSections(props);
   const { t } = useTypeSafeTranslation();
-  const me = useContext(WebSocketContext).conn?.user;
+  const me = {};
   const muted = useMuteStore().muted;
   const deafened = useDeafStore().deafened;
   let gridTemplateColumns = "repeat(5, minmax(0, 1fr))";

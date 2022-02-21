@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { BaseUser } from "@dogehouse/kebab";
+import { BaseUser } from "../modules/ws/entities";
 import { format } from "date-fns";
 
 import { Tag } from "./Tag";

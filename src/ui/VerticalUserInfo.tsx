@@ -1,4 +1,4 @@
-import { UserWithFollowInfo } from "@dogehouse/kebab";
+import { UserWithFollowInfo } from "../modules/ws/entities";
 import normalizeUrl from "normalize-url";
 import React from "react";
 import { linkRegex } from "../lib/constants";

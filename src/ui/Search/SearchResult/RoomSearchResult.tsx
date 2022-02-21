@@ -1,4 +1,4 @@
-import { Room } from "@dogehouse/kebab";
+import { Room } from "../../../modules/ws/entities";
 import React from "react";
 import { BubbleText } from "../../BubbleText";
 import { formatNumber } from "../../RoomCard";

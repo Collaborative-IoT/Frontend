@@ -1,4 +1,4 @@
-import { RoomPermissions } from "@dogehouse/kebab";
+import { RoomPermissions } from "../../ws/entities";
 
 export const mergeRoomPermission = (
   currentRoomPermission: RoomPermissions | null | undefined,

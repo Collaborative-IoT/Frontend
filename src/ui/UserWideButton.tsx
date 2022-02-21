@@ -1,7 +1,7 @@
 import React from "react";
 import { SingleUser } from "./UserAvatar";
 import { Button } from "./Button";
-import { BaseUser } from "@dogehouse/kebab";
+import { BaseUser } from "../modules/ws/entities";
 
 export interface UserWideButtonInfoProps {
   user: BaseUser;

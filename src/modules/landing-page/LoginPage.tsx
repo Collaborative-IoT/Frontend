@@ -18,7 +18,6 @@ import { useSaveTokensFromQueryParams } from "../auth/useSaveTokensFromQueryPara
 import { useTokenStore } from "../auth/useTokenStore";
 import { HeaderController } from "../display/HeaderController";
 import { ElectronHeader } from "../layouts/ElectronHeader";
-import { WebSocketContext } from "../ws/WebSocketProvider";
 
 /*
 i know this code is kinda garbage but that's because the mockup is garbage and doesn't use the design system
@@ -73,13 +72,11 @@ const LoginButton: React.FC<LoginButtonProps> = ({
 export const LoginPage: React.FC = () => {
   useSaveTokensFromQueryParams();
   const hasTokens = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
-  const { setConn } = useContext(WebSocketContext);
   const { push } = useRouter();
   const [tokensChecked, setTokensChecked] = useState(false);
 
   useEffect(() => {
     // only want this on mount
-    setConn(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

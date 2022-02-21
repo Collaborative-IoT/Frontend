@@ -1,4 +1,3 @@
-import { wrap } from "@dogehouse/kebab";
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
 import { FC, useContext, useEffect } from "react";
@@ -11,7 +10,6 @@ import {
   useRoomChatStore,
 } from "../modules/room/chat/useRoomChatStore";
 import { mergeRoomPermission } from "../modules/webrtc/utils/mergeRoomPermission";
-import { WebSocketContext } from "../modules/ws/WebSocketProvider";
 import { invitedToRoomConfirm } from "../shared-components/InvitedToJoinRoomModal";
 import { setMute } from "./useSetMute";
 import { useTypeSafeUpdateQuery } from "./useTypeSafeUpdateQuery";
@@ -23,7 +21,7 @@ if (isElectron()) {
 
 export const useMainWsHandler = () => {
   const { push } = useRouter();
-  const { conn } = useContext(WebSocketContext);
+  const { conn } = useContext();
   const updateQuery = useTypeSafeUpdateQuery();
 
   useEffect(() => {

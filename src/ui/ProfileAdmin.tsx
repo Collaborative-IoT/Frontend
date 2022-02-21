@@ -1,4 +1,4 @@
-import { BaseUser, wrap } from "@dogehouse/kebab";
+import { BaseUser } from "../modules/ws/entities";;
 import React, { useEffect, useState } from "react";
 import { useConn } from "../shared-hooks/useConn";
 import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";
@@ -16,7 +16,6 @@ export const ProfileAdmin: React.FC<ProfileAdminProps> = ({
 }) => {
   const { t } = useTypeSafeTranslation();
   const conn = useConn();
-  const wrapper = wrap(conn);
   const [contributions, setContributions] = useState(0);
   const [isStaff, setIsStaff] = useState(false);
   useEffect(() => {
@@ -43,9 +42,7 @@ export const ProfileAdmin: React.FC<ProfileAdminProps> = ({
             size="tiny"
             className="ml-4"
             onClick={() => {
-              wrapper.mutation.userAdminUpdate(user.id, {
-                contributions,
-              });
+            
             }}
           >
             {t("common.save")}
@@ -65,9 +62,6 @@ export const ProfileAdmin: React.FC<ProfileAdminProps> = ({
             size="tiny"
             className="ml-4"
             onClick={() => {
-              wrapper.mutation.userAdminUpdate(user.id, {
-                staff: isStaff,
-              });
             }}
           >
             {t("common.save")}

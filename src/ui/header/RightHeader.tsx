@@ -1,4 +1,4 @@
-import { Room, User, UserPreview } from "@dogehouse/kebab";
+import { Room, User, UserPreview } from "../../modules/ws/entities";
 import { useRouter } from "next/router";
 import React from "react";
 import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";

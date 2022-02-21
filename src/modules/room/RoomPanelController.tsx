@@ -1,4 +1,4 @@
-import { JoinRoomAndGetInfoResponse } from "@dogehouse/kebab";
+import { JoinRoomAndGetInfoResponse } from "../ws/entities";
 import React, { useState } from "react";
 import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";
 import { useConn } from "../../shared-hooks/useConn";

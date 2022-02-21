@@ -1,7 +1,6 @@
-import { Room, UserPreview, UserWithFollowInfo } from "@dogehouse/kebab";
+import { Room, UserPreview, UserWithFollowInfo } from "../ws/entities";
 import React, { useState } from "react";
 import { useConn } from "../../shared-hooks/useConn";
-import { useTypeSafeQuery } from "../../shared-hooks/useTypeSafeQuery";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import {
   FollowerOnline,

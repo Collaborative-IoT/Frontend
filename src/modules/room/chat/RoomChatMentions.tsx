@@ -1,4 +1,4 @@
-import { BaseUser, RoomUser } from "@dogehouse/kebab";
+import { BaseUser, RoomUser } from "../../ws/entities";
 import React, { useEffect } from "react";
 import { mentionRegex } from "../../../lib/constants";
 import { useConn } from "../../../shared-hooks/useConn";

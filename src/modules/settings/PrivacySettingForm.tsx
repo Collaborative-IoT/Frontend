@@ -1,16 +1,10 @@
-import { User } from "@dogehouse/kebab";
 import React, { useContext } from "react";
-import { useTypeSafeMutation } from "../../shared-hooks/useTypeSafeMutation";
 import { NativeSelect } from "../../ui/NativeSelect";
-import { WebSocketContext } from "../ws/WebSocketProvider";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 
 interface PrivacySettingFormProps {}
 
 export const PrivacySettingForm: React.FC<PrivacySettingFormProps> = ({}) => {
-  const { mutateAsync } = useTypeSafeMutation("userUpdate");
-  const { conn, setUser } = useContext(WebSocketContext);
-  const { user } = conn!;
   const { t } = useTypeSafeTranslation();
   return (
     <div>
@@ -19,12 +13,8 @@ export const PrivacySettingForm: React.FC<PrivacySettingFormProps> = ({}) => {
       </div>
       <div>
         <NativeSelect
-          value={user.whisperPrivacySetting}
+          value={"test"}
           onChange={(e) => {
-            const whisperPrivacySetting = e.target
-              .value as User["whisperPrivacySetting"];
-            setUser({ ...user, whisperPrivacySetting });
-            mutateAsync([{ whisperPrivacySetting }]);
           }}
         >
           {[

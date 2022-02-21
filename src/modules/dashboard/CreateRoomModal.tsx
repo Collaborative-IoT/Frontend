@@ -5,7 +5,6 @@ import { InputField } from "../../form-fields/InputField";
 import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";
 import { showErrorToast } from "../../lib/showErrorToast";
 import { useWrappedConn } from "../../shared-hooks/useConn";
-import { useTypeSafePrefetch } from "../../shared-hooks/useTypeSafePrefetch";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { Button } from "../../ui/Button";
 import { ButtonLink } from "../../ui/ButtonLink";
@@ -31,7 +30,6 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
   const conn = useWrappedConn();
   const { t } = useTypeSafeTranslation();
   const { push } = useRouter();
-  const prefetch = useTypeSafePrefetch();
 
   return (
     <Modal isOpen onRequestClose={onRequestClose}>
@@ -69,26 +67,6 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
           return errors;
         }}
         onSubmit={async ({ name, privacy, description }) => {
-          const d = { name, privacy, description };
-          const resp = edit
-            ? await conn.mutation.editRoom(d)
-            : await conn.mutation.createRoom(d);
-
-          if (typeof resp === "object" && "error" in resp) {
-            showErrorToast(resp.error);
-
-            return;
-          } else if (resp.room) {
-            const { room } = resp;
-
-            prefetch(["joinRoomAndGetInfo", room.id], [room.id]);
-            console.log("new room voice server id: " + room.voiceServerId);
-            useRoomChatStore.getState().clearChat();
-            useCurrentRoomIdStore.getState().setCurrentRoomId(room.id);
-            push(`/room/[id]`, `/room/${room.id}`);
-          }
-
-          onRequestClose();
         }}
       >
         {({ setFieldValue, values, isSubmitting }) => (

@@ -1,5 +1,5 @@
 import DateFnsUtils from "@date-io/date-fns";
-import { BaseUser } from "@dogehouse/kebab";
+import { BaseUser } from"../ws/entities";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { add } from "date-fns";

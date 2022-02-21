@@ -1,4 +1,4 @@
-import { UserWithFollowInfo } from "@dogehouse/kebab";
+import { UserWithFollowInfo } from "../modules/ws/entities";
 import Link from "next/link";
 import React, { MouseEventHandler } from "react";
 import { ApiPreloadLink } from "../shared-components/ApiPreloadLink";

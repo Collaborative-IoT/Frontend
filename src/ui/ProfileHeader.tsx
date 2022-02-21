@@ -9,10 +9,8 @@ import {
   SolidMessages,
   SolidPersonAdd,
 } from "../icons";
-import { useTypeSafeMutation } from "../shared-hooks/useTypeSafeMutation";
-import { UserWithFollowInfo } from "@dogehouse/kebab";
-import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";
-import { useTypeSafeUpdateQuery } from "../shared-hooks/useTypeSafeUpdateQuery";
+import { UserWithFollowInfo } from "../modules/ws/entities";
+import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";;
 import { EditProfileModal } from "../modules/user/EditProfileModal";
 import { usePreloadPush } from "../shared-components/ApiPreloadLink";
 import { badge, Badges } from "./UserSummaryCard";
@@ -38,22 +36,10 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   pfp = "https://dogehouse.tv/favicon.ico",
   badges = [],
 }) => {
-  const { mutateAsync, isLoading: followLoading } = useTypeSafeMutation(
-    "follow"
-  );
-  const {
-    mutateAsync: unblock,
-    isLoading: unblockLoading,
-  } = useTypeSafeMutation("userUnblock");
-  const { mutateAsync: block, isLoading: blockLoading } = useTypeSafeMutation(
-    "userBlock"
-  );
 
   const { t } = useTypeSafeTranslation();
-  const updater = useTypeSafeUpdateQuery();
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const preloadPush = usePreloadPush();
-  const update = useTypeSafeUpdateQuery();
 
   return (
     // @TODO: Add the cover api (once it's implemented)}
@@ -64,9 +50,6 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         isOpen={showEditProfileModal}
         onRequestClose={() => setShowEditProfileModal(false)}
         onEdit={(d) => {
-          update(["getUserProfile", d.username], (x) =>
-            !x ? x : { ...x, ...d }
-          );
           if (d.username !== username) {
             preloadPush({
               route: "profile",
@@ -108,30 +91,13 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <div className="flex flex-row justify-end content-end gap-2">
           {!isCurrentUser && (
             <Button
-              loading={blockLoading || unblockLoading}
+              loading={true}
               size="small"
               color={user.iBlockedThem ? "secondary" : "primary"}
               onClick={async () => {
                 if (user.iBlockedThem) {
-                  await unblock([user.id]);
-                  updater(["getUserProfile", username], (u) =>
-                    !u
-                      ? u
-                      : {
-                          ...u,
-                          iBlockedThem: false,
-                        }
-                  );
                 } else {
-                  await block([user.id]);
-                  updater(["getUserProfile", username], (u) =>
-                    !u
-                      ? u
-                      : {
-                          ...u,
-                          iBlockedThem: true,
-                        }
-                  );
+                  
                 }
               }}
             >
@@ -142,19 +108,8 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           )}
           {!isCurrentUser && (
             <Button
-              loading={followLoading}
+              loading={true}
               onClick={async () => {
-                await mutateAsync([user.id, !user.youAreFollowing]);
-                updater(["getUserProfile", username], (u) =>
-                  !u || "error" in u
-                    ? u
-                    : {
-                        ...u,
-                        numFollowers:
-                          u.numFollowers + (user.youAreFollowing ? -1 : 1),
-                        youAreFollowing: !user.youAreFollowing,
-                      }
-                );
               }}
               size="small"
               color={user.youAreFollowing ? "secondary" : "primary"}

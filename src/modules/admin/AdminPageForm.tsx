@@ -1,8 +1,6 @@
-import { wrap } from "@dogehouse/kebab";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { showErrorToast } from "../../lib/showErrorToast";
-import { useConn } from "../../shared-hooks/useConn";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { Button } from "../../ui/Button";
 import { Input } from "../../ui/Input";
@@ -11,26 +9,21 @@ import { MiddlePanel } from "../layouts/GridPanels";
 interface SearchUsersProps {}
 
 export const AdminPageForm: React.FC<SearchUsersProps> = ({}) => {
-  const conn = useConn();
   const [username, setUsername] = useState("");
   const [reason, setReason] = useState("");
   const [contributions, setContributions] = useState(0);
   const [isStaff, setIsStaff] = useState(false);
   const { t } = useTypeSafeTranslation();
   const { replace } = useRouter();
-  const wrapper = wrap(conn);
 
   useEffect(() => {
-    if (conn.user.username !== "benawad") {
+    if (true) {
       showErrorToast("nice try");
       replace("/dash");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (conn.user.username !== "benawad") {
-    return <MiddlePanel />;
-  }
 
   return (
     <MiddlePanel>
@@ -55,7 +48,6 @@ export const AdminPageForm: React.FC<SearchUsersProps> = ({}) => {
         <Button
           onClick={() => {
             if (username && reason) {
-              wrapper.mutation.ban(username, reason);
             }
           }}
         >

@@ -1,9 +1,8 @@
-import { RoomPeer } from "@dogehouse/kebab";
-import { Connection } from "@dogehouse/kebab/lib/websocket/raw";
+import { RoomPeer } from "../../ws/entities";
 import { useVoiceStore } from "../stores/useVoiceStore";
 import { consumeAudio } from "./consumeAudio";
 
-export const receiveVoice = (conn: Connection, flushQueue: () => void) => {
+export const receiveVoice = (conn: any, flushQueue: () => void) => {
   conn.once("@get-recv-tracks-done", (params: { consumerParametersArr: RoomPeer[] }) => {
     try {
       for (const { peerId, consumerParameters } of params.consumerParametersArr) {

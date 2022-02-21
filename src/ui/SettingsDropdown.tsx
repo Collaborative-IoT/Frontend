@@ -1,4 +1,4 @@
-import { User } from "@dogehouse/kebab";
+import { User } from "../modules/ws/entities";
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
 import React, { ReactNode, useState } from "react";

@@ -1,4 +1,4 @@
-import { BaseUser } from "@dogehouse/kebab";
+import { BaseUser } from "../../ws/entities";
 import create from "zustand";
 import { combine } from "zustand/middleware";
 import { useSoundEffectStore } from "../../sound-effects/useSoundEffectStore";

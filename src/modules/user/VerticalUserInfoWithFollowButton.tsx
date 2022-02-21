@@ -1,4 +1,4 @@
-import { UserWithFollowInfo } from "@dogehouse/kebab";
+import { UserWithFollowInfo } from "../ws/entities";
 import React from "react";
 import { SolidFriends, SolidFriendsAdd } from "../../icons";
 import { useConn } from "../../shared-hooks/useConn";

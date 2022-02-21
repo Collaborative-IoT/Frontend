@@ -1,5 +1,5 @@
 import React from "react";
-import { UserWithFollowInfo } from "@dogehouse/kebab";
+import { UserWithFollowInfo } from "../modules/ws/entities";
 import { ProfileHeader } from "./ProfileHeader";
 import { ProfileAbout } from "./ProfileAbout";
 import { ProfileTabs } from "./ProfileTabs";

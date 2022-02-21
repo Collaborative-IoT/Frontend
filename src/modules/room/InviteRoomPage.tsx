@@ -5,8 +5,6 @@ import { SolidFriends } from "../../icons";
 import { isServer } from "../../lib/isServer";
 import { ApiPreloadLink } from "../../shared-components/ApiPreloadLink";
 import { useWrappedConn } from "../../shared-hooks/useConn";
-import { useTypeSafePrefetch } from "../../shared-hooks/useTypeSafePrefetch";
-import { useTypeSafeQuery } from "../../shared-hooks/useTypeSafeQuery";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { PageComponent } from "../../types/PageComponent";
 import { Button } from "../../ui/Button";
@@ -54,61 +52,10 @@ const Page = ({
 }) => {
   const conn = useWrappedConn();
   const { t } = useTypeSafeTranslation();
-  const { isLoading, data } = useTypeSafeQuery(
-    ["getInviteList", cursor],
-    {
-      staleTime: Infinity,
-      enabled: !isServer,
-      refetchOnMount: "always",
-    },
-    [cursor]
-  );
-
-  if (isLoading) {
-    return <CenterLoader />;
-  }
-
-  if (!data) {
-    return null;
-  }
 
   return (
     <>
       <HeaderController embed={{}} title="Invite" />
-      {data.users.map((user) => (
-        <div key={user.id} className="flex items-center mb-6">
-          <div className="flex">
-            <SingleUser size="md" src={user.avatarUrl} />
-          </div>
-          <div className="flex px-4 flex-1">
-            <ApiPreloadLink route="profile" data={{ username: user.username }}>
-              <div className="flex flex-col">
-                <div className="flex text-primary-100">{user.displayName}</div>
-                <div className="flex text-primary-200">@{user.username}</div>
-              </div>
-            </ApiPreloadLink>
-          </div>
-          <div className="block">
-            <InviteButton
-              onClick={() => {
-                conn.mutation.inviteToRoom(user.id);
-              }}
-            />
-          </div>
-        </div>
-      ))}
-      {isLastPage && data.nextCursor ? (
-        <div className={`flex justify-center py-5`}>
-          <Button
-            size="small"
-            onClick={() => {
-              onLoadMore(data.nextCursor!);
-            }}
-          >
-            {t("common.loadMore")}
-          </Button>
-        </div>
-      ) : null}
     </>
   );
 };

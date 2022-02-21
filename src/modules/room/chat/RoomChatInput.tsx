@@ -1,9 +1,8 @@
-import { Room, RoomUser, UserWithFollowInfo } from "@dogehouse/kebab";
+import { Room, RoomUser, UserWithFollowInfo } from "../../ws/entities";
 import React, { useRef, useState, useEffect } from "react";
 import { Smiley } from "../../../icons";
 import { createChatMessage } from "../../../lib/createChatMessage";
 import { showErrorToast } from "../../../lib/showErrorToast";
-import { useConn, useWrappedConn } from "../../../shared-hooks/useConn";
 import { useTypeSafeTranslation } from "../../../shared-hooks/useTypeSafeTranslation";
 import { Input } from "../../../ui/Input";
 import { customEmojis, CustomEmote } from "./EmoteData";
@@ -13,7 +12,6 @@ import { EmojiPicker } from "../../../ui/EmojiPicker";
 import { useEmojiPickerStore } from "../../../global-stores/useEmojiPickerStore";
 import { navigateThroughQueriedUsers } from "./navigateThroughQueriedUsers";
 import { navigateThroughQueriedEmojis } from "./navigateThroughQueriedEmojis";
-import { useTypeSafeQuery } from "../../../shared-hooks/useTypeSafeQuery";
 import { useCurrentRoomIdStore } from "../../../global-stores/useCurrentRoomIdStore";
 import { useScreenType } from "../../../shared-hooks/useScreenType";
 import { useCurrentRoomFromCache } from "../../../shared-hooks/useCurrentRoomFromCache";
@@ -27,10 +25,7 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
   const { message, setMessage } = useRoomChatStore();
   const { setQueriedUsernames } = useRoomChatMentionStore();
   const { setOpen, open, queryMatches } = useEmojiPickerStore();
-  const conn = useConn();
   const dolma = new Dolma(customEmojis);
-  const wConn = useWrappedConn();
-  const me = conn.user;
   const inputRef = useRef<HTMLInputElement>(null);
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState<number>(0);
   const { t } = useTypeSafeTranslation();
@@ -56,14 +51,6 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-
-    if (!me) return;
-
-    if (me.id in useRoomChatStore.getState().bannedUserIdMap) {
-      showErrorToast(t("modules.roomChat.bannedAlert"));
-      return;
-    }
-
     if (
       data &&
       !("error" in data) &&
@@ -79,8 +66,6 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
     console.log(messageData);
 
     messageData.whisperedTo = await Promise.all(messageData.whisperedTo.map(async (uname = "") => {
-      const u = await wConn.query.getUserProfile(uname);
-      if("id" in u!) return u.id;
       return "";
     }));
 
@@ -96,8 +81,6 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
     ) {
       return;
     }
-
-    conn.send("send_room_chat_msg", messageData);
     setQueriedUsernames([]);
 
     setLastMessageTimestamp(Date.now());
