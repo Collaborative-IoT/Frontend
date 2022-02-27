@@ -1,15 +1,16 @@
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
 import React, { useCallback, useContext, useEffect, useState } from "react";
+import { Url } from "url";
 import { LgLogo } from "../../icons";
 import SvgSolidBug from "../../icons/SolidBug";
 import SvgSolidDiscord from "../../icons/SolidDiscord";
 import SvgSolidGitHub from "../../icons/SolidGitHub";
 import SvgSolidTwitter from "../../icons/SolidTwitter";
+import redirect from 'nextjs-redirect'
 import {
   apiBaseUrl,
   isStaging,
-  loginNextPathKey,
   __prod__,
 } from "../../lib/constants";
 import { isServer } from "../../lib/isServer";
@@ -38,21 +39,15 @@ const LoginButton: React.FC<LoginButtonProps> = ({
   ...props
 }) => {
   const { query } = useRouter();
-  const clickHandler = useCallback(() => {
-    if (typeof query.next === "string" && query.next) {
-      try {
-        localStorage.setItem(loginNextPathKey, query.next);
-      } catch {}
-    }
-
-    window.location.href = oauthUrl as string;
-  }, [query, oauthUrl]);
+  const {push} = useRouter();
 
   return (
     <Button
       className="justify-center text-base py-3 mt-2"
       color={dev ? "primary" : "secondary"}
-      onClick={oauthUrl ? clickHandler : onClick}
+      onClick={()=>{
+        console.log("pushing to " , oauthUrl)
+        push("/redirect-discord")}}
       {...props}
     >
       <div
@@ -94,7 +89,7 @@ export const LoginPage: React.FC = () => {
       : "";
 
   if (!tokensChecked) return null;
-
+  
   return (
     <>
       <div className="flex">
@@ -131,20 +126,20 @@ export const LoginPage: React.FC = () => {
           </div>
           <div className="flex flex-col gap-4">
             <LoginButton
-              oauthUrl={`${apiBaseUrl}/auth/github/web${queryParams}`}
+              oauthUrl={`${apiBaseUrl}/auth/discord`}
             >
               <SvgSolidGitHub width={20} height={20} />
               Log in with GitHub
             </LoginButton>
             <LoginButton
-              oauthUrl={`${apiBaseUrl}/auth/twitter/web${queryParams}`}
+              oauthUrl={`${apiBaseUrl}/auth/discord`}
             >
               <SvgSolidTwitter width={20} height={20} />
               Log in with Twitter
             </LoginButton>
             {!isElectron() ? (
               <LoginButton
-                oauthUrl={`${apiBaseUrl}/auth/discord/web${queryParams}`}
+                oauthUrl={`${apiBaseUrl}/auth/discord`}
               >
                 <SvgSolidDiscord width={20} height={20} />
                 Log in with Discord
