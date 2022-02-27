@@ -1,4 +1,4 @@
-import { CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse } from "@collaborative/arthur";
+import { CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse } from "@collaborative/arthur";
 import { useState } from "@storybook/addons";
 import React from "react";
 import { apiBaseUrl } from "../lib/constants";
@@ -10,8 +10,10 @@ export const MainContext = React.createContext<{
     dash_live_rooms:Nullable<CommunicationRoom[]>;
     client: Nullable<Client>;
     user:Nullable<BaseUser>;
-    all_users_in_room:Nullable<User[]>
+    all_users_in_room:Nullable<User[]>;
+    my_followers:Nullable<Array<number>>;
     create_client:(set:()=>{}) => void;
+    set_my_followers:StateChange;
     set_dash_live_rooms:StateChange
   }>({
       dash_live_rooms:[],
@@ -20,6 +22,8 @@ export const MainContext = React.createContext<{
       user:null,
       all_users_in_room:null,
       create_client: ()=>{},
+      my_followers:null,
+      set_my_followers:null
   });  
 
   const initClient = (
@@ -38,6 +42,7 @@ export const MainContext = React.createContext<{
             oauth_type:type_of_auth
         };
         const {push} = useRouter();
+        var my_user_id:Nullable<number> = null;
 
         // setup the subscriber
         let subscriber =  new ClientSubscriber();
@@ -47,9 +52,12 @@ export const MainContext = React.createContext<{
             client.send("get_top_rooms",{});
         }
         subscriber.your_data = (user_data:BaseUser)=>{
+            
             set_user?((_prev:any)=>{
                 return user_data;
             }):null;
+            client.send("get_followers", user_data.user_id);
+            my_user_id = user_data.user_id;
         }
         subscriber.all_users_in_room = (room_data:AllUsersInRoomResponse) =>{
             set_all_users_in_room?((_prev:any)=>{
@@ -59,6 +67,11 @@ export const MainContext = React.createContext<{
         subscriber.bad_auth =()=>{
             localStorage.setItem("ciot_auth_status","bad");
             push("/");
+        }
+        subscriber.followers = (data:GetFollowListResponse)=>{
+            if (my_user_id != null && data.for_user == my_user_id){
+                
+            }
         }
         // begin routing incoming data + auth
         client.begin();
@@ -78,6 +91,7 @@ export const MainContextProvider: React.FC<{}> = ({
     const [client, set_client] = useState(null);
     const [user, set_user] = useState(null);
     const [all_users_in_room, set_all_users_in_room] = useState(null);
+    const [my_followers, set_my_followers] = useState(null);
     return(    
       <MainContext.Provider value={
           {
@@ -85,6 +99,8 @@ export const MainContextProvider: React.FC<{}> = ({
             client,
             user,
             all_users_in_room,
+            my_followers,
+            set_my_followers,
             set_dash_live_rooms:set_dash_live_rooms,
             create_client:()=>{initClient(set_client,set_user,set_all_users_in_room);}
           }

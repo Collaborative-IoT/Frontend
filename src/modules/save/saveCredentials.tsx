@@ -10,10 +10,10 @@ export const SaveCredentials: React.FC<Nothing> = () => {
   typeof window !== 'undefined' ?   localStorage.setItem("a-ciot", access as string): issue = true;
 
   if (!issue){
-    localStorage.setItem("ciot_auth_status", "good");
+    typeof window !== 'undefined' ? localStorage.setItem("ciot_auth_status", "good"): null;
   }
   else{
-    localStorage.setItem("ciot_auth_status", "bad");
+    typeof window !== 'undefined' ? localStorage.setItem("ciot_auth_status", "bad"): null;
   }
 
   return(<div></div>)
