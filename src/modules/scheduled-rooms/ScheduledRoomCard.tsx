@@ -45,7 +45,7 @@ export const ScheduledRoomCard: React.FC<ScheduledRoomCardProps> = ({
   }, [dt]);
   const { t } = useTypeSafeTranslation();
   const isCreator = true;
-  const url = window.location.origin + `/scheduled-room/${id}`;
+  const url = "";
   return (
     <div className="flex">
       <div

@@ -1,18 +1,18 @@
 import { CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse } from "@collaborative/arthur";
-import { useState } from "@storybook/addons";
-import React from "react";
-import { apiBaseUrl } from "../lib/constants";
+import React, { useState } from "react";
+import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
 
 type Nullable<T> = T | null;
 type StateChange = Nullable<(update: ((prevState: null) => null) | null) => void>;
+
 export const MainContext = React.createContext<{
     dash_live_rooms:Nullable<CommunicationRoom[]>;
     client: Nullable<Client>;
     user:Nullable<BaseUser>;
     all_users_in_room:Nullable<User[]>;
     my_followers:Nullable<Array<number>>;
-    create_client:(set:()=>{}) => void;
+    create_client:() => void;
     set_my_followers:StateChange;
     set_dash_live_rooms:StateChange
   }>({
@@ -29,24 +29,26 @@ export const MainContext = React.createContext<{
   const initClient = (
       set_client:StateChange, 
       set_user:StateChange,
-      set_all_users_in_room:StateChange)=>{
+      set_all_users_in_room:StateChange,
+      set_my_followers:StateChange)=>{
     
     if (typeof window !== 'undefined'){
         // connect to the server and authenticate
-        const type_of_auth = localStorage.getItem("t_ciot") as string;
-        const auth_access = localStorage.getItem("a_ciot") as string;
-        const auth_refresh = localStorage.getItem("r_ciot") as string;
+        try{
+        const type_of_auth = localStorage.getItem("t-ciot") as string;
+        const auth_access = localStorage.getItem("a-ciot") as string;
+        const auth_refresh = localStorage.getItem("r-ciot") as string;
         let auth_credentials:AuthCredentials = {
             access:auth_access,
             refresh:auth_refresh,
             oauth_type:type_of_auth
         };
-        const {push} = useRouter();
         var my_user_id:Nullable<number> = null;
 
         // setup the subscriber
         let subscriber =  new ClientSubscriber();
-        let client = new Client(apiBaseUrl,subscriber,auth_credentials);
+        console.log("the url" ,wsApiBaseUrl);
+        let client = new Client(wsApiBaseUrl,subscriber,auth_credentials);
         subscriber.good_auth = (_prev:any)=>{
             client.send("my_data",{});
             client.send("get_top_rooms",{});
@@ -56,7 +58,7 @@ export const MainContext = React.createContext<{
             set_user?((_prev:any)=>{
                 return user_data;
             }):null;
-            client.send("get_followers", user_data.user_id);
+            client.send("get_followers", {user_id:user_data.user_id});
             my_user_id = user_data.user_id;
         }
         subscriber.all_users_in_room = (room_data:AllUsersInRoomResponse) =>{
@@ -66,23 +68,28 @@ export const MainContext = React.createContext<{
         }
         subscriber.bad_auth =()=>{
             localStorage.setItem("ciot_auth_status","bad");
-            push("/");
         }
         subscriber.followers = (data:GetFollowListResponse)=>{
             if (my_user_id != null && data.for_user == my_user_id){
-                
+                set_my_followers?((_prev:any)=>{
+                    return data.user_ids;
+                }):null;
             }
         }
         // begin routing incoming data + auth
         client.begin();
 
-        set_client?((prev:any)=>{
+        set_client?((_prev:any)=>{
             return client;
         }):null;
+    }
+    catch(e){
+        console.log("error");
+        console.log(e);
+    }
         
     }
 }
-
 
 export const MainContextProvider: React.FC<{}> = ({
     children,
@@ -102,7 +109,7 @@ export const MainContextProvider: React.FC<{}> = ({
             my_followers,
             set_my_followers,
             set_dash_live_rooms:set_dash_live_rooms,
-            create_client:()=>{initClient(set_client,set_user,set_all_users_in_room);}
+            create_client:()=>{initClient(set_client,set_user,set_all_users_in_room,set_my_followers);}
           }
       }>
           {children}

@@ -17,6 +17,8 @@ import { useRoomChatStore } from "../room/chat/useRoomChatStore";
 import { EditScheduleRoomModalController } from "../scheduled-rooms/EditScheduleRoomModalController";
 import { ScheduledRoomCard } from "../scheduled-rooms/ScheduledRoomCard";
 import { CreateRoomModal } from "./CreateRoomModal";
+import {MainContext} from "../../context/api_based";
+
 
 interface FeedControllerProps {}
 
@@ -33,25 +35,32 @@ const Page = ({
   const { currentRoomId } = useCurrentRoomIdStore();
   const { push } = useRouter();
   const { t } = useTypeSafeTranslation();
-  const shouldAlert = useDownloadAlertStore().shouldAlert;
-  const data = {
-    rooms:[
-      {id:"222",
-       name:"To the moon",
-       peoplePreviewList: [{
-        id: "222",
-        displayName: "tester",
-        numFollowers: 2,
-        avatarUrl: "",
-      }],
-      numPeopleInside:1
-      }
-
-    ]
-
-
+  const shouldAlert = useDownloadAlertStore().shouldAlert
+  const {create_client, user, dash_live_rooms} = useContext(MainContext);
+  const hasTokens = ()=>{
+    if (
+      typeof window !== 'undefined' && 
+      localStorage.getItem("a-ciot") != null && 
+      localStorage.getItem("r-ciot") != null &&
+      localStorage.getItem("t-ciot") != null){
+      return true;
+    }
+    return false;
   }
+
+  useEffect(()=>{
+    if (hasTokens()){
+      console.log("hastokens");
+      create_client();
+    }
+    else{
+      push("/");
+    }
+  });
+  const rooms = dash_live_rooms? dash_live_rooms:[];
   const loading = false;
+  console.log(dash_live_rooms);
+  console.log(user);
   //const { isLoading, data } = useTypeSafeQuery(
    // ["getTopPublicRooms", cursor],
     //{
@@ -86,7 +95,7 @@ const Page = ({
     return <CenterLoader />;
   }
 
-  if (!data) {
+  if (!rooms) {
     return null;
   }
 
@@ -100,34 +109,32 @@ const Page = ({
 
   return (
     <>
-      {data.rooms.map((room) => (
+      {rooms.map((room) => (
         <RoomCard
           onClick={() => {
-            if (room.id !== currentRoomId) {
-              useRoomChatStore.getState().reset();
-            }
+            //if (room.room_id !== currentRoomId) {
+              //useRoomChatStore.getState().reset();
+           // }
 
-            push(`/room/[id]`, `/room/${room.id}`);
+            push(`/room/[id]`, `/room/${room.room_id}`);
           }}
-          key={room.id}
-          title={room.name}
+          key={room.room_id}
+          title={room.details.name}
           subtitle={
-            "peoplePreviewList" in room
-              ? room.peoplePreviewList
+            Array.from(room.people_preview_data.values())
                   .slice(0, 3)
-                  .map((x) => x.displayName)
+                  .map((x) => x.display_name)
                   .join(", ")
-              : ""
+             
           }
           avatars={
-            "peoplePreviewList" in room
-              ? room.peoplePreviewList
-                  .map((x) => x.avatarUrl!)
+             Array.from(room.people_preview_data.values())
+                  .map((x) => x.avatar_url!)
                   .slice(0, 3)
                   .filter((x) => x !== null)
-              : []
+             
           }
-          listeners={"numPeopleInside" in room ? room.numPeopleInside : 0}
+          listeners={ room.num_of_people_in_room }
           tags={[]}
         />
       ))}

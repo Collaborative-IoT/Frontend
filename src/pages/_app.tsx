@@ -22,6 +22,7 @@ import { ConfirmModal } from "../shared-components/ConfirmModal";
 import isElectron from "is-electron";
 import Head from "next/head";
 import { useHostStore } from "../global-stores/useHostStore";
+import { MainContextProvider } from "../context/api_based";
 
 if (!isServer) {
   init_i18n();
@@ -68,7 +69,7 @@ function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-      <QueryClientProvider client={queryClient}>
+    <MainContextProvider>
           <Head>
             <link rel="icon" href="/favicon.ico" type="image/x-icon" />
             <link rel="manifest" href="/manifest.json" />
@@ -79,13 +80,17 @@ function App({ Component, pageProps }: AppProps) {
             <link rel="apple-touch-icon" href="/img/doge.png"></link>
             <link rel="apple-touch-startup-image" href="img/doge512.png" />
           </Head>
+          
           <Component {...pageProps} />
+          
           <SoundEffectPlayer />
           <ErrorToastController />
           <WebRtcApp />
           <InvitedToJoinRoomModal />
           <ConfirmModal />
-      </QueryClientProvider>
+      </MainContextProvider>
+         
+      
   );
 }
 

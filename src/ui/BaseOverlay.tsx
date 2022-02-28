@@ -1,5 +1,4 @@
 import React, { MouseEventHandler, ReactNode } from "react";
-import ProfileHeaderWrapperStory from "../stories/ProfileHeaderWrapper.story";
 
 export interface BaseOverlayProps
   extends React.ComponentPropsWithoutRef<"div"> {
