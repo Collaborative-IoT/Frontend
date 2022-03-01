@@ -69,7 +69,7 @@ function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <MainContextProvider>
+    <MainContextProvider should_connect ={!!(Component as PageComponent<unknown>).ws}>
           <Head>
             <link rel="icon" href="/favicon.ico" type="image/x-icon" />
             <link rel="manifest" href="/manifest.json" />

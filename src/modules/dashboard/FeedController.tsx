@@ -1,4 +1,4 @@
-import { Room, ScheduledRoom, User, UserPreview } from "../ws/entities";
+import { Room, ScheduledRoom, User,UserPreview } from "../ws/entities";
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
@@ -18,6 +18,7 @@ import { EditScheduleRoomModalController } from "../scheduled-rooms/EditSchedule
 import { ScheduledRoomCard } from "../scheduled-rooms/ScheduledRoomCard";
 import { CreateRoomModal } from "./CreateRoomModal";
 import {MainContext} from "../../context/api_based";
+import { CommunicationRoom } from "@collaborative/arthur";
 
 
 interface FeedControllerProps {}
@@ -35,32 +36,9 @@ const Page = ({
   const { currentRoomId } = useCurrentRoomIdStore();
   const { push } = useRouter();
   const { t } = useTypeSafeTranslation();
-  const shouldAlert = useDownloadAlertStore().shouldAlert
-  const {create_client, user, dash_live_rooms} = useContext(MainContext);
-  const hasTokens = ()=>{
-    if (
-      typeof window !== 'undefined' && 
-      localStorage.getItem("a-ciot") != null && 
-      localStorage.getItem("r-ciot") != null &&
-      localStorage.getItem("t-ciot") != null){
-      return true;
-    }
-    return false;
-  }
+  const {dash_live_rooms} = useContext(MainContext);
 
-  useEffect(()=>{
-    if (hasTokens()){
-      console.log("hastokens");
-      create_client();
-    }
-    else{
-      push("/");
-    }
-  });
-  const rooms = dash_live_rooms? dash_live_rooms:[];
-  const loading = false;
-  console.log(dash_live_rooms);
-  console.log(user);
+  const rooms:CommunicationRoom[] = dash_live_rooms? dash_live_rooms:[];
   //const { isLoading, data } = useTypeSafeQuery(
    // ["getTopPublicRooms", cursor],
     //{
@@ -91,13 +69,11 @@ const Page = ({
   //   }
   // }, []);
 
-  if (loading) {
-    return <CenterLoader />;
-  }
 
   if (!rooms) {
     return null;
   }
+  
 
   // if (isOnlyPage && data.rooms.length === 0) {
   //   return (
@@ -109,7 +85,7 @@ const Page = ({
 
   return (
     <>
-      {rooms.map((room) => (
+      {rooms.map((room:CommunicationRoom) => (
         <RoomCard
           onClick={() => {
             //if (room.room_id !== currentRoomId) {
@@ -121,15 +97,15 @@ const Page = ({
           key={room.room_id}
           title={room.details.name}
           subtitle={
-            Array.from(room.people_preview_data.values())
+            Array.from(Object.values(room.people_preview_data))
                   .slice(0, 3)
-                  .map((x) => x.display_name)
+                  .map((x:any) => x.display_name)
                   .join(", ")
              
           }
           avatars={
-             Array.from(room.people_preview_data.values())
-                  .map((x) => x.avatar_url!)
+             Array.from(Object.values(room.people_preview_data))
+                  .map((x:any) => x.avatar_url!)
                   .slice(0, 3)
                   .filter((x) => x !== null)
              
@@ -260,7 +236,7 @@ const  data:ScheduledRoom  = {
             </EditScheduleRoomModalController>
           }
           {cursors.map((cursor, i) => (
-            <Page
+            <Page 
               key={cursor}
               cursor={cursor}
               isOnlyPage={cursors.length === 1}

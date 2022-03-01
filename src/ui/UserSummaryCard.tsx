@@ -17,7 +17,7 @@ export type badge = {
 
 export interface UserSummaryCardProps {
   onClick: () => void;
-  id: string;
+  id: number;
   displayName: string;
   username: string;
   numFollowers: number;
