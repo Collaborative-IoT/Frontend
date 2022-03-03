@@ -101,12 +101,7 @@ export const SingleUser: React.FC<AvatarProps> = ({
           deafened ? "opacity-60" : ""
         }`}
         onError={() => setError(true)}
-        src={
-          isError
-            ? `https://ui-avatars.com/api/${
-                username ? `&name=${username}` : "&name"
-              }&rounded=true&background=B23439&bold=true&color=FFFFFF`
-            : src
+        src={src
         }
       />
       {hover && (

@@ -16,18 +16,6 @@ export const DefaultDesktopLayout: React.FC<DefaultDesktopLayoutProps> = ({
   children,
   mobileHeader = undefined,
 }) => {
-  const {create_client,client} = useContext(MainContext);
-  const hasTokens = ()=>{
-    if (
-      typeof window !== 'undefined' && 
-      localStorage.getItem("a-ciot") != null && 
-      localStorage.getItem("r-ciot") != null &&
-      localStorage.getItem("t-ciot") != null){
-      return true;
-    }
-    return false;
-  }
-
   return (
 
       <MainLayout

@@ -6,7 +6,7 @@ export const useConn = () => {
     username:"test",
     botOwnerId:1,
     staff:true,
-    avatarUrl:"https://avatars.githubusercontent.com/u/35206353?v=4",
+    avatarUrl:"",
     numFollowers:10,
     numFollowing:100,
     bio:"godlike",

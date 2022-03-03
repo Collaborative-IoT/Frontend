@@ -20,7 +20,6 @@ export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}
   const [upcomingCount, setUpcomingCount] = useState(3);
   const { currentRoomId } = useCurrentRoomIdStore();
   const {user,client} = useContext(MainContext);
-  console.log("user inside profile", user, client);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [
     showCreateScheduleRoomModal,

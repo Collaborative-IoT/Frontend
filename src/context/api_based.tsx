@@ -1,10 +1,8 @@
-import { CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse } from "@collaborative/arthur";
+import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse } from "@collaborative/arthur";
 import React, { useEffect, useMemo, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
-import { useMediaQuery } from "react-responsive";
-import { CpuInfo } from "os";
-import { da } from "date-fns/locale";
+import { Url } from "url";
 
 type Nullable<T> = T | null;
 type StateChange = Nullable<(update: ((prevState: null) => null) | null) => void>;
@@ -28,6 +26,7 @@ export const MainContext = React.createContext<{
   });  
 
   const initClient = (
+      set_error:any,
       set_user:React.Dispatch<React.SetStateAction<BaseUser | null>>,
       set_dash_live_rooms:React.Dispatch<React.SetStateAction<CommunicationRoom[] | null>>,
       set_all_users_in_room:StateChange,
@@ -49,7 +48,11 @@ export const MainContext = React.createContext<{
         // setup the subscriber
         let subscriber =  new ClientSubscriber();
         let client = new Client(wsApiBaseUrl,subscriber,auth_credentials);
-        subscriber.good_auth = (_prev:any)=>{
+        subscriber.good_auth = (data:AuthResponse)=>{
+            if(data.new_access){
+                localStorage.setItem("a-ciot",data.new_access);
+                localStorage.setItem("r-ciot", data.new_refresh);
+            }
             client.send("my_data",{});
             client.send("create_room", {name:"test",desc:"test2",public:true});
             client.send("create_room", {name:"test",desc:"test2",public:true});
@@ -64,7 +67,10 @@ export const MainContext = React.createContext<{
             }):null;
         }
         subscriber.bad_auth =()=>{
+
             localStorage.setItem("ciot_auth_status","bad");
+            set_error(true)
+            
         }
         subscriber.followers = (data:GetFollowListResponse)=>{
             console.log("the follower data from ws:",data);
@@ -86,7 +92,7 @@ export const MainContext = React.createContext<{
     catch(e){
         console.log("error");
         console.log(e);
-    }
+        }
         
     }
 }
@@ -100,19 +106,27 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [user, set_user] = useState<BaseUser|null>(null);
     const [all_users_in_room, set_all_users_in_room] = useState(null);
     const [my_followers, set_my_followers] = useState(null);
+    const [error, set_error] = useState(false);
+    let {push} = useRouter();
     useEffect(()=>{
         if (should_connect){
-            let temp_client:Client = initClient(set_user,set_dash_live_rooms,set_all_users_in_room,set_my_followers)!!;
+            
+            let temp_client:Client = initClient(set_error,set_user,set_dash_live_rooms,set_all_users_in_room,set_my_followers)!!;
             set_client((_prev:any)=>{              
                 return temp_client;
             })
         }
     },[])
+    useEffect(()=>{
+        
+        if (error == true){
+            push("/");
+        }
+    },[error])
     return(    
       <MainContext.Provider 
         value={useMemo(
             () => ({
-                
                     dash_live_rooms:dash_live_rooms,
                     client,
                     user,
