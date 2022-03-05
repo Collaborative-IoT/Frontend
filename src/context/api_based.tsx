@@ -53,7 +53,9 @@ export const MainContext = React.createContext<{
             client.send("my_data",{});
             client.send("create_room", {name:"test",desc:"test2",public:true});
             client.send("create_room", {name:"test",desc:"test2",public:true});
-            client.send("get_top_rooms",{});
+            setInterval(()=>{
+                client.send("get_top_rooms",{});
+            },5000)
         }
         subscriber.your_data = (user_data:BaseUser)=>{
             set_user(user_data);
@@ -74,13 +76,9 @@ export const MainContext = React.createContext<{
             set_my_following(data.user_ids);
             
         }
-        subscriber.user_previews = ()=>{
-            
-        }
         subscriber.top_rooms = (data:CommunicationRoom[])=>{
-            if (data.length > 0){
                 set_dash_live_rooms!!(data);
-            }
+            
         }
         // begin routing incoming data + auth
         client.begin();
@@ -90,7 +88,6 @@ export const MainContext = React.createContext<{
         console.log("error");
         console.log(e);
         }
-        
     }
 }
 
@@ -122,17 +119,15 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     },[error])
     return(    
       <MainContext.Provider 
-        value={useMemo(
-            () => ({
-                    dash_live_rooms:dash_live_rooms,
-                    client,
-                    user,
-                    all_users_in_room,
-                    im_following,
-                    create_client:()=>{},
-            }),
-            [client,user,all_users_in_room,im_following,dash_live_rooms]
-          )
+        value={
+         {
+            dash_live_rooms:dash_live_rooms,
+            client,
+            user,
+            all_users_in_room,
+            im_following,
+            create_client:()=>{},
+        }
       }>
           {children}
       </MainContext.Provider>

@@ -21,7 +21,10 @@ const Page: React.FC<{
 }> = ({ cursor, isLastPage, isOnlyPage, onLoadMore }) => {
   const { t } = useTypeSafeTranslation();
   const {im_following} = useContext(MainContext);
-
+  if (im_following && im_following.length == 0 ){
+    return( <h5 className={`text-primary-100`}>None of your people are online</h5>);
+  }
+    
   return (
     <>
       {
@@ -29,7 +32,7 @@ const Page: React.FC<{
             return <FollowerOnline {...follow_info} />
         }):null
         
-}
+      }
       {isLastPage  ? (
         <FollowersOnlineShowMore
           onClick={() => {}}
