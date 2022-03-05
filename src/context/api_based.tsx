@@ -1,4 +1,4 @@
-import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo } from "@collaborative/arthur";
+import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions } from "@collaborative/arthur";
 import React, { useEffect, useMemo, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
@@ -13,7 +13,8 @@ export const MainContext = React.createContext<{
     user:Nullable<BaseUser>;
     all_users_in_room:Nullable<User[]>;
     im_following:Nullable<Array<FollowInfo>>;
-    main_interval_handle:Nullable<NodeJS.Timeout>,
+    main_interval_handle:Nullable<NodeJS.Timeout>;
+    current_room_permissions:Nullable<Map<number,RoomPermissions>>
     create_client:() => void;
   }>({
       dash_live_rooms:[],
@@ -22,15 +23,17 @@ export const MainContext = React.createContext<{
       all_users_in_room:null,
       create_client: ()=>{},
       im_following:null,
-      main_interval_handle: null
+      main_interval_handle: null,
+      current_room_permissions:null
   });  
 
   const initClient = (
+      set_all_room_permissions:React.Dispatch<React.SetStateAction<Map<number,RoomPermissions>|null | null>>,
       set_interval_handle:React.Dispatch<React.SetStateAction<NodeJS.Timeout | null>>,
       set_error:any,
       set_user:React.Dispatch<React.SetStateAction<BaseUser | null>>,
       set_dash_live_rooms:React.Dispatch<React.SetStateAction<CommunicationRoom[] | null>>,
-      set_all_users_in_room:StateChange,
+      set_all_users_in_room:React.Dispatch<React.SetStateAction<User[] | null>>,
       set_my_following:React.Dispatch<React.SetStateAction<Array<FollowInfo> | null>>,)=>{
     
     if (typeof window !== 'undefined'){
@@ -61,16 +64,13 @@ export const MainContext = React.createContext<{
             set_user(user_data);
             let handle = setInterval(()=>{
                 client.send("create_room", {name:"test",desc:"test2",public:true});
-                client.send("create_room", {name:"test",desc:"test2",public:true});
                 client.send("get_top_rooms",{});
                 client.send("get_following", {user_id:user_data.user_id});
             },5000);
             set_interval_handle(handle);
         }
         subscriber.all_users_in_room = (room_data:AllUsersInRoomResponse) =>{
-            set_all_users_in_room?((_prev:any)=>{
-                return room_data;
-            }):null;
+            set_all_users_in_room(room_data.users);
         }
         subscriber.bad_auth =()=>{
             localStorage.setItem("ciot_auth_status","bad");
@@ -104,9 +104,10 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [dash_live_rooms, set_dash_live_rooms] = useState<CommunicationRoom[]|null>(null);
     const [client, set_client] = useState<Client|null>(null);
     const [user, set_user] = useState<BaseUser|null>(null);
-    const [all_users_in_room, set_all_users_in_room] = useState(null);
+    const [all_users_in_room, set_all_users_in_room] = useState<User[]|null>(null);
     const [im_following, set_my_following] = useState<Array<FollowInfo>|null>(null);
     const [error, set_error] = useState(false);
+    const [current_room_permissions, set_current_permissions] = useState<Map<number,RoomPermissions>|null>(null);
     // for the main interval triggered in the "my_data" callback of the subscriber above.
     // we need to clear it when needed.
     const [interval_handle, set_interval_handle] = useState<NodeJS.Timeout |null>(null);
@@ -114,13 +115,13 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     useEffect(()=>{
         if (should_connect){
             let temp_client:Client = initClient(
+                set_current_permissions,
                 set_interval_handle,
                 set_error,
                 set_user,
                 set_dash_live_rooms,
                 set_all_users_in_room,
                 set_my_following)!!;
-
             set_client((_prev:any)=>{              
                 return temp_client;
             })
@@ -143,6 +144,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
             im_following,
             create_client:()=>{},
             main_interval_handle:interval_handle,
+            current_room_permissions
         }
       }>
           {children}
