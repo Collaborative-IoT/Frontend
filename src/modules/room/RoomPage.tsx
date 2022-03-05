@@ -33,7 +33,6 @@ export const RoomPage: PageComponent<RoomPageProps> = ({ room }) => {
 
   return (
     <RoomOpenGraphPreview room={room}>
-      <WaitForWsAndAuth>
         <UserPreviewModalProvider>
           <MainLayout
             floatingRoomInfo={null}
@@ -90,7 +89,6 @@ export const RoomPage: PageComponent<RoomPageProps> = ({ room }) => {
             />
           </MainLayout>
         </UserPreviewModalProvider>
-      </WaitForWsAndAuth>
     </RoomOpenGraphPreview>
   );
 };

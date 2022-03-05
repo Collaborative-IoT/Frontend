@@ -54,13 +54,14 @@ export const MainContext = React.createContext<{
                 localStorage.setItem("r-ciot", data.new_refresh);
             }
             client.send("my_data",{});
-            client.send("create_room", {name:"test",desc:"test2",public:true});
-            client.send("create_room", {name:"test",desc:"test2",public:true});
+     
 
         }
         subscriber.your_data = (user_data:BaseUser)=>{
             set_user(user_data);
             let handle = setInterval(()=>{
+                client.send("create_room", {name:"test",desc:"test2",public:true});
+                client.send("create_room", {name:"test",desc:"test2",public:true});
                 client.send("get_top_rooms",{});
                 client.send("get_following", {user_id:user_data.user_id});
             },5000);

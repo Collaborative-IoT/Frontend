@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SolidChatBubble,
   SolidDeafened,
@@ -38,6 +38,7 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
 }) => {
   const { t } = useTypeSafeTranslation();
   const screenType = useScreenType();
+  const [board_status, set_board_status] = useState(false);
   return (
     <div className="flex flex-wrap justify-center bg-primary-700 rounded-b-8 py-3 px-4 w-full sm:justify-between">
       <div className="flex my-1 justify-between w-full sm:my-0 sm:w-auto">
@@ -117,10 +118,20 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
           </BoxedIcon>
         ) : null}
       </div>
-
+      <Button
+      transition
+      className="my-1 mx-1 w-full text-base sm:my-0 sm:mx-0 sm:w-15"
+      color= {board_status? "secondary-800":"accent-secondary" as any}
+      title={t("components.bottomVoiceControl.settings")}
+      onClick={()=>{if (board_status){set_board_status(false)}else{set_board_status(true)}}}
+      data-testid="room-settings"
+      >
+       Board 
+      </Button>
+       
       <Button
         transition
-        className={`my-1 mx-1 w-full text-base sm:my-0 sm:mx-0 sm:w-15`}
+        className={`my-1 mx-1 w-full text-base sm:my-0 sm:mx-0 sm:w-1`}
         color="secondary-800"
         onClick={() => {
           onLeaveRoom();

@@ -35,7 +35,25 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
 
   return (
     <>
-    {
+    
+
+{showEditModal || showMobileEditModal ? (
+  <CreateRoomModal
+    onRequestClose={() => {
+      setShowEditModal(false);
+      setShowMobileEditModal(false);
+    }}
+    edit
+    data={{
+      name: "test",
+      description: "",
+      privacy: "public",
+    }}
+  />
+) : null}
+
+
+<HeaderController embed={{}} title="test" />
     <MiddlePanel
       stickyChildren={
         screenType !== "fullscreen" ? (
@@ -64,7 +82,7 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
         <RoomPanelIconBarController users={[]} />
       </div>
     </MiddlePanel>
-}
+
 </>
   );
 };
