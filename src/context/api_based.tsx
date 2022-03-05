@@ -1,4 +1,4 @@
-import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse } from "@collaborative/arthur";
+import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo } from "@collaborative/arthur";
 import React, { useEffect, useMemo, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
@@ -12,17 +12,15 @@ export const MainContext = React.createContext<{
     client: Nullable<Client>;
     user:Nullable<BaseUser>;
     all_users_in_room:Nullable<User[]>;
-    my_followers:Nullable<Array<number>>;
+    im_following:Nullable<Array<FollowInfo>>;
     create_client:() => void;
-    set_my_followers:StateChange;
   }>({
       dash_live_rooms:[],
       client: null, 
       user:null,
       all_users_in_room:null,
       create_client: ()=>{},
-      my_followers:null,
-      set_my_followers:null
+      im_following:null,
   });  
 
   const initClient = (
@@ -30,7 +28,7 @@ export const MainContext = React.createContext<{
       set_user:React.Dispatch<React.SetStateAction<BaseUser | null>>,
       set_dash_live_rooms:React.Dispatch<React.SetStateAction<CommunicationRoom[] | null>>,
       set_all_users_in_room:StateChange,
-      set_my_followers:StateChange)=>{
+      set_my_following:React.Dispatch<React.SetStateAction<Array<FollowInfo> | null>>,)=>{
     
     if (typeof window !== 'undefined'){
         // connect to the server and authenticate
@@ -54,12 +52,11 @@ export const MainContext = React.createContext<{
                 localStorage.setItem("r-ciot", data.new_refresh);
             }
             client.send("my_data",{});
-            client.send("create_room", {name:"test",desc:"test2",public:true});
-            client.send("create_room", {name:"test",desc:"test2",public:true});
             client.send("get_top_rooms",{});
         }
         subscriber.your_data = (user_data:BaseUser)=>{
             set_user(user_data);
+            client.send("get_following", {user_id:user_data.user_id});
         }
         subscriber.all_users_in_room = (room_data:AllUsersInRoomResponse) =>{
             set_all_users_in_room?((_prev:any)=>{
@@ -67,18 +64,17 @@ export const MainContext = React.createContext<{
             }):null;
         }
         subscriber.bad_auth =()=>{
-
             localStorage.setItem("ciot_auth_status","bad");
             set_error(true)
             
         }
         subscriber.followers = (data:GetFollowListResponse)=>{
-            console.log("the follower data from ws:",data);
-            if (my_user_id != null && data.for_user == my_user_id){
-                set_my_followers?((_prev:any)=>{
-                    return data.user_ids;
-                }):null;
-            }
+            console.log(data.user_ids);
+            set_my_following(data.user_ids);
+            
+        }
+        subscriber.user_previews = ()=>{
+            
         }
         subscriber.top_rooms = (data:CommunicationRoom[])=>{
             if (data.length > 0){
@@ -105,18 +101,18 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [client, set_client] = useState<Client|null>(null);
     const [user, set_user] = useState<BaseUser|null>(null);
     const [all_users_in_room, set_all_users_in_room] = useState(null);
-    const [my_followers, set_my_followers] = useState(null);
+    const [im_following, set_my_following] = useState<Array<FollowInfo>|null>(null);
     const [error, set_error] = useState(false);
     let {push} = useRouter();
     useEffect(()=>{
         if (should_connect){
             
-            let temp_client:Client = initClient(set_error,set_user,set_dash_live_rooms,set_all_users_in_room,set_my_followers)!!;
+            let temp_client:Client = initClient(set_error,set_user,set_dash_live_rooms,set_all_users_in_room,set_my_following)!!;
             set_client((_prev:any)=>{              
                 return temp_client;
             })
         }
-    },[])
+    },[should_connect])
     useEffect(()=>{
         
         if (error == true){
@@ -131,11 +127,10 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
                     client,
                     user,
                     all_users_in_room,
-                    my_followers,
-                    set_my_followers,
+                    im_following,
                     create_client:()=>{},
             }),
-            [client,user,all_users_in_room,my_followers,dash_live_rooms]
+            [client,user,all_users_in_room,im_following,dash_live_rooms]
           )
       }>
           {children}

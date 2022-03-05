@@ -1,9 +1,9 @@
 import { UserWithFollowInfo } from "../modules/ws/entities";
 import Link from "next/link";
 import React, { MouseEventHandler } from "react";
-import { ApiPreloadLink } from "../shared-components/ApiPreloadLink";
 import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";
 import { SingleUser } from "./UserAvatar/SingleUser";
+import { FollowInfo } from "@collaborative/arthur";
 
 export interface FriendOnlineType {
   username: string;
@@ -21,11 +21,11 @@ export interface FriendsOnlineProps {
   showMoreAction?: MouseEventHandler<HTMLDivElement>;
 }
 
-export const FollowerOnline: React.FC<UserWithFollowInfo> = ({
+export const FollowerOnline: React.FC<FollowInfo> = ({
   username,
-  avatarUrl: avatar,
+  avatar_url: avatar,
   online,
-  currentRoom,
+  room_id,
 }) => (
   <div className="flex py-3 w-full">
       <SingleUser
@@ -36,10 +36,10 @@ export const FollowerOnline: React.FC<UserWithFollowInfo> = ({
       />
     <div className="flex ml-3 flex-col overflow-hidden justify-center">
         <h5 className="text-primary-100 font-bold">{username}</h5>
-      {currentRoom ? (
-        <Link href={`/room/[id]`} as={`/room/${currentRoom.id}`}>
+      {room_id ? (
+        <Link href={`/room/[id]`} as={`/room/${room_id}`}>
           <a className={`hover:underline text-primary-300 truncate block`}>
-            {currentRoom.name}
+            {room_id}
           </a>
         </Link>
       ) : null}

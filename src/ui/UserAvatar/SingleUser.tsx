@@ -57,7 +57,7 @@ export const onlineIndicatorStyleMap = {
 };
 
 export interface AvatarProps {
-  src: string;
+  src: string|undefined;
   size?: keyof typeof onlineIndicatorStyleMap;
   className?: string;
   isOnline?: boolean;
@@ -101,7 +101,7 @@ export const SingleUser: React.FC<AvatarProps> = ({
           deafened ? "opacity-60" : ""
         }`}
         onError={() => setError(true)}
-        src={src
+        src={src?src:""
         }
       />
       {hover && (

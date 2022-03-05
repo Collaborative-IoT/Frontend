@@ -1,20 +1,29 @@
 import { useRouter } from 'next/router'
+import { useEffect } from 'react';
+import { Button } from '../../ui/Button';
 
 interface Nothing {}
 
 export const SaveCredentials: React.FC<Nothing> = () => {
-  const router = useRouter()  
-  const {refresh, access} = router.query;
-  let issue = false;
-  typeof window !== 'undefined' ? localStorage.setItem("r-ciot", refresh as string): issue = true;
-  typeof window !== 'undefined' ?   localStorage.setItem("a-ciot", access as string): issue = true;
+  const {push,query} = useRouter()  
+  useEffect(()=>{
+    const {refresh, access} = query;
+    console.log(query);
+    console.log(access);
+    if (typeof window !== 'undefined'){
+      if (refresh && access ){
+          localStorage.setItem("r-ciot", refresh as string);
+          localStorage.setItem("a-ciot", access as string);
+          localStorage.setItem("ciot_auth_status", "good");
+          push("/dash");
+       }
+    }
+    else{
+      push("/");
+    }
 
-  if (!issue){
-    typeof window !== 'undefined' ? localStorage.setItem("ciot_auth_status", "good"): null;
-  }
-  else{
-    typeof window !== 'undefined' ? localStorage.setItem("ciot_auth_status", "bad"): null;
-  }
+    
+  })
 
-  return(<div></div>)
+  return(<div></div>);
 }

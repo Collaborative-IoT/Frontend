@@ -6,13 +6,11 @@ export const DropdownController: React.FC<{
   portal?: boolean;
   className?: string;
   innerClassName?: string;
-  overlay: (c: () => void) => React.ReactNode;
   zIndex?: number;
 }> = ({
   children,
   className,
   innerClassName,
-  overlay,
   portal = true,
   zIndex,
 }) => {

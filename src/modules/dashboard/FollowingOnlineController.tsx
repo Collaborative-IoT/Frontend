@@ -1,5 +1,5 @@
 import { Room, UserPreview, UserWithFollowInfo } from "../ws/entities";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useConn } from "../../shared-hooks/useConn";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import {
@@ -8,50 +8,10 @@ import {
   FollowersOnlineWrapper,
 } from "../../ui/FollowersOnline";
 import { InfoText } from "../../ui/InfoText";
+import { MainContext } from "../../context/api_based";
+import { FollowInfo } from "@collaborative/arthur";
 
 interface FriendsOnlineControllerProps {}
-
-
-const userPreview: UserPreview = {
-  id: "222",
-  displayName: "tester",
-  numFollowers: 2,
-  avatarUrl: "",
-};
-const room:Room = {
-
-    id: "222",
-    numPeopleInside: 2,
-    voiceServerId: "222",
-    creatorId: "23423",
-    peoplePreviewList: [userPreview],
-    autoSpeaker: false,
-    inserted_at: "2",
-    chatMode: "default",
-    name: "test room 445",
-    chatThrottle: 2000,
-    isPrivate: false,
-    description: "test desc"
-
-}
-const data :UserWithFollowInfo = {
-  followsYou :true,
-  youAreFollowing:true,
-  iBlockedThem:false,
-  id:"2342",
-  bio:"test",
-  displayName:"topdawg",
-  avatarUrl:"",
-  bannerUrl:"",
-  numFollowers:10,
-  numFollowing:1000,
-  currentRoom:room,
-  contributions:200,
-  staff:true,
-  online:true,
-  username:"top",
-  lastOnline:new Date().toString() 
-}
 
 const Page: React.FC<{
   cursor: number;
@@ -60,13 +20,15 @@ const Page: React.FC<{
   isOnlyPage: boolean;
 }> = ({ cursor, isLastPage, isOnlyPage, onLoadMore }) => {
   const { t } = useTypeSafeTranslation();
-
-
+  const {im_following} = useContext(MainContext);
 
   return (
     <>
       {
-        <FollowerOnline {...data} />
+        im_following?im_following.map((follow_info:FollowInfo)=>{
+            return <FollowerOnline {...follow_info} />
+        }):null
+        
 }
       {isLastPage  ? (
         <FollowersOnlineShowMore
