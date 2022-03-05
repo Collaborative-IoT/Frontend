@@ -13,6 +13,7 @@ export const MainContext = React.createContext<{
     user:Nullable<BaseUser>;
     all_users_in_room:Nullable<User[]>;
     im_following:Nullable<Array<FollowInfo>>;
+    main_interval_handle:Nullable<NodeJS.Timeout>,
     create_client:() => void;
   }>({
       dash_live_rooms:[],
@@ -21,9 +22,11 @@ export const MainContext = React.createContext<{
       all_users_in_room:null,
       create_client: ()=>{},
       im_following:null,
+      main_interval_handle: null
   });  
 
   const initClient = (
+      set_interval_handle:React.Dispatch<React.SetStateAction<NodeJS.Timeout | null>>,
       set_error:any,
       set_user:React.Dispatch<React.SetStateAction<BaseUser | null>>,
       set_dash_live_rooms:React.Dispatch<React.SetStateAction<CommunicationRoom[] | null>>,
@@ -53,13 +56,15 @@ export const MainContext = React.createContext<{
             client.send("my_data",{});
             client.send("create_room", {name:"test",desc:"test2",public:true});
             client.send("create_room", {name:"test",desc:"test2",public:true});
-            setInterval(()=>{
-                client.send("get_top_rooms",{});
-            },5000)
+
         }
         subscriber.your_data = (user_data:BaseUser)=>{
             set_user(user_data);
-            client.send("get_following", {user_id:user_data.user_id});
+            let handle = setInterval(()=>{
+                client.send("get_top_rooms",{});
+                client.send("get_following", {user_id:user_data.user_id});
+            },5000);
+            set_interval_handle(handle);
         }
         subscriber.all_users_in_room = (room_data:AllUsersInRoomResponse) =>{
             set_all_users_in_room?((_prev:any)=>{
@@ -101,11 +106,20 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [all_users_in_room, set_all_users_in_room] = useState(null);
     const [im_following, set_my_following] = useState<Array<FollowInfo>|null>(null);
     const [error, set_error] = useState(false);
+    // for the main interval triggered in the "my_data" callback of the subscriber above.
+    // we need to clear it when needed.
+    const [interval_handle, set_interval_handle] = useState<NodeJS.Timeout |null>(null);
     let {push} = useRouter();
     useEffect(()=>{
         if (should_connect){
-            
-            let temp_client:Client = initClient(set_error,set_user,set_dash_live_rooms,set_all_users_in_room,set_my_following)!!;
+            let temp_client:Client = initClient(
+                set_interval_handle,
+                set_error,
+                set_user,
+                set_dash_live_rooms,
+                set_all_users_in_room,
+                set_my_following)!!;
+
             set_client((_prev:any)=>{              
                 return temp_client;
             })
@@ -127,6 +141,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
             all_users_in_room,
             im_following,
             create_client:()=>{},
+            main_interval_handle:interval_handle,
         }
       }>
           {children}
