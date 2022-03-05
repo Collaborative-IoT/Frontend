@@ -14,7 +14,6 @@ import { useRoomChatStore } from "./useRoomChatStore";
 import { useResize } from "../useResize";
 
 interface ChatListProps {
-  room: Room;
   userMap: Record<string, RoomUser>;
 }
 
@@ -23,7 +22,7 @@ interface BadgeIconData {
   title: string;
 }
 
-export const RoomChatList: React.FC<ChatListProps> = ({ room, userMap }) => {
+export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
   const { setData } = useContext(UserPreviewModalContext);
   const { messages, toggleFrozen } = useRoomChatStore();
   const me = useConn().user;
@@ -54,7 +53,7 @@ export const RoomChatList: React.FC<ChatListProps> = ({ room, userMap }) => {
 
   const getBadgeIcon = (m: Message) => {
     const user = userMap[m.userId];
-    const isCreator = room.creatorId === user?.id;
+    const isCreator = true;
     let badge: React.ReactNode | null = null;
     if (isCreator) {
       badge = (
@@ -151,8 +150,7 @@ export const RoomChatList: React.FC<ChatListProps> = ({ room, userMap }) => {
                             message:
                               (me?.id === messages[index].userId ||
                                 iAmCreator ||
-                                (iAmMod &&
-                                  room.creatorId !== messages[index].userId)) &&
+                                (iAmMod)) &&
                               !messages[index].deleted
                                 ? messages[index]
                                 : undefined,

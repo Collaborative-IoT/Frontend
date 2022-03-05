@@ -41,7 +41,6 @@ export const MainContext = React.createContext<{
             refresh:auth_refresh,
             oauth_type:type_of_auth
         };
-        var my_user_id:Nullable<number> = null;
 
         // setup the subscriber
         let subscriber =  new ClientSubscriber();
@@ -52,6 +51,8 @@ export const MainContext = React.createContext<{
                 localStorage.setItem("r-ciot", data.new_refresh);
             }
             client.send("my_data",{});
+            client.send("create_room", {name:"test",desc:"test2",public:true});
+            client.send("create_room", {name:"test",desc:"test2",public:true});
             client.send("get_top_rooms",{});
         }
         subscriber.your_data = (user_data:BaseUser)=>{

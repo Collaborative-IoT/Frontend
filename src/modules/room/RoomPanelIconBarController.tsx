@@ -21,9 +21,8 @@ import { useRoomChatStore } from "./chat/useRoomChatStore";
 import RoomOverlay from "./mobile/RoomOverlay";
 import { RoomSettingsModal } from "./RoomSettingModal";
 
-export const RoomPanelIconBarController: React.FC<JoinRoomAndGetInfoResponse> = ({
-  users,
-  room,
+export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
+  users
 }) => {
   const { t } = useTypeSafeTranslation();
   const { muted } = useMuteStore();
@@ -40,9 +39,6 @@ export const RoomPanelIconBarController: React.FC<JoinRoomAndGetInfoResponse> = 
   const screenType = useScreenType();
   const userMap = useMemo(() => {
     const map: Record<string, RoomUser> = {};
-    users.forEach((u) => {
-      map[u.id] = u;
-    });
     return map;
   }, [users]);
 
@@ -115,7 +111,7 @@ export const RoomPanelIconBarController: React.FC<JoinRoomAndGetInfoResponse> = 
               </button>
               <div className="flex overflow-y-auto flex-1">
                 <div className={`flex flex-1 w-full flex-col mt-4`}>
-                  <RoomChatList room={room} userMap={userMap} />
+                  <RoomChatList  userMap={userMap} />
                   <RoomChatMentions users={users} />
                   <RoomChatInput users={users} />
                 </div>

@@ -35,6 +35,37 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
 
   return (
     <>
-    </>
+    {
+    <MiddlePanel
+      stickyChildren={
+        screenType !== "fullscreen" ? (
+          <RoomHeader
+            onTitleClick={()=>setShowEditModal(true)}
+            title={"test"}
+            description={"here with the best"}
+            names={ []}
+          />
+        ) : (
+          ""
+        )
+      }
+    >
+      <UserPreviewModal />
+      {screenType === "fullscreen" && open ? null : (
+        <RoomUsersPanel />
+      )}
+      <div
+        className={`sticky bottom-0 pb-7 bg-primary-900 ${
+          (screenType === "fullscreen" || screenType === "1-cols") && open
+            ? "flex-1"
+            : ""
+        }`}
+      >
+        <RoomPanelIconBarController users={[]} />
+      </div>
+    </MiddlePanel>
+}
+</>
   );
 };
+

@@ -7,8 +7,5 @@ interface RoomChatControllerProps {}
 export const RoomChatController: React.FC<RoomChatControllerProps> = ({}) => {
   const data = useCurrentRoomFromCache();
 
-  if (!data || "error" in data) {
-    return null;
-  }
-  return null;
+  return (<RoomChat users={[]}/>);
 };

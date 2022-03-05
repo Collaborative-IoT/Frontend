@@ -20,13 +20,12 @@ if (isElectron()) {
   ipcRenderer = window.require("electron").ipcRenderer;
 }
 
-export const RoomUsersPanel: React.FC<RoomUsersPanelProps> = (props) => {
-  const {
-    askingToSpeak,
-    listeners,
-    speakers,
-    canIAskToSpeak,
-  } = useSplitUsersIntoSections(props);
+export const RoomUsersPanel: React.FC<{}> = (props) => {
+
+    const askingToSpeak:any[] = [];
+    const listeners:any[] = []
+    const speakers:any[]= []
+    const canIAskToSpeak:any[]= []
   const { t } = useTypeSafeTranslation();
   const me = {};
   const muted = useMuteStore().muted;
@@ -58,7 +57,7 @@ export const RoomUsersPanel: React.FC<RoomUsersPanelProps> = (props) => {
       className={`flex pt-4 px-4 flex-1 ${
         screenType !== "fullscreen" ? "bg-primary-800" : "bg-primary-900"
       }`}
-      id={props.room.isPrivate ? "private-room" : "public-room"}
+      id={"public-room"}
       style={useIsElectronMobile() ? { marginTop: "38px" } : { top: "0px" }}
     >
       <div className="w-full block">

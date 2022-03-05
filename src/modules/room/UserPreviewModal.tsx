@@ -171,9 +171,7 @@ const UserPreview: React.FC<{
   );
 };
 
-export const UserPreviewModal: React.FC<JoinRoomAndGetInfoResponse> = ({
-  room,
-  users,
+export const UserPreviewModal: React.FC<{}> = ({
 }) => {
   const { isCreator: iAmCreator, isMod } = useCurrentRoomInfo();
   const { data, setData } = useContext(UserPreviewModalContext);
@@ -187,9 +185,9 @@ export const UserPreviewModal: React.FC<JoinRoomAndGetInfoResponse> = ({
       {!data ? null : (
         <UserPreview
           id={data.userId}
-          isCreator={room.creatorId === data.userId}
+          isCreator={true}
           roomPermissions={
-            users.find((u) => u.id === data.userId)?.roomPermissions
+            null
           }
           iAmCreator={iAmCreator}
           isMe={true}
