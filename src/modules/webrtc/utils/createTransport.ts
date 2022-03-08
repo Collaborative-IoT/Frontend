@@ -1,15 +1,15 @@
+import { Client } from "@collaborative/arthur";
 import { TransportOptions } from "mediasoup-client/lib/types";
 import { useVoiceStore } from "../stores/useVoiceStore";
 
 export async function createTransport(
-  conn: Connection,
+  conn:Client,
   _roomId: string,
   direction: "recv" | "send",
   transportOptions: TransportOptions
 ) {
   console.log(`create ${direction} transport`);
   const { device, set } = useVoiceStore.getState();
-
   // ask the server to create a server-side transport object and send
   // us back the info we need to create a client-side transport
   console.log("transport options", transportOptions);
@@ -22,7 +22,7 @@ export async function createTransport(
   // start flowing for the first time. send dtlsParameters to the
   // server, then call callback() on success or errback() on failure.
   transport.on("connect", ({ dtlsParameters }, callback, errback) => {
-    conn.once<any>(`@connect-transport-${direction}-done`, (d: { error: string | null }) => {
+    const handle_connect_response = (d:any)=>{
       if (d.error) {
         console.log(`connect-transport ${direction} failed`, d.error);
         if (d.error.includes("already called")) {
@@ -34,8 +34,10 @@ export async function createTransport(
         console.log(`connect-transport ${direction} success`);
         callback();
       }
-    });
-    conn.send(`@connect-transport`, {
+    }
+    conn!!.client_sub.connect_transport_recv_done = handle_connect_response;
+    conn!!.client_sub.connect_transport_send_done = handle_connect_response;
+    conn!!.send("@connect-transport",{
       transportId: transportOptions.id,
       dtlsParameters,
       direction,
@@ -63,7 +65,7 @@ export async function createTransport(
         // up a server-side producer object, and get back a
         // producer.id. call callback() on success or errback() on
         // failure.
-        conn.once<any>(`@send-track-${direction}-done`, (d: { error: string | null, id: string }) => {
+        const handle_send_response = (d:any)=>{
           if (d.error) {
             console.log(`send-track ${direction} failed`, d.error);
             errback();
@@ -71,9 +73,10 @@ export async function createTransport(
             console.log(`send-track-transport ${direction} success`);
             callback({ id: d.id });
           }
-        });
-
-        conn.send("@send-track", {
+        }
+        conn!!.client_sub.send_track_send_done = handle_send_response;
+        conn!!.client_sub.send_track_recv_done = handle_send_response;
+        conn!!.send("@send-track",{
           transportId: transportOptions.id,
           kind,
           rtpParameters,
