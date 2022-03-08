@@ -135,9 +135,6 @@ export const AddToCalendar: React.FC<AddToCalendarProps> = ({
     <div className="relative" title="Add to Calendar">
       <DropdownController
         portal={false}
-        overlay={(close) => (
-          <Dropdown filename={filename} onToggle={close} urls={urls} />
-        )}
       >
         {children(onToggle)}
       </DropdownController>

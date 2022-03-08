@@ -1,6 +1,7 @@
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
+import { MainContext } from "../../context/api_based";
 import { InputField } from "../../form-fields/InputField";
 import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";
 import { showErrorToast } from "../../lib/showErrorToast";
@@ -30,6 +31,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
   const conn = useWrappedConn();
   const { t } = useTypeSafeTranslation();
   const { push } = useRouter();
+  const {client} = useContext(MainContext);
 
   return (
     <Modal isOpen onRequestClose={onRequestClose}>
@@ -66,7 +68,8 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
 
           return errors;
         }}
-        onSubmit={async ({ name, privacy, description }) => {
+        onSubmit={({ name, privacy, description }) => {
+          client?.send("create_room", {name,desc:description,public:privacy == "public"});
         }}
       >
         {({ setFieldValue, values, isSubmitting }) => (

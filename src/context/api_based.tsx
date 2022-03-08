@@ -2,10 +2,8 @@ import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSu
 import React, { useEffect, useMemo, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
-import { Url } from "url";
 
 type Nullable<T> = T | null;
-type StateChange = Nullable<(update: ((prevState: null) => null) | null) => void>;
 
 export const MainContext = React.createContext<{
     dash_live_rooms:Nullable<CommunicationRoom[]>;
@@ -34,7 +32,8 @@ export const MainContext = React.createContext<{
       set_user:React.Dispatch<React.SetStateAction<BaseUser | null>>,
       set_dash_live_rooms:React.Dispatch<React.SetStateAction<CommunicationRoom[] | null>>,
       set_all_users_in_room:React.Dispatch<React.SetStateAction<User[] | null>>,
-      set_my_following:React.Dispatch<React.SetStateAction<Array<FollowInfo> | null>>,)=>{
+      set_my_following:React.Dispatch<React.SetStateAction<Array<FollowInfo> | null>>,
+      push:any)=>{
     
     if (typeof window !== 'undefined'){
         // connect to the server and authenticate
@@ -57,13 +56,10 @@ export const MainContext = React.createContext<{
                 localStorage.setItem("r-ciot", data.new_refresh);
             }
             client.send("my_data",{});
-     
-
         }
         subscriber.your_data = (user_data:BaseUser)=>{
             set_user(user_data);
             let handle = setInterval(()=>{
-                client.send("create_room", {name:"test",desc:"test2",public:true});
                 client.send("get_top_rooms",{});
                 client.send("get_following", {user_id:user_data.user_id});
             },5000);
@@ -75,7 +71,6 @@ export const MainContext = React.createContext<{
         subscriber.bad_auth =()=>{
             localStorage.setItem("ciot_auth_status","bad");
             set_error(true)
-            
         }
         subscriber.followers = (data:GetFollowListResponse)=>{
             console.log(data.user_ids);
@@ -83,8 +78,11 @@ export const MainContext = React.createContext<{
             
         }
         subscriber.top_rooms = (data:CommunicationRoom[])=>{
-                set_dash_live_rooms!!(data);
-            
+            set_dash_live_rooms!!(data);
+        }
+        subscriber.room_created = (room_number:number)=>{
+            console.log("created");
+            push(`room/${room_number}`)
         }
         // begin routing incoming data + auth
         client.begin();
@@ -121,7 +119,8 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
                 set_user,
                 set_dash_live_rooms,
                 set_all_users_in_room,
-                set_my_following)!!;
+                set_my_following,
+                push)!!;
             set_client((_prev:any)=>{              
                 return temp_client;
             })
