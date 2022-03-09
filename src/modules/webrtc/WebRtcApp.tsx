@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useRef } from "react";
 import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";
 import { useMuteStore } from "../../global-stores/useMuteStore";
 import { useDeafStore } from "../../global-stores/useDeafStore";
-import { WebSocketContext } from "../ws/WebSocketProvider";
 import { ActiveSpeakerListener } from "./components/ActiveSpeakerListener";
 import { AudioRender } from "./components/AudioRender";
 import { useMicIdStore } from "./stores/useMicIdStore";
@@ -13,10 +12,11 @@ import { createTransport } from "./utils/createTransport";
 import { joinRoom } from "./utils/joinRoom";
 import { receiveVoice } from "./utils/receiveVoice";
 import { sendVoice } from "./utils/sendVoice";
+import { MainContext } from "../../context/api_based";
 
 interface App2Props {}
 
-export function closeVoiceConnections(_roomId: string | null) {
+export function closeVoiceConnections(_roomId: number | null) {
   const { roomId, mic, nullify } = useVoiceStore.getState();
   if (_roomId === null || _roomId === roomId) {
     if (mic) {
@@ -30,12 +30,11 @@ export function closeVoiceConnections(_roomId: string | null) {
 }
 
 export const WebRtcApp: React.FC<App2Props> = () => {
-  const { conn } = useContext(WebSocketContext);
+  const { client , current_room_id, set_current_room_id} = useContext(MainContext);
   const { mic } = useVoiceStore();
   const { micId } = useMicIdStore();
   const { muted } = useMuteStore();
   const { deafened } = useDeafStore();
-  const { setCurrentRoomId } = useCurrentRoomIdStore();
   const initialLoad = useRef(true);
   const { push } = useRouter();
 
@@ -69,37 +68,33 @@ export const WebRtcApp: React.FC<App2Props> = () => {
     }
   }, [mic, muted, deafened]);
   useEffect(() => {
-    if (!conn) {
+    if (!client) {
       return;
     }
-
-    const unsubs = [
-      conn.addListener<any>("you_left_room", (d) => {
-        if (d.kicked) {
-          const { currentRoomId } = useCurrentRoomIdStore.getState();
-          if (currentRoomId !== d.roomId) {
+      client.client_sub.you_left_room = (data:any) =>{
+          if (current_room_id?.toString() !== data.roomId) {
             return;
           }
-          setCurrentRoomId(null);
-          closeVoiceConnections(d.roomId);
+          set_current_room_id(+data.roomId);
+          closeVoiceConnections(data.roomId);
           push("/dash");
-        }
-      }),
-      conn.addListener<any>("new-peer-speaker", async (d) => {
+      },
+      client.client_sub.new_peer_speaker = async (data:any)=>{
         const { roomId, recvTransport } = useVoiceStore.getState();
-        if (recvTransport && roomId === d.roomId) {
-          await consumeAudio(d.consumerParameters, d.peerId);
+        if (recvTransport && roomId === data.roomId) {
+          await consumeAudio(data.consumerParameters, data.peerId);
         } else {
-          consumerQueue.current = [...consumerQueue.current, { roomId, d }];
+          let id:string= roomId? roomId.toString():"";
+          consumerQueue.current = [...consumerQueue.current, { roomId:id, d:data }];
         }
-      }),
-      conn.addListener<any>("you-are-now-a-speaker", async (d) => {
-        if (d.roomId !== useVoiceStore.getState().roomId) {
+      },
+      client.client_sub.you_are_now_a_speaker = async(data:any)=>{
+        if (data.roomId !== useVoiceStore.getState().toString()) {
           return;
         }
         // setStatus("connected-speaker");
         try {
-          await createTransport(conn, d.roomId, "send", d.sendTransportOptions);
+          await createTransport(client, data.roomId, "send", data.sendTransportOptions);
         } catch (err) {
           console.log(err);
           return;
@@ -110,44 +105,44 @@ export const WebRtcApp: React.FC<App2Props> = () => {
         } catch (err) {
           console.log(err);
         }
-      }),
-      conn.addListener<any>("you-joined-as-peer", async (d) => {
+      },
+      client.client_sub.you_joined_as_peer = async(data:any) =>{
         closeVoiceConnections(null);
-        useVoiceStore.getState().set({ roomId: d.roomId });
+        useVoiceStore.getState().set({ roomId: data.roomId });
         // setStatus("connected-listener");
         consumerQueue.current = [];
         console.log("creating a device");
         try {
-          await joinRoom(d.routerRtpCapabilities);
+          await joinRoom(data.routerRtpCapabilities);
         } catch (err) {
           console.log("error creating a device | ", err);
           return;
         }
         try {
-          await createTransport(conn, d.roomId, "recv", d.recvTransportOptions);
+          await createTransport(client, data.roomId, "recv", data.recvTransportOptions);
         } catch (err) {
           console.log("error creating recv transport | ", err);
           return;
         }
-        receiveVoice(conn, () => flushConsumerQueue(d.roomId));
-      }),
-      conn.addListener<any>("you-joined-as-speaker", async (d) => {
+        receiveVoice(client, () => flushConsumerQueue(data.roomId));
+      },
+      client.client_sub.you_joined_as_speaker = async(data:any) =>{
         closeVoiceConnections(null);
-        useVoiceStore.getState().set({ roomId: d.roomId });
+        useVoiceStore.getState().set({ roomId: data.roomId });
         // setStatus("connected-speaker");
         consumerQueue.current = [];
         console.log("creating a device");
         try {
-          await joinRoom(d.routerRtpCapabilities);
+          await joinRoom(data.routerRtpCapabilities);
         } catch (err) {
           console.log("error creating a device | ", err);
           return;
         }
         try {
-          await createTransport(conn, d.roomId, "send", d.sendTransportOptions);
+          await createTransport(client, data.roomId, "send", data.sendTransportOptions);
         } catch (err) {
           console.log("error creating send transport | ", err);
-          return;
+          return; 
         }
         console.log("sending voice");
         try {
@@ -156,15 +151,10 @@ export const WebRtcApp: React.FC<App2Props> = () => {
           console.log("error sending voice | ", err);
           return;
         }
-        await createTransport(conn, d.roomId, "recv", d.recvTransportOptions);
-        receiveVoice(conn, () => flushConsumerQueue(d.roomId));
-      }),
-    ];
-
-    return () => {
-      unsubs.forEach((x) => x());
-    };
-  }, [conn, push, setCurrentRoomId]);
+        await createTransport(client, data.roomId, "recv", data.recvTransportOptions);
+        receiveVoice(client, () => flushConsumerQueue(data.roomId));
+      }
+  }, [client, push, set_current_room_id]);
 
   return (
     <>

@@ -21,7 +21,7 @@ export const getDevice = () => {
 export const useVoiceStore = create(
   combine(
     {
-      roomId: "",
+      roomId: null as number | null,
       micStream: null as MediaStream | null,
       mic: null as MediaStreamTrack | null,
       recvTransport: null as Transport | null,
@@ -33,7 +33,7 @@ export const useVoiceStore = create(
         set({
           recvTransport: null,
           sendTransport: null,
-          roomId: "",
+          roomId: null,
           mic: null,
           micStream: null,
         }),

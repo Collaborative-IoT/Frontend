@@ -12,8 +12,10 @@ export const MainContext = React.createContext<{
     all_users_in_room:Nullable<User[]>;
     im_following:Nullable<Array<FollowInfo>>;
     main_interval_handle:Nullable<NodeJS.Timeout>;
-    current_room_permissions:Nullable<Map<number,RoomPermissions>>
+    current_room_permissions:Nullable<Map<number,RoomPermissions>>;
+    current_room_id:Nullable<number>;
     create_client:() => void;
+    set_current_room_id:any,
   }>({
       dash_live_rooms:[],
       client: null, 
@@ -22,7 +24,9 @@ export const MainContext = React.createContext<{
       create_client: ()=>{},
       im_following:null,
       main_interval_handle: null,
-      current_room_permissions:null
+      current_room_permissions:null,
+      current_room_id:null,
+      set_current_room_id:null,
   });  
 
   const initClient = (
@@ -106,6 +110,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [im_following, set_my_following] = useState<Array<FollowInfo>|null>(null);
     const [error, set_error] = useState(false);
     const [current_room_permissions, set_current_permissions] = useState<Map<number,RoomPermissions>|null>(null);
+    const [current_room_id, set_current_room_id] = useState<number|null>(null);
     // for the main interval triggered in the "my_data" callback of the subscriber above.
     // we need to clear it when needed.
     const [interval_handle, set_interval_handle] = useState<NodeJS.Timeout |null>(null);
@@ -143,7 +148,9 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
             im_following,
             create_client:()=>{},
             main_interval_handle:interval_handle,
-            current_room_permissions
+            current_room_permissions,
+            current_room_id,
+            set_current_room_id
         }
       }>
           {children}

@@ -80,17 +80,13 @@ function App({ Component, pageProps }: AppProps) {
             <link rel="apple-touch-icon" href="/img/doge.png"></link>
             <link rel="apple-touch-startup-image" href="img/doge512.png" />
           </Head>
-          
           <Component {...pageProps} />
-          
           <SoundEffectPlayer />
           <ErrorToastController />
           <WebRtcApp />
           <InvitedToJoinRoomModal />
           <ConfirmModal />
       </MainContextProvider>
-         
-      
   );
 }
 
