@@ -54,6 +54,7 @@ export const MainContext = React.createContext<{
         // setup the subscriber
         let subscriber =  new ClientSubscriber();
         let client = new Client(wsApiBaseUrl,subscriber,auth_credentials);
+        let my_id:number|null = null;
         subscriber.good_auth = (data:AuthResponse)=>{
             if(data.new_access){
                 localStorage.setItem("a-ciot",data.new_access);
@@ -63,6 +64,7 @@ export const MainContext = React.createContext<{
         }
         subscriber.your_data = (user_data:BaseUser)=>{
             set_user(user_data);
+            my_id = user_data.user_id;
             let handle = setInterval(()=>{
                 client.send("get_top_rooms",{});
                 client.send("get_following", {user_id:user_data.user_id});
@@ -85,8 +87,10 @@ export const MainContext = React.createContext<{
             set_dash_live_rooms!!(data);
         }
         subscriber.room_created = (room_number:number)=>{
-            console.log("created");
-            push(`room/${room_number}`)
+            let request= {roomId:+room_number, peerId:my_id};
+            console.log(request);
+            client.send("join-as-speaker",request);
+            push(`room/${room_number}`);
         }
         // begin routing incoming data + auth
         client.begin();
