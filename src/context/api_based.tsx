@@ -75,6 +75,7 @@ export const MainContext = React.createContext<{
             set_interval_handle(handle);
         }
         subscriber.all_users_in_room = (room_data:AllUsersInRoomResponse) =>{
+            console.log(room_data);
             set_all_users_in_room(room_data.users);
         }
         subscriber.bad_auth =()=>{
@@ -96,9 +97,11 @@ export const MainContext = React.createContext<{
             push(`room/${room_number}`);
         }
         subscriber.all_room_permissions = (data:Map<number, RoomPermissions>)=>{
+            console.log(data);
             set_all_room_permissions(data);
         }
         subscriber.initial_room_data = (data:InitRoomData)=>{
+            console.log(data);
             set_base_room_data(data);
         }
         // begin routing incoming data + auth

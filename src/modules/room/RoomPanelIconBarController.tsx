@@ -20,6 +20,8 @@ import { RoomChatMentions } from "./chat/RoomChatMentions";
 import { useRoomChatStore } from "./chat/useRoomChatStore";
 import RoomOverlay from "./mobile/RoomOverlay";
 import { RoomSettingsModal } from "./RoomSettingModal";
+import { MainContext } from "../../context/api_based";
+import { useContext } from "react";
 
 export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
   users
@@ -31,12 +33,12 @@ export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
   const conn = useConn();
   const setDeaf = useSetDeaf();
   const { canSpeak, isCreator, canIAskToSpeak } = useCurrentRoomInfo();
-  const { leaveRoom } = useLeaveRoom();
   const { push } = useRouter();
   const { currentRoomId } = useCurrentRoomIdStore();
   const [roomId, setRoomId] = useState("");
   const [open, toggleOpen] = useRoomChatStore((s) => [s.open, s.toggleOpen]);
   const screenType = useScreenType();
+  const {set_current_room_id,current_room_id, client} = useContext(MainContext);
   const userMap = useMemo(() => {
     const map: Record<string, RoomUser> = {};
     return map;
@@ -80,7 +82,8 @@ export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
           deaf={{ isDeaf: deafened, onDeaf: () => setDeaf(!deafened) }}
           onLeaveRoom={() => {
             push("/dash");
-            leaveRoom();
+            client?.send("leave_room", {room_id:current_room_id});
+            set_current_room_id(null);
           }}
           onInvitePeopleToRoom={() => {
             push(`/room/[id]/invite`, `/room/${currentRoomId}/invite`);

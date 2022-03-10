@@ -25,10 +25,8 @@ export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}
     showCreateScheduleRoomModal,
     setShowCreateScheduleRoomModal,
   ] = useState(false);
-  const { push } = useRouter();
+  const {current_room_id} = useContext(MainContext);
   const { height } = useWindowSize();
-  const { t } = useTypeSafeTranslation();
-
   const badges: badge[] = [];
 
   useEffect(() => {
@@ -54,7 +52,7 @@ export const ProfileBlockController: React.FC<ProfileBlockControllerProps> = ({}
       ) : null}
       <ProfileBlock
         top={
-          currentRoomId ? (
+          current_room_id ? (
             <MinimizedRoomCardController />
           ) : (
             <UserSummaryCard

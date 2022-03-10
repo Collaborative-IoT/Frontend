@@ -27,7 +27,6 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
   showMobileEditModal,
   setShowMobileEditModal,
 }) => {
-  const conn = useConn();
   const { currentRoomId } = useCurrentRoomIdStore();
   const [showEditModal, setShowEditModal] = useState(false);
   const open = useRoomChatStore((s) => s.open);

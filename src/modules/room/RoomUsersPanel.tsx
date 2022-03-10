@@ -21,11 +21,12 @@ if (isElectron()) {
 }
 
 export const RoomUsersPanel: React.FC<{}> = (props) => {
-
-    const askingToSpeak:any[] = [];
-    const listeners:any[] = []
-    const speakers:any[]= []
-    const canIAskToSpeak:any[]= []
+  const {
+    askingToSpeak,
+    listeners,
+    speakers,
+    canIAskToSpeak,
+  } = useSplitUsersIntoSections({});
   const { t } = useTypeSafeTranslation();
   const me = {};
   const muted = useMuteStore().muted;
