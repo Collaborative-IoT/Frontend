@@ -1,4 +1,4 @@
-import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions } from "@collaborative/arthur";
+import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions, InitRoomData } from "@collaborative/arthur";
 import React, { useEffect, useMemo, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
@@ -16,6 +16,7 @@ export const MainContext = React.createContext<{
     current_room_id:Nullable<number>;
     create_client:() => void;
     set_current_room_id:any,
+    current_room_base_data:Nullable<InitRoomData>,
   }>({
       dash_live_rooms:[],
       client: null, 
@@ -27,10 +28,12 @@ export const MainContext = React.createContext<{
       current_room_permissions:null,
       current_room_id:null,
       set_current_room_id:null,
+      current_room_base_data:null,
   });  
 
   const initClient = (
-      set_all_room_permissions:React.Dispatch<React.SetStateAction<Map<number,RoomPermissions>|null | null>>,
+      set_base_room_data:React.Dispatch<React.SetStateAction<InitRoomData|null>>,
+      set_all_room_permissions:React.Dispatch<React.SetStateAction<Map<number,RoomPermissions> | null>>,
       set_interval_handle:React.Dispatch<React.SetStateAction<NodeJS.Timeout | null>>,
       set_error:any,
       set_user:React.Dispatch<React.SetStateAction<BaseUser | null>>,
@@ -92,6 +95,12 @@ export const MainContext = React.createContext<{
             client.send("join-as-speaker",request);
             push(`room/${room_number}`);
         }
+        subscriber.all_room_permissions = (data:Map<number, RoomPermissions>)=>{
+            set_all_room_permissions(data);
+        }
+        subscriber.initial_room_data = (data:InitRoomData)=>{
+            set_base_room_data(data);
+        }
         // begin routing incoming data + auth
         client.begin();
         return client;
@@ -115,6 +124,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [error, set_error] = useState(false);
     const [current_room_permissions, set_current_permissions] = useState<Map<number,RoomPermissions>|null>(null);
     const [current_room_id, set_current_room_id] = useState<number|null>(null);
+    const [current_room_base_data, set_current_room_base_data] = useState<InitRoomData|null>(null);
     // for the main interval triggered in the "my_data" callback of the subscriber above.
     // we need to clear it when needed.
     const [interval_handle, set_interval_handle] = useState<NodeJS.Timeout |null>(null);
@@ -122,6 +132,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     useEffect(()=>{
         if (should_connect){
             let temp_client:Client = initClient(
+                set_current_room_base_data,
                 set_current_permissions,
                 set_interval_handle,
                 set_error,
@@ -154,7 +165,8 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
             main_interval_handle:interval_handle,
             current_room_permissions,
             current_room_id,
-            set_current_room_id
+            set_current_room_id,
+            current_room_base_data
         }
       }>
           {children}

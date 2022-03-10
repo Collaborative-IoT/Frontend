@@ -1,52 +1,44 @@
-import { JoinRoomAndGetInfoResponse } from "../ws/entities";
 import React, { useContext } from "react";
 import { useMuteStore } from "../../global-stores/useMuteStore";
 import { useDeafStore } from "../../global-stores/useDeafStore";
 import { SolidSimpleMegaphone } from "../../icons";
 import { modalConfirm } from "../../shared-components/ConfirmModal";
-import { useConn } from "../../shared-hooks/useConn";
 import { BoxedIcon } from "../../ui/BoxedIcon";
 import { RoomAvatar } from "../../ui/RoomAvatar";
-import { UserPreviewModalContext } from "./UserPreviewModalProvider";
 import { Emote } from "./chat/Emote";
 import { useScreenType } from "../../shared-hooks/useScreenType";
-
+import { User } from "@collaborative/arthur";
+import { MainContext } from "../../context/api_based";
 export const useSplitUsersIntoSections = ({
-  room,
-  users,
-  activeSpeakerMap,
-  muteMap,
-  deafMap,
-}: JoinRoomAndGetInfoResponse) => {
-  const conn = useConn();
+}) => {
   const { muted } = useMuteStore();
   const { deafened } = useDeafStore();
-  const { setData } = useContext(UserPreviewModalContext);
   const screenType = useScreenType();
   const speakers: React.ReactNode[] = [];
   const askingToSpeak: React.ReactNode[] = [];
   const listeners: React.ReactNode[] = [];
+  const {user,all_users_in_room, current_room_base_data,current_room_permissions} = useContext(MainContext);
   let canIAskToSpeak = false;
 
-  users.forEach((u) => {
+  all_users_in_room!!.forEach((u:User) => {
     let arr = listeners;
-    if (u.id === room.creatorId || u.roomPermissions?.isSpeaker) {
+    if (u.user_id === current_room_base_data?.creator_id ||current_room_permissions!!.get(u.user_id)!!.is_speaker) {
       arr = speakers;
-    } else if (u.roomPermissions?.askedToSpeak) {
+    } else if (current_room_permissions!!.get(u.user_id)!!.asked_to_speak) {
       arr = askingToSpeak;
-    } else if (u.id === conn.user.id) {
+    } else if (u.user_id === user!!.user_id) {
       canIAskToSpeak = true;
     }
 
     let flair: React.ReactNode | undefined = undefined;
 
-    const isCreator = u.id === room.creatorId;
-    const isSpeaker = !!u.roomPermissions?.isSpeaker;
+    const isCreator = u.user_id === current_room_base_data!!.creator_id;
+    const isSpeaker = current_room_permissions!!.get(u.user_id)!!.is_speaker;
     const canSpeak = isCreator || isSpeaker;
-    const isMuted = conn.user.id === u.id ? muted : muteMap[u.id];
-    const isDeafened = conn.user.id === u.id ? deafened : deafMap[u.id];
+    const isMuted = user!!.user_id === u.user_id ? muted : false;
+    const isDeafened = user!!.user_id === u.user_id ? deafened : false;
 
-    if (isCreator || u.roomPermissions?.isMod) {
+    if (isCreator || current_room_permissions!!.get(u.user_id)!!.is_mod) {
       flair = (
         <Emote
           emote={isCreator ? "coolhouse" : "dogehouse"}
@@ -62,20 +54,19 @@ export const useSplitUsersIntoSections = ({
     arr.push(
       <RoomAvatar
         // key={u.id + i}
-        id={u.id}
+        id={u.user_id}
         canSpeak={canSpeak}
-        isMe={u.id === conn.user.id}
-        key={u.id}
-        src={u.avatarUrl}
+        isMe={user!!.user_id === u.user_id}
+        key={u.user_id}
+        src={u.avatar_url}
         username={u.username}
-        isBot={!!u.botOwnerId}
+        isBot={false}
         activeSpeaker={
-          canSpeak && !isMuted && !isDeafened && u.id in activeSpeakerMap
+          canSpeak && !isMuted && !isDeafened && false //make false active speaker map
         }
         muted={canSpeak && isMuted && !isDeafened}
         deafened={isDeafened}
         onClick={() => {
-          setData({ userId: u.id });
         }}
         flair={flair}
       />

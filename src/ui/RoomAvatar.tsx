@@ -6,7 +6,7 @@ import { SingleUser } from "./UserAvatar";
 
 interface RoomAvatarProps {
   isMe?: boolean;
-  id?: string;
+  id?: number;
   canSpeak?: boolean;
   activeSpeaker?: boolean;
   muted?: boolean;
@@ -52,7 +52,7 @@ export const RoomAvatar: React.FC<RoomAvatarProps> = ({
       onClick={onClick}
     >
       {!isMe && canSpeak && id && debugAudio ? (
-        <AudioDebugAvatar id={id}>{avatar}</AudioDebugAvatar>
+        <AudioDebugAvatar id={id.toString()}>{avatar}</AudioDebugAvatar>
       ) : (
         avatar
       )}

@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef } from "react";
-import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";
 import { useMuteStore } from "../../global-stores/useMuteStore";
 import { useDeafStore } from "../../global-stores/useDeafStore";
 import { ActiveSpeakerListener } from "./components/ActiveSpeakerListener";
@@ -75,7 +74,7 @@ export const WebRtcApp: React.FC<App2Props> = () => {
           if (current_room_id?.toString() !== data.roomId) {
             return;
           }
-          set_current_room_id(+data.roomId);
+          set_current_room_id(null);
           closeVoiceConnections(data.roomId);
           push("/dash");
       },
@@ -113,6 +112,11 @@ export const WebRtcApp: React.FC<App2Props> = () => {
         consumerQueue.current = [];
         console.log("creating a device");
         try {
+          set_current_room_id(+data.roomId);
+          //request initial room information.
+          client.send("initial_room_data", {room_id:+data.roomId});
+          client.send("gather_all_users_in_room",{room_id:+data.roomId});
+          client.send("all_room_permissions",{});
           await joinRoom(data.routerRtpCapabilities);
         } catch (err) {
           console.log("error creating a device | ", err);
@@ -133,6 +137,11 @@ export const WebRtcApp: React.FC<App2Props> = () => {
         consumerQueue.current = [];
         console.log("creating a device");
         try {
+          set_current_room_id(+data.roomId);
+          //request initial room information.
+          client.send("initial_room_data", {room_id:+data.roomId});
+          client.send("gather_all_users_in_room",{room_id:+data.roomId});
+          client.send("all_room_permissions",{});
           await joinRoom(data.routerRtpCapabilities);
         } catch (err) {
           console.log("error creating a device | ", err);
