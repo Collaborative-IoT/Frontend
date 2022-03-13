@@ -1,6 +1,6 @@
 import { JoinRoomAndGetInfoResponse, Room } from "../ws/entities";
 import router, { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { validate } from "uuid";
 import { isServer } from "../../lib/isServer";
 import { defaultQueryFn } from "../../lib/defaultQueryFn";
@@ -16,6 +16,7 @@ import { UserPreviewModalProvider } from "./UserPreviewModalProvider";
 import { PageHeader } from "../../ui/mobile/MobileHeader";
 import { useLeaveRoom } from "../../shared-hooks/useLeaveRoom";
 import { useConn } from "../../shared-hooks/useConn";
+import { MainContext } from "../../context/api_based";
 
 interface RoomPageProps {
   room?: Room;
@@ -29,6 +30,8 @@ export const RoomPage: PageComponent<RoomPageProps> = ({ room }) => {
   const [roomData, setRoomData] = useState(
     undefined as JoinRoomAndGetInfoResponse | undefined
   );
+
+  const {current_room_base_data, all_users_in_room} = useContext(MainContext);
   const [showMobileEditModal, setShowMobileEditModal] = useState(false);
 
   return (
@@ -52,7 +55,7 @@ export const RoomPage: PageComponent<RoomPageProps> = ({ room }) => {
                         <span
                           className={"text-sm text-center font-normal truncate"}
                         >
-                          with{" "}
+                          with{}
                           <span className={"font-bold truncate"}>
                             {
                               roomData?.users.find(

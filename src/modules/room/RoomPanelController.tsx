@@ -1,5 +1,5 @@
 import { JoinRoomAndGetInfoResponse } from "../ws/entities";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";
 import { useConn } from "../../shared-hooks/useConn";
 import { useScreenType } from "../../shared-hooks/useScreenType";
@@ -13,6 +13,7 @@ import { RoomPanelIconBarController } from "./RoomPanelIconBarController";
 import { RoomUsersPanel } from "./RoomUsersPanel";
 import { useGetRoomByQueryParam } from "./useGetRoomByQueryParam";
 import { UserPreviewModal } from "./UserPreviewModal";
+import { MainContext } from "../../context/api_based";
 
 interface RoomPanelControllerProps {
   setRoomData?: React.Dispatch<
@@ -31,7 +32,7 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
   const [showEditModal, setShowEditModal] = useState(false);
   const open = useRoomChatStore((s) => s.open);
   const screenType = useScreenType();
-
+  const {current_room_base_data} = useContext(MainContext);
   return (
     <>
     
@@ -52,15 +53,15 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
 ) : null}
 
 
-<HeaderController embed={{}} title="test" />
+<HeaderController embed={{}} title="Control" />
     <MiddlePanel
       stickyChildren={
         screenType !== "fullscreen" ? (
           <RoomHeader
             onTitleClick={()=>setShowEditModal(true)}
-            title={"test"}
-            description={"here with the best"}
-            names={ []}
+            title={current_room_base_data? current_room_base_data!!.details.name : "loading..."}
+            description={current_room_base_data? current_room_base_data!!.details.description:"loading..."}
+            names={ [""]}
           />
         ) : (
           ""

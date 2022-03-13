@@ -3,6 +3,8 @@ import { SolidCaretRight } from "../icons";
 import { ApiPreloadLink } from "../shared-components/ApiPreloadLink";
 import { linkRegex } from "../lib/constants";
 import normalizeUrl from "normalize-url";
+import { MainContext } from "../context/api_based";
+import {useContext} from "react";
 
 interface RoomHeaderProps {
   onTitleClick?: () => void;
@@ -14,12 +16,24 @@ interface RoomHeaderProps {
 export const RoomHeader: React.FC<RoomHeaderProps> = ({
   onTitleClick,
   title,
-  names,
   description,
 }) => {
   const [open, setOpen] = useState(true);
   const [hasDescription, setHasDescription] = useState<boolean>(false);
-
+  const {current_room_base_data, all_users_in_room,user} = useContext(MainContext);
+  const gather_owner_user_name = ()=>{
+      // if we are the owner
+      if (current_room_base_data!!.creator_id === user!!.user_id){
+          return user?.username; 
+      } 
+      if (all_users_in_room && current_room_base_data){
+          for (var user_data of all_users_in_room!!){
+            if (user_data.user_id === current_room_base_data.creator_id){
+              return user_data.username;
+            }
+          }
+      }
+  }
   useEffect(() => {
     setHasDescription(description.trim().length > 0);
   }, [description]);
@@ -53,21 +67,13 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
       </div>
       <div className={`flex text-primary-200 text-sm`}>
         <span style={{ marginRight: 4 }}>with</span>{" "}
-        {names.map((username, i) => (
-          <ApiPreloadLink
-            route="profile"
-            data={{ username }}
-            key={username + i}
-          >
             <span
               className={`font-bold text-primary-100 hover:underline`}
               style={{ marginRight: 4 }}
             >
-              {`${username}`}
-              {i === names.length - 1 ? "" : `,`}
+            {current_room_base_data && all_users_in_room? gather_owner_user_name():"loading..."}
             </span>
-          </ApiPreloadLink>
-        ))}
+        
       </div>
       {/* {open ? <div className="text-primary-100 mt-4">{description}</div> : null} */}
 

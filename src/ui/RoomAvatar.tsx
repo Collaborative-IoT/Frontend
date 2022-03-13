@@ -33,6 +33,14 @@ export const RoomAvatar: React.FC<RoomAvatarProps> = ({
 }) => {
   const { t } = useTypeSafeTranslation();
   const { debugAudio } = useDebugAudioStore();
+
+  const truncateString = (str:string, num:number) => {
+    if (str.length <= num) {
+      return str
+    }
+    return str.slice(0, num) + '...'
+  }
+
   const avatar = (
     <SingleUser
       activeSpeaker={activeSpeaker}
@@ -58,7 +66,7 @@ export const RoomAvatar: React.FC<RoomAvatarProps> = ({
       )}
       <div className={`flex items-center mt-2 ${deafened ? "opacity-60" : ""}`}>
         <span className={`truncate text-primary-100 text-sm block`}>
-          {username}
+          {truncateString(username,12)}
         </span>
         {flair}
       </div>

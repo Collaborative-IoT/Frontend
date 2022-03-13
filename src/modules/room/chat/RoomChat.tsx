@@ -26,7 +26,7 @@ export const RoomChat: React.FC<ChatProps> = ({ users }) => {
       <div className={`flex flex-1 w-full flex-col md:mt-4`}>
         <RoomChatList userMap={userMap} />
         <RoomChatMentions users={[]} />
-        <RoomChatInput users={[]} />
+        <RoomChatInput />
       </div>
     </div>
   );

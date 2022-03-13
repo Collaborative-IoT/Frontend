@@ -12,6 +12,7 @@ import { EmoteKeys } from "./EmoteData";
 import { useRoomChatMentionStore } from "./useRoomChatMentionStore";
 import { useRoomChatStore } from "./useRoomChatStore";
 import { useResize } from "../useResize";
+import { MainContext } from "../../../context/api_based";
 
 interface ChatListProps {
   userMap: Record<string, RoomUser>;
@@ -23,9 +24,7 @@ interface BadgeIconData {
 }
 
 export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
-  const { setData } = useContext(UserPreviewModalContext);
   const { messages, toggleFrozen } = useRoomChatStore();
-  const me = useConn().user;
   const { isMod: iAmMod, isCreator: iAmCreator } = useCurrentRoomInfo();
   const bottomRef = useRef<null | HTMLDivElement>(null);
   const chatListRef = useRef<null | HTMLDivElement>(null);
@@ -36,6 +35,8 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
     setMessage,
   } = useRoomChatStore();
   const { t } = useTypeSafeTranslation();
+  const {user} = useContext(MainContext);
+  console.log("messages:",messages);
 
   // Only scroll into view if not manually scrolled to top
   useEffect(() => {
@@ -55,15 +56,10 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
     const user = userMap[m.userId];
     const isCreator = true;
     let badge: React.ReactNode | null = null;
-    if (isCreator) {
       badge = (
         <Emote title="Admin" alt="admin" size="small" emote="coolhouse" />
       );
-    } else if (user?.roomPermissions?.isMod) {
-      badge = <Emote title="Mod" alt="mod" size="small" emote="dogehouse" />;
-    } else if (user?.roomPermissions?.isSpeaker) {
-      badge = <StaticTwemoji emoji="📣" title="Speaker" />;
-    }
+    
     return <span style={{ marginRight: 4 }}>{badge}</span>;
   };
 
@@ -134,7 +130,7 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
                       <button
                         onClick={(e) => {
                           // Auto mention on shift click
-                          if (e.shiftKey && messages[index].userId !== me.id) {
+                          if (e.shiftKey && messages[index].userId !== user?.user_id.toString()) {
                             setMessage(
                               message +
                                 "@" +
@@ -145,16 +141,6 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
                             return;
                           }
 
-                          setData({
-                            userId: messages[index].userId,
-                            message:
-                              (me?.id === messages[index].userId ||
-                                iAmCreator ||
-                                (iAmMod)) &&
-                              !messages[index].deleted
-                                ? messages[index]
-                                : undefined,
-                          });
                         }}
                         // DO NOT CHANGE FONT ON THIS BUTTON, IT CRASHES FIREFOX
                         className={`inline hover:underline font-bold focus:outline-none`}
@@ -192,20 +178,20 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
                                   <React.Fragment key={i}>
                                     <button
                                       onClick={() => {
-                                        setData({ userId: v });
+                                      
                                       }}
                                       className={`inline flex-1 focus:outline-none ${
-                                        v === me?.username
+                                        v === user?.username
                                           ? "bg-accent text-button px-1 rounded text-md"
                                           : ""
                                       }`}
                                       style={{
                                         textDecorationColor:
-                                          v === me?.username
+                                          v === user?.username
                                             ? ""
                                             : messages[index].color,
                                         color:
-                                          v === me?.username
+                                          v === user?.username
                                             ? ""
                                             : messages[index].color,
                                       }}

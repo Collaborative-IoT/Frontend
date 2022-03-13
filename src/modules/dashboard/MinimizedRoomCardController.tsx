@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 import { Room, UserPreview, UserWithFollowInfo } from "../ws/entities";
 import { useDeafStore } from "../../global-stores/useDeafStore";
 import { useMuteStore } from "../../global-stores/useMuteStore";
@@ -9,6 +9,7 @@ import { useLeaveRoom } from "../../shared-hooks/useLeaveRoom";
 import { useSetDeaf } from "../../shared-hooks/useSetDeaf";
 import { useSetMute } from "../../shared-hooks/useSetMute";
 import { MinimizedRoomCard } from "../../ui/MinimizedRoomCard";
+import { MainContext } from "../../context/api_based";
 
 export const MinimizedRoomCardController: React.FC = ({}) => {
   const data = useCurrentRoomFromCache();
@@ -19,40 +20,21 @@ export const MinimizedRoomCardController: React.FC = ({}) => {
   const setDeaf = useSetDeaf();
   const router = useRouter();
 
-  if (!data || "error" in data) {
+  const {current_room_base_data, current_room_id, all_users_in_room} = useContext(MainContext);
+
+  if (!current_room_base_data || !current_room_id || !all_users_in_room) {
     return null;
   }
-  const userPreview: UserPreview = {
-    id: "222",
-    displayName: "tester",
-    numFollowers: 2,
-    avatarUrl: "",
-  };
-  const room:Room = {
-
-    id: "222",
-    numPeopleInside: 2,
-    voiceServerId: "222",
-    creatorId: "23423",
-    peoplePreviewList: [userPreview],
-    autoSpeaker: false,
-    inserted_at: "2",
-    chatMode: "default",
-    name: "test room 445",
-    chatThrottle: 2000,
-    isPrivate: false,
-    description: "test desc"
-
-}
-  const dt = new Date(room.inserted_at);
+  const dt = new Date(current_room_base_data.created_at.slice(0,current_room_base_data.created_at.length-4).concat("Z"));
+  console.log(dt);
 
   return (
     <MinimizedRoomCard
-      onFullscreenClick={() => router.push(`/room/${room.id}`)}
+      onFullscreenClick={() => router.push(`/room/${current_room_id}`)}
       leaveLoading={false}
       room={{
-        name: room.name,
-        speakers: room.peoplePreviewList.slice(0, 3).map((s) => s.displayName),
+        name: current_room_base_data.details.name,
+        speakers: [],
         roomStartedAt: dt,
         myself: {
           isDeafened: deafened,

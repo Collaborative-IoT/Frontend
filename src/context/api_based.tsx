@@ -2,6 +2,9 @@ import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSu
 import React, { useEffect, useMemo, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
+import { RoomChatMessageToken, useRoomChatStore } from "../modules/room/chat/useRoomChatStore";
+import isElectron from "is-electron";
+import { useRoomChatMentionStore } from "../global-stores/useRoomChatMentionStore";
 
 type Nullable<T> = T | null;
 
@@ -58,6 +61,7 @@ export const MainContext = React.createContext<{
         let subscriber =  new ClientSubscriber();
         let client = new Client(wsApiBaseUrl,subscriber,auth_credentials);
         let my_id:number|null = null;
+        let my_data:BaseUser|null = null;
         subscriber.good_auth = (data:AuthResponse)=>{
             if(data.new_access){
                 localStorage.setItem("a-ciot",data.new_access);
@@ -67,6 +71,7 @@ export const MainContext = React.createContext<{
         }
         subscriber.your_data = (user_data:BaseUser)=>{
             set_user(user_data);
+            my_data = user_data;
             my_id = user_data.user_id;
             let handle = setInterval(()=>{
                 client.send("get_top_rooms",{});
@@ -87,21 +92,39 @@ export const MainContext = React.createContext<{
             set_my_following(data.user_ids);
             
         }
+        subscriber.new_chat_msg = (data:any) =>{
+            console.log("new incoming message:",data);
+            try{
+            const { open } = useRoomChatStore.getState();
+            useRoomChatStore.getState().addMessage(data);
+            const { isRoomChatScrolledToTop } = useRoomChatStore.getState();
+            if (
+              (!open || !document.hasFocus() || isRoomChatScrolledToTop) &&
+              !! data.tokens.filter(
+                (t: RoomChatMessageToken) =>
+                  t.t === "mention" &&
+                  t.v?.toLowerCase() === my_data?.username.toLowerCase()
+              ).length
+            ) {
+              useRoomChatMentionStore.getState().incrementIAmMentioned();
+            }
+        }
+        catch(e){
+            console.log(e);
+        }
+        }
         subscriber.top_rooms = (data:CommunicationRoom[])=>{
             set_dash_live_rooms!!(data);
         }
         subscriber.room_created = (room_number:number)=>{
             let request= {roomId:+room_number, peerId:my_id};
-            console.log(request);
             client.send("join-as-speaker",request);
             push(`room/${room_number}`);
         }
         subscriber.all_room_permissions = (data:Map<number, RoomPermissions>)=>{
-            console.log(data);
             set_all_room_permissions(data);
         }
         subscriber.initial_room_data = (data:InitRoomData)=>{
-            console.log(data);
             set_base_room_data(data);
         }
         // begin routing incoming data + auth

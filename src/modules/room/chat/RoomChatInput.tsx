@@ -1,5 +1,5 @@
 import { Room, RoomUser, UserWithFollowInfo } from "../../ws/entities";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { Smiley } from "../../../icons";
 import { createChatMessage } from "../../../lib/createChatMessage";
 import { showErrorToast } from "../../../lib/showErrorToast";
@@ -16,12 +16,10 @@ import { useCurrentRoomIdStore } from "../../../global-stores/useCurrentRoomIdSt
 import { useScreenType } from "../../../shared-hooks/useScreenType";
 import { useCurrentRoomFromCache } from "../../../shared-hooks/useCurrentRoomFromCache";
 import dolma from "./encoding/dolma/src";
+import { MainContext } from "../../../context/api_based";
 
-interface ChatInputProps {
-  users: RoomUser[];
-}
 
-export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
+export const RoomChatInput: React.FC<{}> = ({}) => {
   const { message, setMessage } = useRoomChatStore();
   const { setQueriedUsernames } = useRoomChatMentionStore();
   const { setOpen, open, queryMatches } = useEmojiPickerStore();
@@ -30,6 +28,7 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState<number>(0);
   const { t } = useTypeSafeTranslation();
   const screenType = useScreenType();
+  const {client} = useContext(MainContext);
 
   let position = 0;
 
@@ -37,43 +36,21 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
     if (!open && screenType !== "fullscreen") inputRef.current?.focus(); // Prevent autofocus on mobile
   }, [open, screenType]);
 
-  const data = useCurrentRoomFromCache();
-
-  if (data && !("error" in data) && data.room.chatMode === "disabled") {
-    return (
-      <p className="my-4 text-center text-primary-300">
-        {t("modules.roomChat.disabled")}
-      </p>
-    );
-  }
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    if (
-      data &&
-      !("error" in data) &&
-      Date.now() - lastMessageTimestamp <= data.room.chatThrottle
-    ) {
-      showErrorToast(t("modules.roomChat.waitAlert"));
-      return;
-    }
-
     const tmp = message;
     // const messageData = createChatMessage(tmp, users);
     const messageData = dolma_type.encode(message);
     console.log(messageData);
-
-    messageData.whisperedTo = await Promise.all(messageData.whisperedTo.map(async (uname = "") => {
-      return "";
-    }));
-
+    console.log("submitting");
 
     // dont empty the input, if no tokens
     if (!messageData.tokens.length) return;
     setMessage("");
-
+    console.log("submitting2");
     if (
       !message ||
       !message.trim() ||
@@ -81,6 +58,9 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
     ) {
       return;
     }
+    console.log("submitting3");
+
+    client?.send("send_chat_msg", messageData);
     setQueriedUsernames([]);
 
     setLastMessageTimestamp(Date.now());
@@ -130,9 +110,6 @@ export const RoomChatInput: React.FC<ChatInputProps> = ({ users }) => {
       </div>
       <div className="flex items-stretch">
         <div className="flex-1">
-          {data && "room" in data && data.room.chatMode === "follower_only" ? (
-            <div className="text-primary-300 mb-1">Follower mode</div>
-          ) : null}
           <div className="flex flex-1 lg:mr-0 items-center bg-primary-700 rounded-8">
             <Input
               maxLength={512}

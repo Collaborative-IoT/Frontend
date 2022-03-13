@@ -7,10 +7,8 @@ export const setMute = (conn: any, value: boolean) => {
   // auto undeafen on unmute
   if (deafened) {
     setInternalDeaf(false);
-    conn.mutation.setDeaf(false);
   } else {
     useMuteStore.getState().setInternalMute(value);
-    conn.mutation.setMute(value);
   }
 };
 
