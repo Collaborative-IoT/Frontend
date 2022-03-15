@@ -80,12 +80,11 @@ export const MainContext = React.createContext<{
             set_interval_handle(handle);
         }
         subscriber.all_users_in_room = (room_data:AllUsersInRoomResponse) =>{
-            console.log(room_data);
-            let new_record = new Map();
+            let new_map = new Map();
             for (var user of room_data.users){
-                new_record.set(user.user_id,user);
+                new_map.set(user.user_id.toString(),user);
             }
-            set_all_users_in_room(new_record);
+            set_all_users_in_room(new_map);
         }
         subscriber.bad_auth =()=>{
             localStorage.setItem("ciot_auth_status","bad");

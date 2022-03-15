@@ -35,7 +35,11 @@ export const useSplitUsersIntoSections = ({
         i_blocked_them:false,
         display_name:user!!.display_name,
         bio:user!!.bio
-      }].concat(all_users_in_room);
+      }];
+
+      for (var key of all_users_in_room.keys()){
+        all_users_plus_me.push(all_users_in_room.get(key)!!);
+      }
       console.log("permissions" , current_room_permissions);
       all_users_plus_me!!.forEach((u:User) => {
         let arr = listeners;
