@@ -12,7 +12,7 @@ export const MainContext = React.createContext<{
     dash_live_rooms:Nullable<CommunicationRoom[]>;
     client: Nullable<Client>;
     user:Nullable<BaseUser>;
-    all_users_in_room:Nullable<User[]>;
+    all_users_in_room:Nullable<Map<string,User>>;
     im_following:Nullable<Array<FollowInfo>>;
     main_interval_handle:Nullable<NodeJS.Timeout>;
     current_room_permissions:Nullable<Map<number,RoomPermissions>>;
@@ -41,7 +41,7 @@ export const MainContext = React.createContext<{
       set_error:any,
       set_user:React.Dispatch<React.SetStateAction<BaseUser | null>>,
       set_dash_live_rooms:React.Dispatch<React.SetStateAction<CommunicationRoom[] | null>>,
-      set_all_users_in_room:React.Dispatch<React.SetStateAction<User[] | null>>,
+      set_all_users_in_room:React.Dispatch<React.SetStateAction<Map<string,User> | null>>,
       set_my_following:React.Dispatch<React.SetStateAction<Array<FollowInfo> | null>>,
       push:any)=>{
     
@@ -81,7 +81,11 @@ export const MainContext = React.createContext<{
         }
         subscriber.all_users_in_room = (room_data:AllUsersInRoomResponse) =>{
             console.log(room_data);
-            set_all_users_in_room(room_data.users);
+            let new_record = new Map();
+            for (var user of room_data.users){
+                new_record.set(user.user_id,user);
+            }
+            set_all_users_in_room(new_record);
         }
         subscriber.bad_auth =()=>{
             localStorage.setItem("ciot_auth_status","bad");
@@ -145,7 +149,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [dash_live_rooms, set_dash_live_rooms] = useState<CommunicationRoom[]|null>(null);
     const [client, set_client] = useState<Client|null>(null);
     const [user, set_user] = useState<BaseUser|null>(null);
-    const [all_users_in_room, set_all_users_in_room] = useState<User[]|null>(null);
+    const [all_users_in_room, set_all_users_in_room] = useState<Map<string,User>|null>(null);
     const [im_following, set_my_following] = useState<Array<FollowInfo>|null>(null);
     const [error, set_error] = useState(false);
     const [current_room_permissions, set_current_permissions] = useState<Map<number,RoomPermissions>|null>(null);
