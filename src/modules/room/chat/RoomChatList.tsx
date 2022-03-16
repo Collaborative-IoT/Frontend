@@ -2,18 +2,17 @@ import { Message, Room, RoomUser } from "../../ws/entities";;
 import normalizeUrl from "normalize-url";
 import React, { useContext, useEffect, useRef } from "react";
 import { useVirtual, VirtualItem } from "react-virtual";
-import { useConn } from "../../../shared-hooks/useConn";
-import { useCurrentRoomInfo } from "../../../shared-hooks/useCurrentRoomInfo";
 import { useTypeSafeTranslation } from "../../../shared-hooks/useTypeSafeTranslation";
 import { ParseTextToTwemoji, StaticTwemoji } from "../../../ui/Twemoji";
-import { UserPreviewModalContext } from "../UserPreviewModalProvider";
 import { Emote } from "./Emote";
 import { EmoteKeys } from "./EmoteData";
 import { useRoomChatMentionStore } from "./useRoomChatMentionStore";
 import { useRoomChatStore } from "./useRoomChatStore";
 import { useResize } from "../useResize";
 import { MainContext } from "../../../context/api_based";
-
+import { RoomChatMessageToken } from "./useRoomChatStore";
+import { v4 as uuidv4 } from 'uuid';
+import { User } from "@collaborative/arthur";
 interface ChatListProps {
   userMap: Record<string, RoomUser>;
 }
@@ -25,7 +24,6 @@ interface BadgeIconData {
 
 export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
   const { messages, toggleFrozen } = useRoomChatStore();
-  const { isMod: iAmMod, isCreator: iAmCreator } = useCurrentRoomInfo();
   const bottomRef = useRef<null | HTMLDivElement>(null);
   const chatListRef = useRef<null | HTMLDivElement>(null);
   const {
@@ -35,7 +33,7 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
     setMessage,
   } = useRoomChatStore();
   const { t } = useTypeSafeTranslation();
-  const {user} = useContext(MainContext);
+  const {user,client, all_users_in_room} = useContext(MainContext);
   console.log("messages:",messages);
 
   // Only scroll into view if not manually scrolled to top
@@ -44,7 +42,63 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
       chatListRef.current?.scrollTo(0, chatListRef.current.scrollHeight);
     }
   });
+
+  useEffect(()=>{
+    if (client){
+    client!!.client_sub.new_chat_msg = (data:any) =>{
+      if (user && all_users_in_room){
+            try{
+                const { open } = useRoomChatStore.getState();
+                if (data["userId"] == user!!.user_id.toString()){
+                    data["id"] = uuidv4();
+                    data["avatarUrl"] = user.avatar_url;
+                    data["username"] = user.username;
+                    data["displayName"] = user.display_name;
+                    data["deleted"] = false;
+                    data["deleterId"] = "";
+                    data["sentAt"] = Date.now();
+                    data["isWhisper"] = false;
+
+                }
+                else{
+                    const this_user:User = all_users_in_room!!.get(data["userId"])!!;
+                    data["id"] = uuidv4();
+                    data["avatarUrl"] = this_user.avatar_url;
+                    data["username"] = this_user.username;
+                    data["displayName"] = this_user.display_name;
+                    data["deleted"] = false;
+                    data["deleterId"] = "";
+                    data["sentAt"] = Date.now();
+                    data["isWhisper"] = false;
+                }
+                useRoomChatStore.getState().addMessage(data);
+                const { isRoomChatScrolledToTop } = useRoomChatStore.getState();
+                  if (
+                    (!open || !document.hasFocus() || isRoomChatScrolledToTop) &&
+                    !! data.tokens.filter(
+                      (t: RoomChatMessageToken) =>
+                        t.t === "mention" &&
+                        t.v?.toLowerCase() === user!!.username.toLowerCase()
+                    ).length
+                  ) {
+                    useRoomChatMentionStore.getState().incrementIAmMentioned();
+                  }
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+  }
+  
+}
+  },[client])
   const windowSize = useResize();
+  const truncateString = (str:string, num:number) => {
+    if (str.length <= num) {
+      return str
+    }
+    return str.slice(0, num) + '...'
+  }
   const rowVirtualizer = useVirtual({
     overscan: 10,
     size: messages.length,
@@ -53,8 +107,6 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
   });
 
   const getBadgeIcon = (m: Message) => {
-    const user = userMap[m.userId];
-    const isCreator = true;
     let badge: React.ReactNode | null = null;
       badge = (
         <Emote title="Admin" alt="admin" size="small" emote="coolhouse" />
@@ -149,7 +201,7 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
                           color: messages[index].color,
                         }}
                       >
-                        {messages[index].username}
+                        {truncateString(messages[index].username,8)}
                       </button>
                       <span className={`inline`}>: </span>
                       <div className={`inline`}>

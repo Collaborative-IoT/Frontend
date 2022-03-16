@@ -95,27 +95,6 @@ export const MainContext = React.createContext<{
             set_my_following(data.user_ids);
             
         }
-        subscriber.new_chat_msg = (data:any) =>{
-            console.log("new incoming message:",data);
-            try{
-            const { open } = useRoomChatStore.getState();
-            useRoomChatStore.getState().addMessage(data);
-            const { isRoomChatScrolledToTop } = useRoomChatStore.getState();
-            if (
-              (!open || !document.hasFocus() || isRoomChatScrolledToTop) &&
-              !! data.tokens.filter(
-                (t: RoomChatMessageToken) =>
-                  t.t === "mention" &&
-                  t.v?.toLowerCase() === my_data?.username.toLowerCase()
-              ).length
-            ) {
-              useRoomChatMentionStore.getState().incrementIAmMentioned();
-            }
-        }
-        catch(e){
-            console.log(e);
-        }
-        }
         subscriber.top_rooms = (data:CommunicationRoom[])=>{
             set_dash_live_rooms!!(data);
         }
