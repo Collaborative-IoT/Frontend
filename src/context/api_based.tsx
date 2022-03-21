@@ -87,6 +87,7 @@ export const MainContext = React.createContext<{
             set_all_users_in_room(new_map);
         }
         subscriber.bad_auth =()=>{
+            console.log("issue_with_auth");
             localStorage.setItem("ciot_auth_status","bad");
             set_error(true)
         }
@@ -157,7 +158,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     useEffect(()=>{
         
         if (error == true){
-            push("/");
+            
         }
     },[error])
     return(    
