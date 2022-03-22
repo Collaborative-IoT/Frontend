@@ -29,63 +29,19 @@ const Page = ({
   const { currentRoomId } = useCurrentRoomIdStore();
   const { push } = useRouter();
   const { t } = useTypeSafeTranslation();
-  const {dash_live_rooms} = useContext(MainContext);
+  const {dash_live_rooms,client} = useContext(MainContext);
 
   const rooms:CommunicationRoom[] = dash_live_rooms? dash_live_rooms:[];
-  //const { isLoading, data } = useTypeSafeQuery(
-   // ["getTopPublicRooms", cursor],
-    //{
-    //  staleTime: Infinity,
-    //  enabled: !isServer,
-     // refetchOnMount: "always",
-      //refetchInterval: 10000,
-    //},
-    //[cursor]
-  //);
-
-  // useEffect(() => {
-  //   if (shouldAlert && !isElectron()) {
-  //     showErrorToast(
-  //       t("pages.home.desktopAlert"),
-  //       "sticky",
-  //       <BannerButton
-  //         onClick={() => {
-  //           window.location.href = window.location.origin + "/download";
-  //         }}
-  //       >
-  //         Download
-  //       </BannerButton>,
-  //       () => {
-  //         localStorage.setItem("@baklava/showDownloadAlert", "false");
-  //       }
-  //     );
-  //   }
-  // }, []);
-
-
   if (!rooms) {
     return null;
   }
-  
-
-  // if (isOnlyPage && data.rooms.length === 0) {
-  //   return (
-  //     <Button variant="small" onClick={() => refetch()}>
-  //       {t("pages.home.refresh")}
-  //     </Button>
-  //   );
-  // }
 
   return (
     <>
       {rooms.map((room:CommunicationRoom) => (
         <RoomCard
           onClick={() => {
-            //if (room.room_id !== currentRoomId) {
-              //useRoomChatStore.getState().reset();
-           // }
-
-            push(`/room/[id]`, `/room/${room.room_id}`);
+            
           }}
           key={room.room_id}
           title={room.details.name}

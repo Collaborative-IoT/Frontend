@@ -1,10 +1,7 @@
 import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions, InitRoomData } from "@collaborative/arthur";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
-import { RoomChatMessageToken, useRoomChatStore } from "../modules/room/chat/useRoomChatStore";
-import isElectron from "is-electron";
-import { useRoomChatMentionStore } from "../global-stores/useRoomChatMentionStore";
 
 type Nullable<T> = T | null;
 
@@ -158,7 +155,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     useEffect(()=>{
         
         if (error == true){
-            
+            push("/");
         }
     },[error])
     return(    
