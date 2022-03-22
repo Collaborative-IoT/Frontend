@@ -1,4 +1,4 @@
-import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions, InitRoomData } from "@collaborative/arthur";
+import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions, InitRoomData, JoinTypeInfo } from "@collaborative/arthur";
 import React, { useEffect, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
@@ -106,6 +106,17 @@ export const MainContext = React.createContext<{
         }
         subscriber.initial_room_data = (data:InitRoomData)=>{
             set_base_room_data(data);
+        }
+        subscriber.join_type_info = (data:JoinTypeInfo)=>{
+            console.log(data);
+            let request= {roomId:data.room_id, peerId:my_id};
+            if (data.as_speaker == true){
+                client.send("join-as-speaker",request);
+            }
+            else{
+                client.send("join-as-new-peer",request);
+            }
+            push(`room/${data.room_id}`);
         }
         // begin routing incoming data + auth
         client.begin();

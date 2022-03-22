@@ -26,11 +26,7 @@ const Page = ({
   isOnlyPage: boolean;
   onLoadMore: (o: number) => void;
 }) => {
-  const { currentRoomId } = useCurrentRoomIdStore();
-  const { push } = useRouter();
-  const { t } = useTypeSafeTranslation();
   const {dash_live_rooms,client} = useContext(MainContext);
-
   const rooms:CommunicationRoom[] = dash_live_rooms? dash_live_rooms:[];
   if (!rooms) {
     return null;
@@ -41,6 +37,11 @@ const Page = ({
       {rooms.map((room:CommunicationRoom) => (
         <RoomCard
           onClick={() => {
+            console.log("clickeddd", client);
+              //we make this request that sends the join type
+              //once the join type is gathered, the defined callbacks
+              //sends the join request in api_based.tsx 
+              client!!.send("join_type", {room_id:room.room_id});
             
           }}
           key={room.room_id}
@@ -57,7 +58,6 @@ const Page = ({
                   .map((x:any) => x.avatar_url!)
                   .slice(0, 3)
                   .filter((x) => x !== null)
-             
           }
           listeners={ room.num_of_people_in_room }
           tags={[]}

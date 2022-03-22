@@ -116,7 +116,7 @@ export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
                 <div className={`flex flex-1 w-full flex-col mt-4`}>
                   <RoomChatList  userMap={userMap} />
                   <RoomChatMentions users={users} />
-                  <RoomChatInput users={users} />
+                  <RoomChatInput />
                 </div>
               </div>
             </div>,

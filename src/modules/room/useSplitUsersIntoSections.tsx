@@ -41,11 +41,12 @@ export const useSplitUsersIntoSections = ({
         all_users_plus_me.push(all_users_in_room.get(key)!!);
       }
       console.log("permissions" , current_room_permissions);
+      const per = current_room_permissions as any;
       all_users_plus_me!!.forEach((u:User) => {
         let arr = listeners;
-        if (u.user_id === current_room_base_data?.creator_id ||current_room_permissions!![u.user_id]!!.is_speaker) {
+        if (u.user_id === current_room_base_data?.creator_id ||per!![u.user_id]!!.is_speaker) {
           arr = speakers;
-        } else if (current_room_permissions!![u.user_id]!!.asked_to_speak) {
+        } else if (per!![u.user_id]!!.asked_to_speak) {
           arr = askingToSpeak;
         } else if (u.user_id === user!!.user_id) {
           canIAskToSpeak = true;
@@ -54,12 +55,12 @@ export const useSplitUsersIntoSections = ({
         let flair: React.ReactNode | undefined = undefined;
 
         const isCreator = u.user_id === current_room_base_data!!.creator_id;
-        const isSpeaker = current_room_permissions!![u.user_id]!!.is_speaker;
+        const isSpeaker = per!![u.user_id]!!.is_speaker;
         const canSpeak = isCreator || isSpeaker;
         const isMuted = user!!.user_id === u.user_id ? muted : false;
         const isDeafened = user!!.user_id === u.user_id ? deafened : false;
 
-        if (isCreator || current_room_permissions!![u.user_id]!!.is_mod) {
+        if (isCreator || per!![u.user_id]!!.is_mod) {
           flair = (
             <Emote
               emote={isCreator ? "coolhouse" : "dogehouse"}

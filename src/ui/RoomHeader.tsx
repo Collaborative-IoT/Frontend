@@ -27,9 +27,10 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
           return user?.username; 
       } 
       if (all_users_in_room && current_room_base_data){
-          for (var user_data of all_users_in_room!!){
-            if (user_data.user_id === current_room_base_data.creator_id){
-              return user_data.username;
+          for (var user_key of all_users_in_room!!.keys()){
+
+            if (all_users_in_room.get(user_key)!!.user_id === current_room_base_data.creator_id){
+              return all_users_in_room.get(user_key)!!.username;
             }
           }
       }
