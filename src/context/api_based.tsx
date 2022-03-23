@@ -16,6 +16,8 @@ export const MainContext = React.createContext<{
     current_room_id:Nullable<number>;
     create_client:() => void;
     set_current_room_id:any,
+    set_all_users_in_room:any,
+    set_all_room_permissions:any,
     current_room_base_data:Nullable<InitRoomData>,
   }>({
       dash_live_rooms:[],
@@ -29,6 +31,8 @@ export const MainContext = React.createContext<{
       current_room_id:null,
       set_current_room_id:null,
       current_room_base_data:null,
+      set_all_users_in_room:null,
+      set_all_room_permissions:null
   });  
 
   const initClient = (
@@ -183,7 +187,9 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
             current_room_permissions,
             current_room_id,
             set_current_room_id,
-            current_room_base_data
+            current_room_base_data,
+            set_all_users_in_room,
+            set_all_room_permissions:set_current_permissions
         }
       }>
           {children}

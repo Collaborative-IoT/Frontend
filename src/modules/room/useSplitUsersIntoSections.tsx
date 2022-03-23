@@ -40,61 +40,64 @@ export const useSplitUsersIntoSections = ({
       for (var key of all_users_in_room.keys()){
         all_users_plus_me.push(all_users_in_room.get(key)!!);
       }
-      console.log("permissions" , current_room_permissions);
       const per = current_room_permissions as any;
       all_users_plus_me!!.forEach((u:User) => {
-        let arr = listeners;
-        if (u.user_id === current_room_base_data?.creator_id ||per!![u.user_id]!!.is_speaker) {
-          arr = speakers;
-        } else if (per!![u.user_id]!!.asked_to_speak) {
-          arr = askingToSpeak;
-        } else if (u.user_id === user!!.user_id) {
-          canIAskToSpeak = true;
-        }
 
-        let flair: React.ReactNode | undefined = undefined;
-
-        const isCreator = u.user_id === current_room_base_data!!.creator_id;
-        const isSpeaker = per!![u.user_id]!!.is_speaker;
-        const canSpeak = isCreator || isSpeaker;
-        const isMuted = user!!.user_id === u.user_id ? muted : false;
-        const isDeafened = user!!.user_id === u.user_id ? deafened : false;
-
-        if (isCreator || per!![u.user_id]!!.is_mod) {
-          flair = (
-            <Emote
-              emote={isCreator ? "coolhouse" : "dogehouse"}
-              alt={isCreator ? `admin` : `mod`}
-              title={isCreator ? `Admin` : `Mod`}
-              style={{ marginLeft: 4 }}
-              className={`w-3 h-3 ml-1`}
-            />
-          );
-        }
-
-        // for (let i = 0; i < 50; i++) {
-        arr.push(
-          <RoomAvatar
-            // key={u.id + i}
-            id={u.user_id}
-            canSpeak={canSpeak}
-            isMe={user!!.user_id === u.user_id}
-            key={u.user_id}
-            src={u.avatar_url}
-            username={u.username}
-            isBot={false}
-            activeSpeaker={
-              canSpeak && !isMuted && !isDeafened && false //make false active speaker map
+      //does the permission for this user exist?
+      //only display users with permissions.
+      if (per!![u.user_id]){      
+            let arr = listeners;
+            if (u.user_id === current_room_base_data?.creator_id ||per!![u.user_id]!!.is_speaker) {
+              arr = speakers;
+            } else if (per!![u.user_id]!!.asked_to_speak) {
+              arr = askingToSpeak;
+            } else if (u.user_id === user!!.user_id) {
+              canIAskToSpeak = true;
             }
-            muted={canSpeak && isMuted && !isDeafened}
-            deafened={isDeafened}
-            onClick={() => {
-            }}
-            flair={flair}
-          />
-        );
+
+            let flair: React.ReactNode | undefined = undefined;
+
+            const isCreator = u.user_id === current_room_base_data!!.creator_id;
+            const isSpeaker = per!![u.user_id]!!.is_speaker;
+            const canSpeak = isCreator || isSpeaker;
+            const isMuted = user!!.user_id === u.user_id ? muted : false;
+            const isDeafened = user!!.user_id === u.user_id ? deafened : false;
+
+            if (isCreator || per!![u.user_id]!!.is_mod) {
+              flair = (
+                <Emote
+                  emote={isCreator ? "coolhouse" : "dogehouse"}
+                  alt={isCreator ? `admin` : `mod`}
+                  title={isCreator ? `Admin` : `Mod`}
+                  style={{ marginLeft: 4 }}
+                  className={`w-3 h-3 ml-1`}
+                />
+              );
+            }
+
+            // for (let i = 0; i < 50; i++) {
+            arr.push(
+              <RoomAvatar
+                // key={u.id + i}
+                id={u.user_id}
+                canSpeak={canSpeak}
+                isMe={user!!.user_id === u.user_id}
+                key={u.user_id}
+                src={u.avatar_url}
+                username={u.username}
+                isBot={false}
+                activeSpeaker={
+                  canSpeak && !isMuted && !isDeafened && false //make false active speaker map
+                }
+                muted={canSpeak && isMuted && !isDeafened}
+                deafened={isDeafened}
+                onClick={() => {
+                }}
+                flair={flair}
+              />
+            );
         // }
-      });
+      }});
 
       if (canIAskToSpeak && screenType !== "fullscreen") {
         speakers.push(

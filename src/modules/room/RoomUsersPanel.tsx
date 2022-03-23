@@ -12,6 +12,8 @@ import { useMuteStore } from "../../global-stores/useMuteStore";
 import { useDeafStore } from "../../global-stores/useDeafStore";
 import { isWebRTCEnabled } from "../../lib/isWebRTCEnabled";
 import { useIsElectronMobile } from "../../global-stores/useElectronMobileStore";
+import { MainContext } from "../../context/api_based";
+import { SingleUserDataResults, User } from "@collaborative/arthur";
 
 interface RoomUsersPanelProps extends JoinRoomAndGetInfoResponse {}
 
@@ -29,6 +31,7 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
   } = useSplitUsersIntoSections({});
   const { t } = useTypeSafeTranslation();
   const me = {};
+  const {user,client, all_users_in_room,set_all_room_permissions,set_all_users_in_room,current_room_id} = useContext(MainContext);
   const muted = useMuteStore().muted;
   const deafened = useDeafStore().deafened;
   let gridTemplateColumns = "repeat(5, minmax(0, 1fr))";
@@ -50,6 +53,25 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
       });
     }
   }, [props, muted, deafened, me]);
+  useEffect(()=>{
+    
+    client!!.client_sub.new_user_joined = (user_id:string) =>{
+      if(current_room_id && user){
+        let user_id_num:number = +user_id;
+        client!!.send("single_user_data", {user_id:user_id_num});
+        client!!.send("single_user_permissions", {roomId:current_room_id, peerId:user!!.user_id})
+      }
+    }
+
+    client!!.client_sub.single_user_data = (data:SingleUserDataResults) =>{
+        if(set_all_users_in_room){
+          set_all_users_in_room((prev:Map<String,User>)=>{
+            prev.set(data.user_id.toString(), data.data);
+            return prev;
+          })
+        }
+    }
+  },[client])
 
   const { debugAudio } = useDebugAudioStore();
 
