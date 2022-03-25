@@ -88,14 +88,11 @@ export const MainContext = React.createContext<{
             set_all_users_in_room(new_map);
         }
         subscriber.bad_auth =()=>{
-            console.log("issue_with_auth");
             localStorage.setItem("ciot_auth_status","bad");
             set_error(true)
         }
         subscriber.followers = (data:GetFollowListResponse)=>{
-            console.log(data.user_ids);
-            set_my_following(data.user_ids);
-            
+            set_my_following(data.user_ids); 
         }
         subscriber.top_rooms = (data:CommunicationRoom[])=>{
             set_dash_live_rooms!!(data);
@@ -112,7 +109,6 @@ export const MainContext = React.createContext<{
             set_base_room_data(data);
         }
         subscriber.join_type_info = (data:JoinTypeInfo)=>{
-            console.log(data);
             let request= {roomId:data.room_id, peerId:my_id};
             if (data.as_speaker == true){
                 client.send("join-as-speaker",request);

@@ -12,7 +12,7 @@ import { useResize } from "../useResize";
 import { MainContext } from "../../../context/api_based";
 import { RoomChatMessageToken } from "./useRoomChatStore";
 import { v4 as uuidv4 } from 'uuid';
-import { User } from "@collaborative/arthur";
+import { SingleUserDataResults, User } from "@collaborative/arthur";
 interface ChatListProps {
   userMap: Record<string, RoomUser>;
 }
@@ -33,7 +33,7 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
     setMessage,
   } = useRoomChatStore();
   const { t } = useTypeSafeTranslation();
-  const {user,client, all_users_in_room} = useContext(MainContext);
+  const {user,client, all_users_in_room,set_all_room_permissions,set_all_users_in_room,current_room_id} = useContext(MainContext);
   console.log("messages:",messages);
 
   // Only scroll into view if not manually scrolled to top
@@ -49,6 +49,7 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
       if (user && all_users_in_room){
             try{
                 const { open } = useRoomChatStore.getState();
+                //if me
                 if (data["userId"] == user!!.user_id.toString()){
                     data["id"] = uuidv4();
                     data["avatarUrl"] = user.avatar_url;
@@ -58,7 +59,6 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
                     data["deleterId"] = "";
                     data["sentAt"] = Date.now();
                     data["isWhisper"] = false;
-
                 }
                 else{
                     const this_user:User = all_users_in_room!!.get(data["userId"])!!;

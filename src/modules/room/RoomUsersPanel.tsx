@@ -59,7 +59,7 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
       if(current_room_id && user){
         let user_id_num:number = +user_id;
         client!!.send("single_user_data", {user_id:user_id_num});
-        client!!.send("single_user_permissions", {roomId:current_room_id, peerId:user!!.user_id})
+        client!!.send("single_user_permissions", {roomId:current_room_id, peerId:user_id_num})
       }
     }
 
@@ -67,7 +67,6 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
         if(set_all_users_in_room){
           set_all_users_in_room((prev:Map<String,User>)=>{
             prev.set(data.user_id.toString(), data.data);
-            console.log("new_all_users", prev);
             return prev;
           })
         }
@@ -76,9 +75,9 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
     client!!.client_sub.single_user_permissions = (data:SingleUserPermissionResults)=>{
         if(set_all_room_permissions){
           set_all_room_permissions((prev:any)=>{
-            prev[data.user_id.toString()] = data.data;
-            console.log("new_all_permissions", prev);
-            return prev;
+            let new_data = {...prev};
+            new_data[data.user_id.toString()] = data.data;
+            return new_data;
           })
         }
     }
