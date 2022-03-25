@@ -13,7 +13,7 @@ import { useDeafStore } from "../../global-stores/useDeafStore";
 import { isWebRTCEnabled } from "../../lib/isWebRTCEnabled";
 import { useIsElectronMobile } from "../../global-stores/useElectronMobileStore";
 import { MainContext } from "../../context/api_based";
-import { SingleUserDataResults, User } from "@collaborative/arthur";
+import { SingleUserDataResults, SingleUserPermissionResults, User } from "@collaborative/arthur";
 
 interface RoomUsersPanelProps extends JoinRoomAndGetInfoResponse {}
 
@@ -67,6 +67,17 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
         if(set_all_users_in_room){
           set_all_users_in_room((prev:Map<String,User>)=>{
             prev.set(data.user_id.toString(), data.data);
+            console.log("new_all_users", prev);
+            return prev;
+          })
+        }
+    }
+
+    client!!.client_sub.single_user_permissions = (data:SingleUserPermissionResults)=>{
+        if(set_all_room_permissions){
+          set_all_room_permissions((prev:any)=>{
+            prev[data.user_id.toString()] = data.data;
+            console.log("new_all_permissions", prev);
             return prev;
           })
         }
