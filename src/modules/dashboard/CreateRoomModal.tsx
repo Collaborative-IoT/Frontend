@@ -31,7 +31,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
   const conn = useWrappedConn();
   const { t } = useTypeSafeTranslation();
   const { push } = useRouter();
-  const {client} = useContext(MainContext);
+  const {client,current_room_base_data} = useContext(MainContext);
 
   return (
     <Modal isOpen onRequestClose={onRequestClose}>
@@ -65,11 +65,26 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
               ),
             };
           }
-
           return errors;
         }}
+        
         onSubmit={({ name, privacy, description }) => {
-          client?.send("create_room", {name,desc:description,public:privacy == "public"});
+          if(edit){
+            if(current_room_base_data){
+              console.log("updating room");
+              client?.send("update_room_meta", {
+                name:name,
+                public:!privacy, 
+                description:current_room_base_data!!.details.description, 
+                auto_speaker:false, //todo fix
+                chat_throttle:current_room_base_data!!.details.chat_throttle})
+            }
+            
+          }
+          else{
+            client?.send("create_room", {name,desc:description,public:privacy == "public"});
+          }
+          
         }}
       >
         {({ setFieldValue, values, isSubmitting }) => (

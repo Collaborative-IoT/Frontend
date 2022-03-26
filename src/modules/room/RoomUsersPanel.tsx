@@ -13,7 +13,7 @@ import { useDeafStore } from "../../global-stores/useDeafStore";
 import { isWebRTCEnabled } from "../../lib/isWebRTCEnabled";
 import { useIsElectronMobile } from "../../global-stores/useElectronMobileStore";
 import { MainContext } from "../../context/api_based";
-import { SingleUserDataResults, SingleUserPermissionResults, User } from "@collaborative/arthur";
+import { InitRoomData, RoomUpdate, SingleUserDataResults, SingleUserPermissionResults, User } from "@collaborative/arthur";
 
 interface RoomUsersPanelProps extends JoinRoomAndGetInfoResponse {}
 
@@ -31,7 +31,15 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
   } = useSplitUsersIntoSections({});
   const { t } = useTypeSafeTranslation();
   const me = {};
-  const {user,client, all_users_in_room,set_all_room_permissions,set_all_users_in_room,current_room_id} = useContext(MainContext);
+  const {
+    user,
+    client, 
+    all_users_in_room,
+    set_all_room_permissions,
+    set_all_users_in_room,
+    current_room_base_data,
+    current_room_id,
+    set_base_room_data} = useContext(MainContext);
   const muted = useMuteStore().muted;
   const deafened = useDeafStore().deafened;
   let gridTemplateColumns = "repeat(5, minmax(0, 1fr))";
@@ -104,6 +112,18 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
           return prev;
         })
       }
+    }
+
+    client!!.client_sub.room_update = (data:RoomUpdate) =>{
+        if(current_room_base_data && set_base_room_data){
+            set_base_room_data((prev:InitRoomData)=>{
+              prev.details.chat_throttle = data.chat_throttle;
+              prev.details.description = data.description;
+              prev.details.is_private = !data.public;
+              prev.details.name = data.name;
+              return prev;
+            })
+        }
     }
   },[client])
 
