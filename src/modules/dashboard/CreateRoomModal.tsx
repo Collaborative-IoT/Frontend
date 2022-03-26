@@ -67,7 +67,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
           }
           return errors;
         }}
-        
+
         onSubmit={({ name, privacy, description }) => {
           if(edit){
             if(current_room_base_data){
@@ -75,7 +75,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
               client?.send("update_room_meta", {
                 name:name,
                 public:!privacy, 
-                description:current_room_base_data!!.details.description, 
+                description:description, 
                 auto_speaker:false, //todo fix
                 chat_throttle:current_room_base_data!!.details.chat_throttle})
             }
