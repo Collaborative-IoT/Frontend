@@ -33,6 +33,14 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
   const open = useRoomChatStore((s) => s.open);
   const screenType = useScreenType();
   const {current_room_base_data} = useContext(MainContext);
+  const room_visibility = ()=>{
+    if (current_room_base_data){
+      if (current_room_base_data.details.is_private){
+        return "private";
+      }
+    }
+    return "public";
+  }
   return (
     <>
     
@@ -45,9 +53,9 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
     }}
     edit
     data={{
-      name: "test",
-      description: "",
-      privacy: "public",
+      name: current_room_base_data? current_room_base_data.details.name:"loading...",
+      description: current_room_base_data? current_room_base_data.details.description:"loading...",
+      privacy:room_visibility(),
     }}
   />
 ) : null}

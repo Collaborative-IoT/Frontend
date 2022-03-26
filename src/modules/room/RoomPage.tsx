@@ -31,7 +31,6 @@ export const RoomPage: PageComponent<RoomPageProps> = ({ room }) => {
     undefined as JoinRoomAndGetInfoResponse | undefined
   );
 
-  const {current_room_base_data, all_users_in_room} = useContext(MainContext);
   const [showMobileEditModal, setShowMobileEditModal] = useState(false);
 
   return (

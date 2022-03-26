@@ -35,7 +35,7 @@ export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
   const { canSpeak, isCreator, canIAskToSpeak } = useCurrentRoomInfo();
   const { push } = useRouter();
   const { currentRoomId } = useCurrentRoomIdStore();
-  const [roomId, setRoomId] = useState("");
+  const [settings_open, set_settings_open] = useState(false);
   const [open, toggleOpen] = useRoomChatStore((s) => [s.open, s.toggleOpen]);
   const screenType = useScreenType();
   const {set_current_room_id,current_room_id, client} = useContext(MainContext);
@@ -46,7 +46,7 @@ export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
 
   return (
     <div className="flex flex-col w-full">
-      <RoomSettingsModal open={!!roomId} onRequestClose={() => setRoomId("")} />
+      <RoomSettingsModal open={settings_open} onRequestClose={() => set_settings_open(false)} />
       {screenType === "fullscreen" ? (
         <RoomOverlay
           mute={
@@ -91,7 +91,7 @@ export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
           onRoomSettings={
             isCreator
               ? () => {
-                  setRoomId(currentRoomId!);
+                  set_settings_open(true)
                 }
               : undefined
           }

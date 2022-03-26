@@ -38,6 +38,16 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
   const screenType = useScreenType();
   const isBigFullscreen = useMediaQuery({ minWidth: 640 });
 
+  const omit = (obj:any, omitKey:any)=> {
+    return Object.keys(obj).reduce((result, key) => {
+      if(key !== omitKey) {
+         result[key] = obj[key];
+      }
+      return result;
+    }, {});
+  }
+  
+
   if (isBigFullscreen && screenType === "fullscreen") {
     gridTemplateColumns = "repeat(4, minmax(0, 1fr))";
   } else if (screenType === "fullscreen") {
@@ -80,6 +90,20 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
             return new_data;
           })
         }
+    }
+
+    client!!.client_sub.user_left_room = (user_id:String)=>{
+      if(set_all_room_permissions && set_all_users_in_room){
+        
+        set_all_room_permissions((prev:any)=>{
+          return omit(prev, user_id)
+        });
+
+        set_all_users_in_room((prev:Map<String,User>)=>{
+          prev.delete(user_id);
+          return prev;
+        })
+      }
     }
   },[client])
 
