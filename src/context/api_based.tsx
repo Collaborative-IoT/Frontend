@@ -148,6 +148,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     // we need to clear it when needed.
     const [interval_handle, set_interval_handle] = useState<NodeJS.Timeout |null>(null);
     let {push} = useRouter();
+    
     useEffect(()=>{
         if (should_connect){
             let temp_client:Client = initClient(

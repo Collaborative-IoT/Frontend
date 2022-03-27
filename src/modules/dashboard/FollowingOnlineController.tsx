@@ -24,14 +24,13 @@ const Page: React.FC<{
   if (im_following && im_following.length == 0 ){
     return( <h5 className={`text-primary-100`}>None of your people are online</h5>);
   }
-    
+
   return (
     <>
       {
         im_following?im_following.map((follow_info:FollowInfo)=>{
             return <FollowerOnline {...follow_info} />
-        }):null
-        
+        }):null 
       }
       {isLastPage  ? (
         <FollowersOnlineShowMore

@@ -32,7 +32,7 @@ interface MainLayoutProps {
 export const MainLayout: React.FC<MainLayoutProps> = ({
   children,
   leftPanel = <div />,
-  rightPanel = <div />,
+  rightPanel = <div />, 
   tabletSidebar = <TabletSidebar />,
   floatingRoomInfo = <FloatingRoomInfo />,
   mobileHeader,

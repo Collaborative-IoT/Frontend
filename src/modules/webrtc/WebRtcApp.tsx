@@ -6,6 +6,7 @@ import { ActiveSpeakerListener } from "./components/ActiveSpeakerListener";
 import { AudioRender } from "./components/AudioRender";
 import { useMicIdStore } from "./stores/useMicIdStore";
 import { useVoiceStore } from "./stores/useVoiceStore";
+import { useRoomChatStore } from "../room/chat/useRoomChatStore";
 import { consumeAudio } from "./utils/consumeAudio";
 import { createTransport } from "./utils/createTransport";
 import { joinRoom } from "./utils/joinRoom";
@@ -29,7 +30,13 @@ export function closeVoiceConnections(_roomId: number | null) {
 }
 
 export const WebRtcApp: React.FC<App2Props> = () => {
-  const { client , current_room_id, set_current_room_id} = useContext(MainContext);
+  const { 
+    client , 
+    current_room_id, 
+    set_current_room_id, 
+    set_all_room_permissions,
+    set_all_users_in_room,
+    set_base_room_data} = useContext(MainContext);
   const { mic } = useVoiceStore();
   const { micId } = useMicIdStore();
   const { muted } = useMuteStore();
@@ -70,11 +77,11 @@ export const WebRtcApp: React.FC<App2Props> = () => {
     if (!client) {
       return;
     }
-      client.client_sub.you_left_room = (data:any) =>{
-          if (current_room_id?.toString() !== data.roomId) {
-            return;
-          }
+      client!!.client_sub.you_left_room = (data:any) =>{
+          useRoomChatStore.getState().clearChat();
           set_current_room_id(null);
+          set_all_room_permissions(null);
+          set_base_room_data(null);
           closeVoiceConnections(data.roomId);
           push("/dash");
       },
@@ -113,6 +120,7 @@ export const WebRtcApp: React.FC<App2Props> = () => {
         console.log("creating a device");
         try {
           set_current_room_id(+data.roomId);
+          console.log("peeer id:",+data.roomId);
           //request initial room information.
           client.send("initial_room_data", {room_id:+data.roomId});
           client.send("gather_all_users_in_room",{room_id:+data.roomId});
@@ -131,6 +139,7 @@ export const WebRtcApp: React.FC<App2Props> = () => {
         receiveVoice(client, () => flushConsumerQueue(data.roomId));
       },
       client.client_sub.you_joined_as_speaker = async(data:any) =>{
+        console.log("speaker id:",+data.roomId);
         closeVoiceConnections(null);
         useVoiceStore.getState().set({ roomId: data.roomId });
         // setStatus("connected-speaker");
@@ -163,7 +172,7 @@ export const WebRtcApp: React.FC<App2Props> = () => {
         await createTransport(client, data.roomId, "recv", data.recvTransportOptions);
         receiveVoice(client, () => flushConsumerQueue(data.roomId));
       }
-  }, [client, push, set_current_room_id]);
+  }, [client, push, current_room_id]);
 
   return (
     <>

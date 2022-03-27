@@ -125,7 +125,7 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
             })
         }
     }
-  },[client])
+  },[client,current_room_id])
 
   const { debugAudio } = useDebugAudioStore();
 

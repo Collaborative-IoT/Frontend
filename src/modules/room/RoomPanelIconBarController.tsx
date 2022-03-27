@@ -81,7 +81,6 @@ export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
           }
           deaf={{ isDeaf: deafened, onDeaf: () => setDeaf(!deafened) }}
           onLeaveRoom={() => {
-            push("/dash");
             client?.send("leave_room", {room_id:current_room_id});
             set_current_room_id(null);
           }}

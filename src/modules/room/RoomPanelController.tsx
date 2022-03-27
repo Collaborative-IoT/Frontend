@@ -43,7 +43,6 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
   }
   return (
     <>
-    
 
 {showEditModal || showMobileEditModal ? (
   <CreateRoomModal

@@ -84,10 +84,11 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
           else{
             client?.send("create_room", {name,desc:description,public:privacy == "public"});
           }
+          onRequestClose();
           
         }}
       >
-        {({ setFieldValue, values, isSubmitting }) => (
+        {({ setFieldValue, values}) => (
           <Form className={`grid grid-cols-3 gap-4 focus:outline-none w-full`}>
             <div className={`col-span-3 block`}>
               <h4 className={`mb-2 text-primary-100`}>
@@ -136,7 +137,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
             </div>
 
             <div className={`flex pt-2 space-x-3 col-span-full items-center`}>
-              <Button loading={isSubmitting} type="submit" className={`mr-3`}>
+              <Button loading={false} type="submit" className={`mr-3`}>
                 {edit ? t("common.save") : t("pages.home.createRoom")}
               </Button>
               <ButtonLink type="button" onClick={onRequestClose}>

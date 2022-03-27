@@ -34,7 +34,6 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
   } = useRoomChatStore();
   const { t } = useTypeSafeTranslation();
   const {user,client, all_users_in_room,set_all_room_permissions,set_all_users_in_room,current_room_id} = useContext(MainContext);
-  console.log("messages:",messages);
 
   // Only scroll into view if not manually scrolled to top
   useEffect(() => {
