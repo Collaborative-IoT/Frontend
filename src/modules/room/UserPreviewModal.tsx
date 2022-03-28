@@ -12,6 +12,7 @@ import { AudioDebugConsumerSection } from "./AudioDebugConsumerSection";
 import { RoomChatMessage, useRoomChatStore } from "./chat/useRoomChatStore";
 import { UserPreviewModalContext } from "./UserPreviewModalProvider";
 import { VolumeSliderController } from "./VolumeSliderController";
+import { MainContext } from "../../api_context/api_based";
 
 const UserPreview: React.FC<{
   message?: RoomChatMessage;
@@ -32,10 +33,11 @@ const UserPreview: React.FC<{
   roomPermissions,
   onClose,
 }) => {
+
+  const {user,all_users_in_room} = useContext(MainContext);
   const { t } = useTypeSafeTranslation();
   const bannedUserIdMap = useRoomChatStore((s) => s.bannedUserIdMap);
   const { debugAudio } = useDebugAudioStore();
-  const {user} = useConn();
 
   const canDoModStuffOnThisUser =
     !isMe &&
@@ -175,23 +177,27 @@ export const UserPreviewModal: React.FC<{}> = ({
 }) => {
   const { isCreator: iAmCreator, isMod } = useCurrentRoomInfo();
   const { data, setData } = useContext(UserPreviewModalContext);
-  const conn = useConn();
+  const {user,all_users_in_room,current_room_permissions,current_room_base_data} = useContext(MainContext);
   return (
     <Modal
       variant="userPreview"
       onRequestClose={() => setData(null)}
       isOpen={!!data}
     >
-      {!data ? null : (
+      {
+      // make sure our data exists
+      // we need the user to have permissions and 
+      // we need to have their data along with our data
+      !data  ? null : (
         <UserPreview
           id={data.userId}
-          isCreator={true}
+          isCreator={current_room_base_data!!.creator_id === +data.userId }
           roomPermissions={
             null
           }
-          iAmCreator={iAmCreator}
-          isMe={true}
-          iAmMod={isMod}
+          iAmCreator={user!!.user_id === current_room_base_data!!.creator_id }
+          isMe={user!!.user_id === +data.userId}
+          iAmMod={current_room_permissions!![user!!.user_id].is_mod}
           message={data.message}
           onClose={() => setData(null)}
         />
@@ -199,3 +205,5 @@ export const UserPreviewModal: React.FC<{}> = ({
     </Modal>
   );
 };
+
+

@@ -9,6 +9,7 @@ import { Emote } from "./chat/Emote";
 import { useScreenType } from "../../shared-hooks/useScreenType";
 import { User } from "@collaborative/arthur";
 import { MainContext } from "../../api_context/api_based";
+import { UserPreviewModalContext } from "./UserPreviewModalProvider";
 export const useSplitUsersIntoSections = ({
 }) => {
   const { muted } = useMuteStore();
@@ -17,6 +18,7 @@ export const useSplitUsersIntoSections = ({
   const speakers: React.ReactNode[] = [];
   const askingToSpeak: React.ReactNode[] = [];
   const listeners: React.ReactNode[] = [];
+  const {setData} = useContext(UserPreviewModalContext);
   const {user,all_users_in_room, current_room_base_data,current_room_permissions} = useContext(MainContext);
   let canIAskToSpeak = false;
   if (user && all_users_in_room && current_room_base_data && current_room_permissions){
@@ -92,6 +94,7 @@ export const useSplitUsersIntoSections = ({
                 muted={canSpeak && isMuted && !isDeafened}
                 deafened={isDeafened}
                 onClick={() => {
+                  setData({userId:u.user_id.toString()});
                 }}
                 flair={flair}
               />

@@ -3,7 +3,7 @@ import { RoomChatMessage } from "./chat/useRoomChatStore";
 
 interface UserProfileOverlayProviderProps {}
 
-type Data = { userId: string;};
+type Data = { userId: string; message?: RoomChatMessage };
 
 export const UserPreviewModalContext = React.createContext<{
   data?: Data | null;

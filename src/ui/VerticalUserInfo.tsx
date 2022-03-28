@@ -10,32 +10,23 @@ import { HeaderController } from "../modules/display/HeaderController";
 import { UserBadge } from "./UserBadge";
 import { badge, Badges } from "./UserSummaryCard";
 import { ContributorBadge, StaffBadge } from "../icons/badges";
+import { User } from "@collaborative/arthur";
 
 interface VerticalUserInfoProps {
-
-  
+  user:User  
 }
 
-const user = {
-  contributions:40,
-  username:"test",
-  botOwnerId:1,
-  staff:true,
-  avatarUrl:"https://avatars.githubusercontent.com/u/35206353?v=4",
-  numFollowers:10,
-  numFollowing:100,
-  bio:"godlike",
-  displayName:"RonTheGod",
-  id:"",
-  online:true,
-  lastOnline:  Date().toString(),
-  bannerUrl:"test"
-  }
-
-export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({}) => {
+export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({user}) => {
   const { t } = useTypeSafeTranslation();
   const badges: badge[] = [];
-  if (user.staff) {
+  const truncateString = (str:string, num:number) => {
+    if (str.length <= num) {
+      return str
+    }
+    return str.slice(0, num) + '...'
+  }
+
+  if (user.user_id == 1 || user.user_id == 2) {
     badges.push({
       content: <StaffBadge />,
       variant: "primary",
@@ -53,17 +44,7 @@ export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({}) => {
       naked: true,
     });
   }
-
-  if (user.botOwnerId) {
-    badges.push({
-      content: t("pages.viewUser.bot"),
-      variant: "primary",
-      color: "white",
-      title: t("pages.viewUser.bot"),
-    });
-  }
-
-  if (true) {
+  if (user.follows_you) {
     badges.push({
       content: t("pages.viewUser.followsYou"),
       variant: "primary-700",
@@ -76,60 +57,47 @@ export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({}) => {
     <>
       <HeaderController
         embed={{}}
-        title={`${user.displayName} (@${user.username})`}
+        title={`${user.display_name} (@${truncateString(user.username,12)})`}
       />
       <div className="flex flex-col rounded-8 pt-5 px-6 pb-4 w-full items-center">
-        <ApiPreloadLink route="profile" data={{ username: user.username }}>
           <SingleUser
             size="default"
-            src={user.avatarUrl}
-            username={user.username}
+            src={user.avatar_url}
+            username={truncateString(user.username,12)}
             hover={true}
           />
-        </ApiPreloadLink>
-        <ApiPreloadLink route="profile" data={{ username: user.username }}>
           <div className="flex mt-2 max-w-full">
             <span className="flex text-primary-100 font-bold h-full break-all line-clamp-1 truncate">
-              {user.displayName}
+              {user.display_name}
             </span>
             <span
               data-testid="profile-info-username"
               className="flex text-primary-300 ml-1 hover:underline"
             >
-              @{user.username}
+              @{truncateString(user.username,12)}
             </span>
           </div>
-        </ApiPreloadLink>
         <span className="flex justify-center mt-2">
           <Badges badges={badges} />
         </span>
 
         <div className="flex mt-2">
           <div className="flex">
-            <ApiPreloadLink
-              route="followers"
-              data={{ username: user.username }}
-            >
               <span className="text-primary-100 font-bold">
-                {kFormatter(user.numFollowers)}
+                {kFormatter(user.num_followers)}
               </span>
               <span className="text-primary-300 lowercase ml-1.5">
                 {t("pages.viewUser.followers")}
               </span>
-            </ApiPreloadLink>
           </div>
           <div className="flex ml-4">
-            <ApiPreloadLink
-              route="following"
-              data={{ username: user.username }}
-            >
+
               <span className="text-primary-100 font-bold">
-                {kFormatter(user.numFollowing)}
+                {kFormatter(user.num_following)}
               </span>
               <span className="text-primary-300 lowercase ml-1.5">
                 {t("pages.viewUser.following")}
               </span>
-            </ApiPreloadLink>
           </div>
         </div>
         <div className="flex w-full mt-2">
