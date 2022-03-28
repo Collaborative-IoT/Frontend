@@ -22,7 +22,7 @@ import { ConfirmModal } from "../shared-components/ConfirmModal";
 import isElectron from "is-electron";
 import Head from "next/head";
 import { useHostStore } from "../global-stores/useHostStore";
-import { MainContextProvider } from "../context/api_based";
+import { MainContextProvider } from "../api_context/api_based";
 
 if (!isServer) {
   init_i18n();

@@ -8,7 +8,7 @@ import {
   FollowersOnlineWrapper,
 } from "../../ui/FollowersOnline";
 import { InfoText } from "../../ui/InfoText";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 import { FollowInfo } from "@collaborative/arthur";
 
 interface FriendsOnlineControllerProps {}

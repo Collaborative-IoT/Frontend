@@ -9,7 +9,7 @@ import { EmoteKeys } from "./EmoteData";
 import { useRoomChatMentionStore } from "./useRoomChatMentionStore";
 import { useRoomChatStore } from "./useRoomChatStore";
 import { useResize } from "../useResize";
-import { MainContext } from "../../../context/api_based";
+import { MainContext } from "../../../api_context/api_based";
 import { RoomChatMessageToken } from "./useRoomChatStore";
 import { v4 as uuidv4 } from 'uuid';
 import { SingleUserDataResults, User } from "@collaborative/arthur";

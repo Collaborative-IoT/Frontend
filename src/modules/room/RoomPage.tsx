@@ -16,7 +16,7 @@ import { UserPreviewModalProvider } from "./UserPreviewModalProvider";
 import { PageHeader } from "../../ui/mobile/MobileHeader";
 import { useLeaveRoom } from "../../shared-hooks/useLeaveRoom";
 import { useConn } from "../../shared-hooks/useConn";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 
 interface RoomPageProps {
   room?: Room;

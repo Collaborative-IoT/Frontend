@@ -12,7 +12,7 @@ import { createTransport } from "./utils/createTransport";
 import { joinRoom } from "./utils/joinRoom";
 import { receiveVoice } from "./utils/receiveVoice";
 import { sendVoice } from "./utils/sendVoice";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 
 interface App2Props {}
 
@@ -139,7 +139,6 @@ export const WebRtcApp: React.FC<App2Props> = () => {
         receiveVoice(client, () => flushConsumerQueue(data.roomId));
       },
       client.client_sub.you_joined_as_speaker = async(data:any) =>{
-        console.log("speaker id:",+data.roomId);
         closeVoiceConnections(null);
         useVoiceStore.getState().set({ roomId: data.roomId });
         // setStatus("connected-speaker");

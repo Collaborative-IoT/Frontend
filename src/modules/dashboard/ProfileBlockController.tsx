@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";
 import { ContributorBadge, StaffBadge } from "../../icons/badges";
 import { useWrappedConn } from "../../shared-hooks/useConn";

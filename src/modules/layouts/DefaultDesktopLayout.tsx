@@ -5,7 +5,7 @@ import { ProfileBlockController } from "../dashboard/ProfileBlockController";
 import { MainLayout } from "./MainLayout";
 import { FloatingRoomInfo } from "./FloatingRoomInfo";
 import { TabletSidebar } from "./TabletSidebar";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 import { useRouter } from "next/router";
 
 interface DefaultDesktopLayoutProps {

@@ -9,7 +9,7 @@ import { useLeaveRoom } from "../../shared-hooks/useLeaveRoom";
 import { useSetDeaf } from "../../shared-hooks/useSetDeaf";
 import { useSetMute } from "../../shared-hooks/useSetMute";
 import { MinimizedRoomCard } from "../../ui/MinimizedRoomCard";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 
 export const MinimizedRoomCardController: React.FC = ({}) => {
   const data = useCurrentRoomFromCache();

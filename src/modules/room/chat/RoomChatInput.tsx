@@ -16,8 +16,7 @@ import { useCurrentRoomIdStore } from "../../../global-stores/useCurrentRoomIdSt
 import { useScreenType } from "../../../shared-hooks/useScreenType";
 import { useCurrentRoomFromCache } from "../../../shared-hooks/useCurrentRoomFromCache";
 import dolma from "./encoding/dolma/src";
-import { MainContext } from "../../../context/api_based";
-
+import { MainContext } from "../../../api_context/api_based";
 
 export const RoomChatInput: React.FC<{}> = ({}) => {
   const { message, setMessage } = useRoomChatStore();
@@ -35,7 +34,6 @@ export const RoomChatInput: React.FC<{}> = ({}) => {
   useEffect(() => {
     if (!open && screenType !== "fullscreen") inputRef.current?.focus(); // Prevent autofocus on mobile
   }, [open, screenType]);
-
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>

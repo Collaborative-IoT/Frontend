@@ -20,7 +20,7 @@ import { RoomChatMentions } from "./chat/RoomChatMentions";
 import { useRoomChatStore } from "./chat/useRoomChatStore";
 import RoomOverlay from "./mobile/RoomOverlay";
 import { RoomSettingsModal } from "./RoomSettingModal";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 import { useContext } from "react";
 
 export const RoomPanelIconBarController: React.FC<{users:[]}> = ({

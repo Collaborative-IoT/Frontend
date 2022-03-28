@@ -3,7 +3,7 @@ import { SolidCaretRight } from "../icons";
 import { ApiPreloadLink } from "../shared-components/ApiPreloadLink";
 import { linkRegex } from "../lib/constants";
 import normalizeUrl from "normalize-url";
-import { MainContext } from "../context/api_based";
+import { MainContext } from "../api_context/api_based";
 import {useContext} from "react";
 
 interface RoomHeaderProps {

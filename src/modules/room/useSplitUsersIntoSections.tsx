@@ -8,7 +8,7 @@ import { RoomAvatar } from "../../ui/RoomAvatar";
 import { Emote } from "./chat/Emote";
 import { useScreenType } from "../../shared-hooks/useScreenType";
 import { User } from "@collaborative/arthur";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 export const useSplitUsersIntoSections = ({
 }) => {
   const { muted } = useMuteStore();

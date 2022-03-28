@@ -12,7 +12,7 @@ import { useMuteStore } from "../../global-stores/useMuteStore";
 import { useDeafStore } from "../../global-stores/useDeafStore";
 import { isWebRTCEnabled } from "../../lib/isWebRTCEnabled";
 import { useIsElectronMobile } from "../../global-stores/useElectronMobileStore";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 import { InitRoomData, RoomUpdate, SingleUserDataResults, SingleUserPermissionResults, User } from "@collaborative/arthur";
 
 interface RoomUsersPanelProps extends JoinRoomAndGetInfoResponse {}

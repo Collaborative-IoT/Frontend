@@ -10,7 +10,7 @@ import { MiddlePanel } from "../layouts/GridPanels";
 import { EditScheduleRoomModalController } from "../scheduled-rooms/EditScheduleRoomModalController";
 import { ScheduledRoomCard } from "../scheduled-rooms/ScheduledRoomCard";
 import { CreateRoomModal } from "./CreateRoomModal";
-import {MainContext} from "../../context/api_based";
+import {MainContext} from "../../api_context/api_based";
 import { CommunicationRoom } from "@collaborative/arthur";
 
 

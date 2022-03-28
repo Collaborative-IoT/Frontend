@@ -5,7 +5,7 @@ import { SolidMegaphone, SolidMessages, SolidNotification } from "../../icons";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { DropdownController } from "../DropdownController";
 import { SingleUser } from "../UserAvatar";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 
 
 export interface RightHeaderProps {

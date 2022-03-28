@@ -13,7 +13,7 @@ import { RoomPanelIconBarController } from "./RoomPanelIconBarController";
 import { RoomUsersPanel } from "./RoomUsersPanel";
 import { useGetRoomByQueryParam } from "./useGetRoomByQueryParam";
 import { UserPreviewModal } from "./UserPreviewModal";
-import { MainContext } from "../../context/api_based";
+import { MainContext } from "../../api_context/api_based";
 
 interface RoomPanelControllerProps {
   setRoomData?: React.Dispatch<
