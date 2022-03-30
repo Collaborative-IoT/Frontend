@@ -31,7 +31,7 @@ export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({user}) => {
       content: <StaffBadge />,
       variant: "primary",
       color: "white",
-      title: t("components.userBadges.dhStaff"),
+      title: "Collaborative Staff",
       naked: true,
     });
   }
@@ -40,7 +40,7 @@ export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({user}) => {
       content: <ContributorBadge contributions={user.contributions} />,
       variant: "primary",
       color: "white",
-      title: `${t("components.userBadges.dhContributor")} (${user.contributions} ${t("pages.admin.contributions")})`,
+      title: `${"Collaborative Contributor"} (${user.contributions} ${t("pages.admin.contributions")})`,
       naked: true,
     });
   }

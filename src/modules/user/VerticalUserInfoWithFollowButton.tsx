@@ -7,6 +7,7 @@ import { Button } from "../../ui/Button";
 import { VerticalUserInfo } from "../../ui/VerticalUserInfo";
 import { UserPreviewModalContext } from "../room/UserPreviewModalProvider";
 import { MainContext } from "../../api_context/api_based";
+import { BaseUser } from "@collaborative/arthur";
 
 interface VerticalUserInfoControllerProps {
   idOrUsernameUsedForQuery: string;
@@ -19,13 +20,20 @@ export const VerticalUserInfoWithFollowButton: React.FC<VerticalUserInfoControll
   const { t } = useTypeSafeTranslation();
   const {user,all_users_in_room} = useContext(MainContext);
   const {data} = useContext(UserPreviewModalContext);
+
+  const convert_base_to_normal = (data:BaseUser)=>{
+      return {
+        ...data
+
+      }
+  }
   return (
     <>
-    {user!!.user_id == +data!!.userId? null:<VerticalUserInfo user={ all_users_in_room!!.get(data?.userId)}/>}
+    {user!!.user_id == +data!!.userId? <VerticalUserInfo user={ convert_base_to_normal(user)}/>:<VerticalUserInfo user={ all_users_in_room!!.get(data?.userId)}/>}
       
       <div className={`flex mb-5 items-center w-full justify-center`}>
         {/* @todo add real icon */}
-        { 
+        { user!!.user_id == +data!!.userId? null:
           <Button
             loading={false}
             onClick={async () => {
@@ -36,7 +44,7 @@ export const VerticalUserInfoWithFollowButton: React.FC<VerticalUserInfoControll
             color={true ? "secondary" : "primary"}
             icon={true ? null : <SolidFriendsAdd />}
           >
-            {true
+            {all_users_in_room!!.get(data?.userId)!!.you_are_following
               ? t("pages.viewUser.unfollow")
               : t("pages.viewUser.followHim")}
           </Button>
