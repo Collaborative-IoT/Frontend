@@ -26,17 +26,26 @@ export const FollowerOnline: React.FC<FollowInfo> = ({
   avatar_url: avatar,
   online,
   room_id,
-}) => (
+}) => { 
+  const truncateString = (str:string, num:number) => {
+    if (str.length <= num) {
+      return str
+    }
+    return str.slice(0, num) + '...'
+  }
+
+  return(
+
   <div className="flex py-3 w-full">
       <SingleUser
         size="sm"
         isOnline={online}
         src={avatar}
-        username={username}
+        username={truncateString(username,12)}
       />
     <div className="flex ml-3 flex-col overflow-hidden justify-center">
-        <h5 className="text-primary-100 font-bold">{username}</h5>
-      {room_id ? (
+        <h5 className="text-primary-100 font-bold">{truncateString(username,12)}</h5>
+      {room_id && room_id != -1 ? (
         <Link href={`/room/[id]`} as={`/room/${room_id}`}>
           <a className={`hover:underline text-primary-300 truncate block`}>
             {room_id}
@@ -45,7 +54,7 @@ export const FollowerOnline: React.FC<FollowInfo> = ({
       ) : null}
     </div>
   </div>
-);
+)};
 
 export const FollowersOnlineWrapper: React.FC<{
   onlineFriendCount?: number;

@@ -22,9 +22,9 @@ const Page: React.FC<{
   const { t } = useTypeSafeTranslation();
   const {im_following} = useContext(MainContext);
   if (im_following && im_following.length == 0 ){
-    return( <h5 className={`text-primary-100`}>None of your people are online</h5>);
+    return( <h5 className={`text-primary-100`}>You don't follow anyone</h5>);
   }
-
+  
   return (
     <>
       {
@@ -43,11 +43,6 @@ const Page: React.FC<{
 
 export const FollowingOnlineController: React.FC<FriendsOnlineControllerProps> = ({}) => {
   const [cursors, setCursors] = useState<number[]>([0]);
-  //const conn = useConn();
-
-  //if (!conn) {
-   // return null;
- // }
 
   return (
     <FollowersOnlineWrapper>

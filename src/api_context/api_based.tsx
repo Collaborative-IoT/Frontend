@@ -95,6 +95,7 @@ export const MainContext = React.createContext<{
         }
         subscriber.followers = (data:GetFollowListResponse)=>{
             set_my_following(data.user_ids); 
+            console.log(data);
         }
         subscriber.top_rooms = (data:CommunicationRoom[])=>{
             set_dash_live_rooms!!(data);
