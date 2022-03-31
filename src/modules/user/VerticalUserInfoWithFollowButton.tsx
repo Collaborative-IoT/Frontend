@@ -38,10 +38,10 @@ export const VerticalUserInfoWithFollowButton: React.FC<VerticalUserInfoControll
             onClick={() => {
               if (client){
                   if (all_users_in_room!!.get(data!!.userId)!!.you_are_following){
-                      client!!.send("follow_user", {user_id:+data!!.userId})
+                    client!!.send("unfollow_user", {user_id:+data!!.userId})
                   }
                   else{
-                      client!!.send("unfollow_user", {user_id:+data!!.userId})
+                    client!!.send("follow_user", {user_id:+data!!.userId})
                   }
                   setData(null);
                }
