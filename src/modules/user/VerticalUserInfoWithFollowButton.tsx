@@ -19,7 +19,7 @@ export const VerticalUserInfoWithFollowButton: React.FC<VerticalUserInfoControll
   const conn = useConn();
   const { t } = useTypeSafeTranslation();
   const {user,all_users_in_room,client} = useContext(MainContext);
-  const {data} = useContext(UserPreviewModalContext);
+  const {data,setData} = useContext(UserPreviewModalContext);
 
   const convert_base_to_normal = (data:BaseUser)=>{
       return {
@@ -43,6 +43,7 @@ export const VerticalUserInfoWithFollowButton: React.FC<VerticalUserInfoControll
                   else{
                       client!!.send("unfollow_user", {user_id:+data!!.userId})
                   }
+                  setData(null);
                }
             }}
             size="small"
