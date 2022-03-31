@@ -18,7 +18,7 @@ export const VerticalUserInfoWithFollowButton: React.FC<VerticalUserInfoControll
 }) => {
   const conn = useConn();
   const { t } = useTypeSafeTranslation();
-  const {user,all_users_in_room} = useContext(MainContext);
+  const {user,all_users_in_room,client} = useContext(MainContext);
   const {data} = useContext(UserPreviewModalContext);
 
   const convert_base_to_normal = (data:BaseUser)=>{
@@ -35,13 +35,21 @@ export const VerticalUserInfoWithFollowButton: React.FC<VerticalUserInfoControll
         { user!!.user_id == +data!!.userId? null:
           <Button
             loading={false}
-            onClick={async () => {
+            onClick={() => {
+              if (client){
+                  if (all_users_in_room!!.get(data!!.userId)!!.you_are_following){
+                      client!!.send("follow_user", {user_id:+data!!.userId})
+                  }
+                  else{
+                      client!!.send("unfollow_user", {user_id:+data!!.userId})
+                  }
+               }
             }}
             size="small"
             color={true ? "secondary" : "primary"}
             icon={true ? null : <SolidFriendsAdd />}
           >
-            {all_users_in_room!!.get(data?.userId)!!.you_are_following
+            {all_users_in_room!!.get(data!!.userId)!!.you_are_following
               ? t("pages.viewUser.unfollow")
               : t("pages.viewUser.followHim")}
           </Button>

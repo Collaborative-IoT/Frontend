@@ -180,9 +180,9 @@ export const UserPreviewModal: React.FC<{}> = ({
   const {user,all_users_in_room,current_room_permissions,current_room_base_data,client} = useContext(MainContext);
   useEffect(()=>{
     if (data && client){
-      
+      client.send("single_user_data", {user_id:+data.userId});
     }
-  },[data,client])
+  },[data])
   return (
     <Modal
       variant="userPreview"
