@@ -60,14 +60,10 @@ export const RoomPanelIconBarController: React.FC<{users:[]}> = ({
             push(`/room/[id]/invite`, `/room/${currentRoomId}/invite`);
           }}
           onRoomSettings={
-            isCreator
-              ? () => {
-                  setRoomId(currentRoomId!);
-                }
-              : undefined
+            ()=>{}
           }
           askToSpeak={
-            canIAskToSpeak ? () => {return true} : undefined
+            ()=>{}
           }
           setListener={() =>{}}
         />

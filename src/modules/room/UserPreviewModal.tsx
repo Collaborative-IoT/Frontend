@@ -1,5 +1,5 @@
 import { JoinRoomAndGetInfoResponse, RoomUser, UserWithFollowInfo } from "../ws/entities";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useDebugAudioStore } from "../../global-stores/useDebugAudio";
 import { useConn } from "../../shared-hooks/useConn";
 import { useCurrentRoomInfo } from "../../shared-hooks/useCurrentRoomInfo";
@@ -177,7 +177,12 @@ export const UserPreviewModal: React.FC<{}> = ({
 }) => {
   const { isCreator: iAmCreator, isMod } = useCurrentRoomInfo();
   const { data, setData } = useContext(UserPreviewModalContext);
-  const {user,all_users_in_room,current_room_permissions,current_room_base_data} = useContext(MainContext);
+  const {user,all_users_in_room,current_room_permissions,current_room_base_data,client} = useContext(MainContext);
+  useEffect(()=>{
+    if (data && client){
+      
+    }
+  },[data,client])
   return (
     <Modal
       variant="userPreview"

@@ -168,7 +168,6 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
         }
     },[should_connect])
     useEffect(()=>{
-        
         if (error == true){
             push("/");
         }

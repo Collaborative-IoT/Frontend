@@ -24,7 +24,6 @@ export const VerticalUserInfoWithFollowButton: React.FC<VerticalUserInfoControll
   const convert_base_to_normal = (data:BaseUser)=>{
       return {
         ...data
-
       }
   }
   return (
@@ -37,8 +36,6 @@ export const VerticalUserInfoWithFollowButton: React.FC<VerticalUserInfoControll
           <Button
             loading={false}
             onClick={async () => {
-        
-              
             }}
             size="small"
             color={true ? "secondary" : "primary"}
