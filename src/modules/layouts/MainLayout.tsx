@@ -39,7 +39,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   plusButtonURL,
 }) => {
   const screenType = useScreenType();
-  const me =undefined;
+  const me =true;
  // const mHeader = mobileHeader || (
    // <ProfileHeader
    //   avatar={me ? me.avatarUrl : "https://dogehouse.tv/favicon.ico"}

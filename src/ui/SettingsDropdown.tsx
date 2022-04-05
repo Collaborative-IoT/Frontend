@@ -1,7 +1,8 @@
-import { User } from "../modules/ws/entities";
+
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
+import { MainContext } from "../api_context/api_based";
 import { useDebugAudioStore } from "../global-stores/useDebugAudio";
 import {
   DeveloperIcon,
@@ -20,14 +21,13 @@ import { SettingsIcon } from "../ui/SettingsIcon";
 import { LanguageSelector } from "./LanguageSelector";
 
 export const SettingsDropdown: React.FC<{
-  user: User;
   onCloseDropdown: () => void;
   onActionButtonClicked: () => void;
-}> = ({ user, onCloseDropdown, onActionButtonClicked }) => {
+}> = ({ onCloseDropdown, onActionButtonClicked }) => {
   const [currentOverlay, setCurrentOverlay] = useState<ReactNode>(null);
   const { t } = useTypeSafeTranslation();
   const { debugAudio, setDebugAudio } = useDebugAudioStore();
-
+  const {user} = useContext(MainContext);
   const { push } = useRouter();
 
   return (
@@ -41,20 +41,13 @@ export const SettingsDropdown: React.FC<{
         overlay={currentOverlay}
       >
         <div className="flex flex-col">
-          <ApiPreloadLink
-            data-testid="profile-link"
-            route="profile"
-            data={{ username: user.username }}
-          >
             <SettingsIcon
               onClick={onCloseDropdown}
               icon={<SolidUser />}
               label={t("components.settingsDropdown.profile")}
               transition
             />
-          </ApiPreloadLink>
-          {/* <SettingsIcon icon={<SolidSettings />} label={"Settings"} />
-        <SettingsIcon icon={<SolidDogenitro />} label={"Wallet"} /> */}
+
           <SettingsIcon
             icon={<OutlineGlobe />}
             label={t("components.settingsDropdown.language")}
@@ -66,19 +59,7 @@ export const SettingsDropdown: React.FC<{
               )
             }
           />
-          {/* <SettingsIcon icon={<SolidHelp />} label={"Help"} /> */}
-          <a
-            href="https://github.com/benawad/dogehouse/issues"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <SettingsIcon
-              onClick={onCloseDropdown}
-              icon={<SolidBug />}
-              label={t("components.settingsDropdown.reportABug")}
-              transition
-            />
-          </a>
+        
           <SettingsIcon
             label={
               !debugAudio

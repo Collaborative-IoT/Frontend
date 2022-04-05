@@ -6,11 +6,13 @@ export const DropdownController: React.FC<{
   portal?: boolean;
   className?: string;
   innerClassName?: string;
+  overlay: (c: () => void) => React.ReactNode;
   zIndex?: number;
 }> = ({
   children,
   className,
   innerClassName,
+  overlay,
   portal = true,
   zIndex,
 }) => {
@@ -28,18 +30,50 @@ export const DropdownController: React.FC<{
     }
   );
 
+  useEffect(() => {
+    const handleDocumentClick = (event: any) => {
+      if (
+        referenceRef.current?.contains(event.target) ||
+        popperRef.current?.contains(event.target)
+      ) {
+        return;
+      }
+      setVisibility(false);
+    };
+    // listen for clicks and close dropdown on body
+    document.addEventListener("mousedown", handleDocumentClick);
+    return () => {
+      document.removeEventListener("mousedown", handleDocumentClick);
+    };
+  }, []);
+
+  const body = (
+    <div
+      className={`absolute ${className}`}
+      ref={popperRef}
+      {...attributes.popper}
+      style={{ zIndex: zIndex || 5 }}
+    >
+      <div
+        style={styles.offset}
+        className={`${visible ? "" : "hidden"} ${innerClassName}`}
+      >
+        {visible ? overlay(() => setVisibility(false)) : null}
+      </div>
+    </div>
+  );
 
   return (
     <React.Fragment>
       <button
         className="flex focus:outline-no-chrome"
         ref={referenceRef}
-        onClick={()=>{}}
+        onClick={() => setVisibility(!visible)}
         data-testid="dropdown-trigger"
       >
         {children}
       </button>
-
+      {body}
     </React.Fragment>
   );
 };

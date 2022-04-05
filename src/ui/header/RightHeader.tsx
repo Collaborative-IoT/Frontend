@@ -6,7 +6,7 @@ import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslatio
 import { DropdownController } from "../DropdownController";
 import { SingleUser } from "../UserAvatar";
 import { MainContext } from "../../api_context/api_based";
-
+import { SettingsDropdown } from "../SettingsDropdown";
 
 export interface RightHeaderProps {
   onAnnouncementsClick?: (
@@ -56,6 +56,18 @@ const RightHeader: React.FC<RightHeaderProps> = ({
         zIndex={20}
         className="top-9 right-3 md:right-0 fixed"
         innerClassName="fixed  transform -translate-x-full"
+        overlay={(close) => (
+          <SettingsDropdown
+            onActionButtonClicked={() => {
+              modalConfirm(
+                t("components.settingsDropdown.logOut.modalSubtitle"),
+                () => {
+                }
+              );
+            }}
+            onCloseDropdown={close}
+          />
+        )}
       >
         <SingleUser
           className={"focus:outline-no-chrome"}
