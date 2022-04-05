@@ -44,4 +44,3 @@ UserPage.getInitialProps = async ({ query }) => {
   }
 };
 
-UserPage.ws = true;

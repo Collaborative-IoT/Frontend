@@ -9,11 +9,11 @@ import {
   SolidMessages,
   SolidPersonAdd,
 } from "../icons";
-import { UserWithFollowInfo } from "../modules/ws/entities";
 import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";;
 import { EditProfileModal } from "../modules/user/EditProfileModal";
 import { usePreloadPush } from "../shared-components/ApiPreloadLink";
 import { badge, Badges } from "./UserSummaryCard";
+import { BaseUser } from "@collaborative/arthur";
 
 export interface ProfileHeaderProps {
   displayName: string;
@@ -22,7 +22,7 @@ export interface ProfileHeaderProps {
   pfp?: string;
   canDM?: boolean;
   isCurrentUser?: boolean;
-  user: UserWithFollowInfo;
+  user: BaseUser;
   badges?: badge[];
 }
 
@@ -44,7 +44,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   return (
     // @TODO: Add the cover api (once it's implemented)}
     <ProfileHeaderWrapper
-      coverUrl={user.bannerUrl || "https://source.unsplash.com/random"}
+      coverUrl={user.ba || "https://source.unsplash.com/random"}
     >
       <EditProfileModal
         isOpen={showEditProfileModal}
@@ -71,11 +71,11 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             data-testid="profile-info-username"
           >{`@${username}`}</p>
 
-          {user.followsYou && (
+          {
             <UserBadge color="grey" variant="primary-700">
               {t("pages.viewUser.followsYou")}
             </UserBadge>
-          )}
+          }
         </div>
         <div className="mt-2 flex">
           <Badges badges={badges} />
@@ -89,7 +89,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             <Button
               loading={true}
               size="small"
-              color={user.iBlockedThem ? "secondary" : "primary"}
+              color={ "primary"}
               onClick={async () => {
                 if (user.iBlockedThem) {
                 } else {
@@ -108,8 +108,8 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               onClick={async () => {
               }}
               size="small"
-              color={user.youAreFollowing ? "secondary" : "primary"}
-              icon={user.youAreFollowing ? null : <SolidFriends />}
+              color={ "primary"}
+              icon={ <SolidFriends />}
             >
               {user.youAreFollowing
                 ? t("pages.viewUser.unfollow")

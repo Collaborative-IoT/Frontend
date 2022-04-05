@@ -5,9 +5,10 @@ import { ProfileAbout } from "./ProfileAbout";
 import { ProfileAdmin } from "./ProfileAdmin";
 import { ProfileScheduled } from "./ProfileScheduled";
 import { UserBadgeLgProps } from "./UserBadgeLg";
+import { BaseUser } from "@collaborative/arthur";
 
 export interface ProfileTabsProps extends React.HTMLAttributes<HTMLDivElement> {
-  user: UserWithFollowInfo;
+  user: BaseUser;
   tabs?: {
     about?: boolean;
     rooms?: boolean;
@@ -106,8 +107,8 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
         <ProfileAbout
           className={activeTab !== "about" ? "hidden" : ""}
           username={user.username}
-          followers={user.numFollowers}
-          following={user.numFollowing}
+          followers={user.num_followers}
+          following={user.num_following}
           description={user.bio}
           tags={aboutTags}
         />

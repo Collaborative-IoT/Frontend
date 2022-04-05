@@ -5,10 +5,11 @@ import { ScheduledRoomCard } from "../modules/scheduled-rooms/ScheduledRoomCard"
 import { Button } from "./Button";
 import { CenterLoader } from "./CenterLoader";
 import { EditScheduleRoomModalController } from "../modules/scheduled-rooms/EditScheduleRoomModalController";
+import { BaseUser } from "@collaborative/arthur";
 
 export interface ProfileScheduledProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  user: UserWithFollowInfo;
+  user: BaseUser;
 }
 
 const List = ({
@@ -53,7 +54,7 @@ export const ProfileScheduled: React.FC<ProfileScheduledProps> = ({
   const [{ cursors, userId }, setQueryState] = useState<{
     cursors: string[];
     userId: string;
-  }>({ cursors: [""], userId: user.id });
+  }>({ cursors: [""], userId: user.user_id.toString() });
 
   return (
     <div

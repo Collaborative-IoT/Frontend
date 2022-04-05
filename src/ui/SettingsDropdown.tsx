@@ -42,12 +42,11 @@ export const SettingsDropdown: React.FC<{
       >
         <div className="flex flex-col">
             <SettingsIcon
-              onClick={onCloseDropdown}
+              onClick={()=>{push(`u/${user!!.user_id}`)}}
               icon={<SolidUser />}
               label={t("components.settingsDropdown.profile")}
               transition
             />
-
           <SettingsIcon
             icon={<OutlineGlobe />}
             label={t("components.settingsDropdown.language")}
@@ -59,7 +58,6 @@ export const SettingsDropdown: React.FC<{
               )
             }
           />
-        
           <SettingsIcon
             label={
               !debugAudio
@@ -70,7 +68,6 @@ export const SettingsDropdown: React.FC<{
             transition
             onClick={() => setDebugAudio(!debugAudio)}
           />
-
           {!isElectron() ? (
             <SettingsIcon
               onClick={() => push("/download")}
@@ -88,7 +85,7 @@ export const SettingsDropdown: React.FC<{
           />
 
           <a
-            href="https://discord.gg/wCbKBZF9cV"
+            href=""
             target="_blank"
             rel="noreferrer"
           >

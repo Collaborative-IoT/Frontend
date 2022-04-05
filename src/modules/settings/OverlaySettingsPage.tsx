@@ -25,7 +25,7 @@ export const OverlaySettingsPage: PageComponent<OverlaySettingsProps> = () => {
   const { t } = useTypeSafeTranslation();
   useEffect(() => {
     if (!isElectron() || isMac) {
-      push("/dash");
+      
     }
   }, [push]);
 

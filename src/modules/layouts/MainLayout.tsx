@@ -105,7 +105,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         <>
           {children}
           {floatingRoomInfo}
-          <AccountOverlay />
+          {typeof window !== 'undefined'?<AccountOverlay />:<></>}
+          
         </>
       );
   }

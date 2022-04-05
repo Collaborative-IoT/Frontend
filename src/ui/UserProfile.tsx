@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { UserWithFollowInfo } from "../modules/ws/entities";
 import { ProfileHeader } from "./ProfileHeader";
 import { ProfileAbout } from "./ProfileAbout";
@@ -7,6 +7,7 @@ import { badge } from "./UserSummaryCard";
 import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";
 import { UserBadgeLgProps } from "./UserBadgeLg";
 import { ContributorBadge, StaffBadge } from "../icons/badges";
+import { MainContext } from "../api_context/api_based";
 
 interface UserProfileProps {
   user: UserWithFollowInfo;
@@ -14,14 +15,13 @@ interface UserProfileProps {
 }
 
 export const UserProfile: React.FC<UserProfileProps> = ({
-  user,
   isCurrentUser,
 }) => {
   const { t } = useTypeSafeTranslation();
   const badges: badge[] = [];
   const tags: UserBadgeLgProps[] = [];
+  const {user} = useContext(MainContext);
 
-  if (user.staff) {
     badges.push({
       content: <StaffBadge />,
       variant: "primary",
@@ -33,42 +33,41 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       icon: "dogeStaff",
       children: t("components.userBadges.dhStaff"),
     });
-  }
 
-  if (user.contributions > 0) {
     badges.push({
-      content: <ContributorBadge contributions={user.contributions} />,
+      content: <ContributorBadge contributions={40} />,
       variant: "primary",
       color: "white",
-      title: `${t("components.userBadges.dhContributor")} (${user.contributions} ${t("pages.admin.contributions")})`,
+      title: `${t("components.userBadges.dhContributor")} (${40} ${t("pages.admin.contributions")})`,
       naked: true,
     });
     tags.push({
       icon: "dogeContributor",
-      contributions: user.contributions,
+      contributions: 40,
       children: t("components.userBadges.dhContributor"),
     });
-  }
+  
 
-  if (user.botOwnerId) {
+
     badges.push({
       content: t("pages.viewUser.bot"),
       variant: "primary",
       color: "white",
       title: t("pages.viewUser.bot"),
     });
-  }
+  
   return (
     <>
       <ProfileHeader
         user={user}
-        pfp={user.avatarUrl}
-        displayName={user.displayName}
-        isCurrentUser={isCurrentUser}
+        pfp={user!!.avatar_url}
+        displayName={user?.display_name}
+        isCurrentUser={true}
         username={user.username}
         badges={badges}
       />
       <ProfileTabs user={user} className="mt-4" aboutTags={tags} />
     </>
+
   );
 };

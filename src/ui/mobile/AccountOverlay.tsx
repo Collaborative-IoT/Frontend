@@ -95,11 +95,7 @@ export const AccountOverlay: React.FC<AccountOverlyProps> = ({}) => {
       >
         <div className="bg-primary-600 rounded-full w-6 h-1 absolute top-3 left-2/4 transform -translate-x-1/2"></div>
         <div>
-          <ApiPreloadLink
-            data-testid="profile-link"
-            route="profile"
-            data={{ username: conn ? conn.user.username : "" }}
-          >
+
             <SettingsIcon
               icon={
                 <SolidUser
@@ -111,7 +107,6 @@ export const AccountOverlay: React.FC<AccountOverlyProps> = ({}) => {
               label={t("components.settingsDropdown.profile")}
               onClick={() => close()}
             />
-          </ApiPreloadLink>
           <SettingsIcon
             icon={
               <OutlineGlobe
