@@ -60,7 +60,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   return (
     <>
       <ProfileHeader
-        user={user}
+        user_data={user}
         pfp={user!!.avatar_url}
         displayName={truncateString(user?.display_name,12)}
         isCurrentUser={isCurrentUser}

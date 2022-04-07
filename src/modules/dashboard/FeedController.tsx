@@ -12,9 +12,36 @@ import { ScheduledRoomCard } from "../scheduled-rooms/ScheduledRoomCard";
 import { CreateRoomModal } from "./CreateRoomModal";
 import {MainContext} from "../../api_context/api_based";
 import { CommunicationRoom } from "@collaborative/arthur";
-
+import {Look} from "./no_rooms.svg"
+import { InfoText } from "../../ui/InfoText";
+import SvgOutlineGlobe from "../../icons/NewIcon";
+import { BubbleText } from "../../ui/BubbleText";
+import { Tag } from "../../ui/Tag";
 
 interface FeedControllerProps {}
+
+const EmptyRoomsPlaceHolders = (info:string, tags:[string[]]) =>{
+  return(
+    <button
+      className="flex flex-col w-full p-4 rounded-lg transition duration-200 ease-in-out bg-primary-800 hover:bg-primary-700"
+      >
+        <div className="flex justify-between w-full space-x-4">
+          <div className="flex flex-shrink-0">
+            <BubbleText live={true}>
+              {info}
+            </BubbleText>
+          </div>
+        </div>
+        <div className="flex mt-4 space-x-2">
+        {
+          tags.map((tag:string[])=>{
+            return <Tag key={tag[0]}>{tag[1]}</Tag>
+          })
+        }
+      </div>
+    </button>
+    );
+}
 
 const Page = ({
   cursor,
@@ -31,110 +58,56 @@ const Page = ({
   if (!rooms) {
     return null;
   }
-
-  return (
-    <>
-      {rooms.map((room:CommunicationRoom) => (
-        <RoomCard
-          onClick={() => {
-            console.log("clickeddd", client);
-              //we make this request that sends the join type
-              //once the join type is gathered, the defined callbacks
-              //sends the join request in api_based.tsx 
-              client!!.send("join_type", {room_id:room.room_id});
-            
-          }}
-          key={room.room_id}
-          title={room.details.name}
-          subtitle={
-            Array.from(Object.values(room.people_preview_data))
-                  .slice(0, 3)
-                  .map((x:any) => x.display_name)
-                  .join(", ")
-             
-          }
-          avatars={
-             Array.from(Object.values(room.people_preview_data))
-                  .map((x:any) => x.avatar_url!)
-                  .slice(0, 3)
-                  .filter((x) => x !== null)
-          }
-          listeners={ room.num_of_people_in_room }
-          tags={[]}
-        />
-      ))}
-    </>
-  );
+  if (rooms.length>0){
+      return (
+        <>
+          { rooms.map((room:CommunicationRoom) => (
+            <RoomCard
+              onClick={() => {
+                console.log("clickeddd", client);
+                  //we make this request that sends the join type
+                  //once the join type is gathered, the defined callbacks
+                  //sends the join request in api_based.tsx 
+                  client!!.send("join_type", {room_id:room.room_id});
+                
+              }}
+              key={room.room_id}
+              title={room.details.name}
+              subtitle={
+                Array.from(Object.values(room.people_preview_data))
+                      .slice(0, 3)
+                      .map((x:any) => x.display_name)
+                      .join(", ")
+                
+              }
+              avatars={
+                Array.from(Object.values(room.people_preview_data))
+                      .map((x:any) => x.avatar_url!)
+                      .slice(0, 3)
+                      .filter((x) => x !== null)
+              }
+              listeners={ room.num_of_people_in_room }
+              tags={[]}
+            />
+          ))}
+        </>
+      );
+    }
+    else{
+      return(    
+        EmptyRoomsPlaceHolders("No Rooms! Be the first to create one 😎", [
+          ["Servers","2 Supported IoT Servers"], 
+          ["2","Connection Safety"], 
+          ["23","Clubhouse-Esque"], 
+          ["-","Twitch-Esque"]
+        ])       
+      );    
+    }
 };
-
-// const isMac = process.platform === "darwin";
 
 export const FeedController: React.FC<FeedControllerProps> = ({}) => {
   const [cursors, setCursors] = useState([0]);
-  //const { conn } = useContext(WebSocketContext);
-  //const { t } = useTypeSafeTranslation();
   const  [roomModal, setRoomModal] = useState(false);
-
-
-const userPreview: UserPreview = {
-  id: "222",
-  displayName: "tester",
-  numFollowers: 2,
-  avatarUrl: "",
-};
-
-
-const room:Room = {
-
-    id: "222",
-    numPeopleInside: 2,
-    voiceServerId: "222",
-    creatorId: "23423",
-    peoplePreviewList: [userPreview],
-    autoSpeaker: false,
-    inserted_at: "2",
-    chatMode: "default",
-    name: "test room 445",
-    chatThrottle: 2000,
-    isPrivate: false,
-    description: "test desc"
-
-}
-const user:User = {
-  youAreFollowing: true,
-    username: "test",
-    online: true,
-    numFollowing: 2,
-    numFollowers: 2,
-    lastOnline: "test",
-    id: "223232",
-    followsYou: true,
-    botOwnerId: "test",
-    contributions: 2,
-    staff: true,
-    displayName: "test",
-    currentRoomId: "23323",
-    currentRoom: room,
-    bio: "test",
-    avatarUrl: "test",
-    bannerUrl: "test",
-    whisperPrivacySetting: "on"
-
-
-}
-const  data:ScheduledRoom  = {    
-  roomId: "55",
-  description: "test2",
-  scheduledFor: new Date().toString(),
-  numAttending: 2,
-  name: 'test',
-  id: "321",
-  creatorId: "34",
-  creator: user }
-//  const updater = useTypeSafeUpdateQuery();
- // const screenType = useScreenType();
-  //const { currentRoomId } = useCurrentRoomIdStore();
-
   const currentRoomId = 20;
   const screenType = "fullscreen";
   let mb = "mb-7";
@@ -145,15 +118,6 @@ const  data:ScheduledRoom  = {
       mb = "mb-8";
     }
   }
-  //  }
-  //}
-  // useEffect(() => {
-  //   if (isElectron() && isMac) {
-  //     modalAlert(t("common.requestPermissions"));
-  //   }
-  // }, [t]);
-
-
   return (
     <MiddlePanel
       stickyChildren={
@@ -169,20 +133,7 @@ const  data:ScheduledRoom  = {
       <div className={`flex flex-1 flex-col ${mb}`} data-testid="feed">
         <div className="flex flex-col space-y-4">
           {
-            <EditScheduleRoomModalController
-              key={data.id}
-              onScheduledRoom={(_, editedRoomData) => {
-              }}
-            >
-              {({ onEdit }) => (
-                <ScheduledRoomCard
-                  info={data}
-                  onDeleteComplete={()=>{}}
-                  onEdit={() => onEdit({ cursor: "", scheduleRoomToEdit: data })}
-                  noCopyLinkButton
-                />
-              )}
-            </EditScheduleRoomModalController>
+            ///scheduled rooms go here
           }
           {cursors.map((cursor, i) => (
             <Page 

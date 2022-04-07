@@ -10,7 +10,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({}) => {
   return (
     <Link href="/dash">
       <a data-testid="logo-link" className="w-full">
-        <h4 style={{color:"#ffffff"}}> Collab Platform🚀</h4>
+        <h2 style={{color:"#ffffff"}}>🚀</h2>
       </a>
     </Link>
   );
