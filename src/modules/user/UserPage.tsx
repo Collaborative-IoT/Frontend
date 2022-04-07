@@ -20,7 +20,7 @@ export const UserPage: PageComponent<UserPageProps> = ({}) => {
 
   useEffect(()=>{
     if(!client){
-      router.push("/404")
+      console.log("no client" ,client);
     }
     else{
       if(user && user.user_id != userId){
@@ -29,7 +29,7 @@ export const UserPage: PageComponent<UserPageProps> = ({}) => {
           }
           client!!.send("single_user_data", {user_id:+userId});
     }
-    }},[])
+    }},[client])
   if (user_data){
     return (
       <>
