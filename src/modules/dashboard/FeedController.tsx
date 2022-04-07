@@ -20,10 +20,11 @@ import { Tag } from "../../ui/Tag";
 
 interface FeedControllerProps {}
 
-const EmptyRoomsPlaceHolders = (info:string, tags:[string[]]) =>{
+const EmptyRoomsPlaceHolders = (info:string, tags:[string[]], openRoomModal:any) =>{
   return(
     <button
       className="flex flex-col w-full p-4 rounded-lg transition duration-200 ease-in-out bg-primary-800 hover:bg-primary-700"
+      onClick={()=>{openRoomModal(true)}}
       >
         <div className="flex justify-between w-full space-x-4">
           <div className="flex flex-shrink-0">
@@ -47,11 +48,13 @@ const Page = ({
   cursor,
   isLastPage,
   onLoadMore,
+  openRoomModal,
 }: {
   cursor: number;
   isLastPage: boolean;
   isOnlyPage: boolean;
   onLoadMore: (o: number) => void;
+  openRoomModal:any;
 }) => {
   const {dash_live_rooms,client} = useContext(MainContext);
   const rooms:CommunicationRoom[] = dash_live_rooms? dash_live_rooms:[];
@@ -100,7 +103,7 @@ const Page = ({
           ["2","Connection Safety"], 
           ["23","Clubhouse-Esque"], 
           ["-","Twitch-Esque"]
-        ])       
+        ],openRoomModal)       
       );    
     }
 };
@@ -142,6 +145,7 @@ export const FeedController: React.FC<FeedControllerProps> = ({}) => {
               isOnlyPage={cursors.length === 1}
               onLoadMore={(c) => setCursors([...cursors, c])}
               isLastPage={i === cursors.length - 1}
+              openRoomModal={setRoomModal}
             />
           ))}
         </div>
