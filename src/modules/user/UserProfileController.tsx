@@ -1,7 +1,8 @@
 import { User } from "@collaborative/arthur";
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { MainContext } from "../../api_context/api_based";
 import { isServer } from "../../lib/isServer";
 import { usePreloadPush } from "../../shared-components/ApiPreloadLink";
 import { useConn } from "../../shared-hooks/useConn";
@@ -16,53 +17,32 @@ import { EditProfileModal } from "./EditProfileModal";
 import { VerticalUserInfoWithFollowButton } from "./VerticalUserInfoWithFollowButton";
 
 interface UserProfileControllerProps {
-  user:User|null
+  user_data:User|null
 }
 
 const isMac = process.platform === "darwin";
 
-export const UserProfileController: React.FC<UserProfileControllerProps> = ({user}) => {
+export const UserProfileController: React.FC<UserProfileControllerProps> = ({user_data}) => {
   const { t } = useTypeSafeTranslation();
   const { push } = useRouter();
   const { query } = useRouter();
+  const {user} = useContext(MainContext);
 
-  // commented this out as rn this shows up all the time
-  useEffect(() => {
-    if (isElectron()) {
-      const ipcRenderer = window.require("electron").ipcRenderer;
-      ipcRenderer.send("@rpc/page", {
-        page: "profile",
-        opened: true,
-        modal: false,
-        data: query.username,
-      });
-      return () => {
-        ipcRenderer.send("@rpc/page", {
-          page: "profile",
-          opened: false,
-          modal: false,
-          data: query.username,
-        });
-      };
-    }
-  }, [query]);
 
-  if (!user) {
-    return <CenterLoader />;
+  if (!user_data) {
+    return <InfoText>{t("pages.myProfile.couldNotFindUser")}</InfoText>;
+  } else if (user_data!!.they_blocked_you) {
+     return <InfoText>You have been blocked by this user.</InfoText>;
   }
 
-  if (false) {
-   // return <InfoText>{t("pages.myProfile.couldNotFindUser")}</InfoText>;
-  } else if (true) {
-   // return <InfoText>You have been blocked by this user.</InfoText>;
-  } else if (true) {
-    //return <InfoText>{data.error}</InfoText>;
+  if (!user){
+    return <InfoText>Fatal Error Encountered Try Again!</InfoText>;
   }
 
   return (
     <>
-      <UserProfile isCurrentUser={true} />
-      {true && (
+      <UserProfile user={user_data!!} isCurrentUser={user_data.user_id == user!!.user_id} />
+      {user_data.user_id == user!!.user_id && (
         <div className={`pt-6 pb-6 flex`}>
           <Button
             style={{ marginRight: "10px" }}
@@ -94,4 +74,4 @@ export const UserProfileController: React.FC<UserProfileControllerProps> = ({use
       )}
     </>
   );
-};
+}

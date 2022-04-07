@@ -13,7 +13,7 @@ import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";
 import { EditProfileModal } from "../modules/user/EditProfileModal";
 import { usePreloadPush } from "../shared-components/ApiPreloadLink";
 import { badge, Badges } from "./UserSummaryCard";
-import { BaseUser } from "@collaborative/arthur";
+import {  User } from "@collaborative/arthur";
 
 export interface ProfileHeaderProps {
   displayName: string;
@@ -22,7 +22,7 @@ export interface ProfileHeaderProps {
   pfp?: string;
   canDM?: boolean;
   isCurrentUser?: boolean;
-  user: BaseUser;
+  user: User;
   badges?: badge[];
 }
 
@@ -97,7 +97,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 }
               }}
             >
-              {user.iBlockedThem
+              {user.i_blocked_them
                 ? t("pages.viewUser.unblock")
                 : t("pages.viewUser.block")}
             </Button>
@@ -111,7 +111,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               color={ "primary"}
               icon={ <SolidFriends />}
             >
-              {user.youAreFollowing
+              {user.you_are_following
                 ? t("pages.viewUser.unfollow")
                 : t("pages.viewUser.followHim")}
             </Button>
