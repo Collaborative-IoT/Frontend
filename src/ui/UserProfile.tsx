@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserWithFollowInfo } from "../modules/ws/entities";
 import { ProfileHeader } from "./ProfileHeader";
 import { ProfileAbout } from "./ProfileAbout";
@@ -8,6 +8,8 @@ import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";
 import { UserBadgeLgProps } from "./UserBadgeLg";
 import { ContributorBadge, StaffBadge } from "../icons/badges";
 import { MainContext } from "../api_context/api_based";
+import { useRouter } from "next/router";
+import { User } from "@collaborative/arthur";
 
 interface UserProfileProps {
   user: UserWithFollowInfo;
@@ -20,7 +22,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   const { t } = useTypeSafeTranslation();
   const badges: badge[] = [];
   const tags: UserBadgeLgProps[] = [];
-  const {user} = useContext(MainContext);
+  const {user, client} = useContext(MainContext);
 
     badges.push({
       content: <StaffBadge />,
@@ -46,8 +48,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       contributions: 40,
       children: t("components.userBadges.dhContributor"),
     });
-  
-
 
     badges.push({
       content: t("pages.viewUser.bot"),

@@ -44,6 +44,7 @@ export const UserProfileController: React.FC<UserProfileControllerProps> = ({}) 
     }
   }, [query]);
 
+
   if (false) {
    // return <InfoText>{t("pages.myProfile.couldNotFindUser")}</InfoText>;
   } else if (true) {
