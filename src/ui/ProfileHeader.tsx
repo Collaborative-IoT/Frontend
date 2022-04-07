@@ -71,10 +71,11 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             data-testid="profile-info-username"
           >{`@${username}`}</p>
 
-          {
+          {user!!.follows_you &&(
             <UserBadge color="grey" variant="primary-700">
               {t("pages.viewUser.followsYou")}
             </UserBadge>
+            )
           }
         </div>
         <div className="mt-2 flex">
