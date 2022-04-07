@@ -22,7 +22,12 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   const { t } = useTypeSafeTranslation();
   const badges: badge[] = [];
   const tags: UserBadgeLgProps[] = [];
-
+  const truncateString = (str:string, num:number) => {
+    if (str.length <= num) {
+      return str
+    }
+    return str.slice(0, num) + '...'
+  }
     if(user.user_id == 1 && user.user_id == 2){
       badges.push({
         content: <StaffBadge />,
@@ -57,9 +62,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       <ProfileHeader
         user={user}
         pfp={user!!.avatar_url}
-        displayName={user?.display_name}
+        displayName={truncateString(user?.display_name,12)}
         isCurrentUser={isCurrentUser}
-        username={user.username}
+        username={truncateString(user.username,12)}
         badges={badges}
       />
       <ProfileTabs user={user} className="mt-4" aboutTags={tags} />

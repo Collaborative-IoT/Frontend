@@ -87,7 +87,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <div className="flex flex-row justify-end content-end gap-2">
           {!isCurrentUser && (
             <Button
-              loading={true}
+              loading={false}
               size="small"
               color={ "primary"}
               onClick={async () => {
@@ -104,7 +104,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           )}
           {!isCurrentUser && (
             <Button
-              loading={true}
+              loading={false}
               onClick={async () => {
               }}
               size="small"
