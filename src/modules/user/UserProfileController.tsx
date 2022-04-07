@@ -1,3 +1,4 @@
+import { User } from "@collaborative/arthur";
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -14,11 +15,13 @@ import { UserProfile } from "../../ui/UserProfile";
 import { EditProfileModal } from "./EditProfileModal";
 import { VerticalUserInfoWithFollowButton } from "./VerticalUserInfoWithFollowButton";
 
-interface UserProfileControllerProps {}
+interface UserProfileControllerProps {
+  user:User|null
+}
 
 const isMac = process.platform === "darwin";
 
-export const UserProfileController: React.FC<UserProfileControllerProps> = ({}) => {
+export const UserProfileController: React.FC<UserProfileControllerProps> = ({user}) => {
   const { t } = useTypeSafeTranslation();
   const { push } = useRouter();
   const { query } = useRouter();
@@ -44,6 +47,9 @@ export const UserProfileController: React.FC<UserProfileControllerProps> = ({}) 
     }
   }, [query]);
 
+  if (!user) {
+    return <CenterLoader />;
+  }
 
   if (false) {
    // return <InfoText>{t("pages.myProfile.couldNotFindUser")}</InfoText>;
