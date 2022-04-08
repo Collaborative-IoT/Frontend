@@ -2,6 +2,7 @@ import { Form, Formik } from "formik";
 import isElectron from "is-electron";
 import React, { useContext, useEffect } from "react";
 import { object, pattern, size, string, optional } from "superstruct";
+import { MainContext } from "../../api_context/api_based";
 import { InputField } from "../../form-fields/InputField";
 import { showErrorToast } from "../../lib/showErrorToast";
 import { validateStruct } from "../../lib/validateStruct";
@@ -48,6 +49,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   //const { conn, setUser } = useContext(WebSocketContext);
   //const { mutateAsync } = useTypeSafeMutation("editProfile");
   const { t } = useTypeSafeTranslation();
+  const {user} = useContext(MainContext);
 
   useEffect(() => {
     if (isElectron()) {
@@ -67,11 +69,11 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       {isOpen ? (
         <Formik
           initialValues={{
-            displayName: "displayName",
-            username: "username",
-            bio: "bio",
-            avatarUrl: "avatarurl",
-            bannerUrl: "bannerurl",
+            displayName: user!!.display_name,
+            username: user!!.username,
+            bio: user!!.bio,
+            avatarUrl: user!!.avatar_url,
+            bannerUrl: user!!.banner_url,
           }}
           validateOnChange={false}
           validate={()=>{}}

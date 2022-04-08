@@ -42,7 +42,7 @@ export const SettingsDropdown: React.FC<{
       >
         <div className="flex flex-col">
             <SettingsIcon
-              onClick={()=>{push(`u/2`)}}
+              onClick={()=>{push(`u/${user!!.user_id}`)}}
               icon={<SolidUser />}
               label={t("components.settingsDropdown.profile")}
               transition
