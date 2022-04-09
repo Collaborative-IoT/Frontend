@@ -49,7 +49,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   //const { conn, setUser } = useContext(WebSocketContext);
   //const { mutateAsync } = useTypeSafeMutation("editProfile");
   const { t } = useTypeSafeTranslation();
-  const {user} = useContext(MainContext);
+  const {user,client} = useContext(MainContext);
 
   useEffect(() => {
     if (isElectron()) {
@@ -77,7 +77,19 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
           }}
           validateOnChange={false}
           validate={()=>{}}
-          onSubmit={async()=>{}}
+          onSubmit={(data)=>{
+            client!!.send(
+              "update_user_data",
+              {
+                display_name:data.displayName, 
+                username:data.username, 
+                bio:data.bio, 
+                avatar_url:data.avatarUrl, 
+                banner_url:data.bannerUrl});
+              onRequestClose();
+          }
+        }
+          
         >
           {({ isSubmitting }) => (
             <Form className={`flex-col w-full`}>

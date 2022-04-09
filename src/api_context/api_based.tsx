@@ -65,6 +65,7 @@ export const MainContext = React.createContext<{
         let client = new Client(wsApiBaseUrl,subscriber,auth_credentials);
         let my_id:number|null = null;
         let my_data:BaseUser|null = null;
+        let initial_setup = true;
         subscriber.good_auth = (data:AuthResponse)=>{
             if(data.new_access){
                 localStorage.setItem("a-ciot",data.new_access);
@@ -76,11 +77,14 @@ export const MainContext = React.createContext<{
             set_user(user_data);
             my_data = user_data;
             my_id = user_data.user_id;
-            let handle = setInterval(()=>{
-                client.send("get_top_rooms",{});
-                client.send("get_following", {user_id:user_data.user_id});
-            },5000);
-            set_interval_handle(handle);
+            if (initial_setup){ 
+                let handle = setInterval(()=>{
+                    client.send("get_top_rooms",{});
+                    client.send("get_following", {user_id:user_data.user_id});
+                },5000);
+                set_interval_handle(handle);
+                initial_setup = false;
+            }
         }
         subscriber.all_users_in_room = (room_data:AllUsersInRoomResponse) =>{
             let new_map = new Map();
@@ -110,6 +114,9 @@ export const MainContext = React.createContext<{
         }
         subscriber.initial_room_data = (data:InitRoomData)=>{
             set_base_room_data(data);
+        }
+        subscriber.profile_updated= (data:any)=> {
+            client.send("my_data",{});
         }
         subscriber.join_type_info = (data:JoinTypeInfo)=>{
             let request= {roomId:data.room_id, peerId:my_id};
