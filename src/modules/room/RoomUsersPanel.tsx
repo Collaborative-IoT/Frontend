@@ -125,6 +125,36 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
             })
         }
     }
+    client!!.client_sub.new_owner = (user_id:String) =>{
+      if(current_room_base_data && set_base_room_data){
+        set_base_room_data((prev:InitRoomData)=>{
+          //should be owner_id but fine now as creator id
+          prev.creator_id = ++user_id;
+          return prev;
+        });
+      }
+    }
+
+    client!!.client_sub.new_mod = (user_id:String) =>{
+      if(set_all_room_permissions){
+        set_all_room_permissions((prev:any)=>{
+          let new_data = {...prev};
+          new_data[user_id].is_mod= true;
+          return new_data;
+        })
+      }
+    }
+    client!!.client_sub.removed_mod = (user_id:String) =>{
+      if(set_all_room_permissions){
+        set_all_room_permissions((prev:any)=>{
+          let new_data = {...prev};
+          new_data[user_id].is_mod = false;
+          return new_data;
+        })
+      }
+    }
+
+
   },[client,current_room_id])
 
   const { debugAudio } = useDebugAudioStore();

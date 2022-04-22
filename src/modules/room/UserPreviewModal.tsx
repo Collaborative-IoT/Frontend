@@ -34,7 +34,7 @@ const UserPreview: React.FC<{
   onClose,
 }) => {
 
-  const {user,all_users_in_room} = useContext(MainContext);
+  const {user,all_users_in_room ,client,current_room_id} = useContext(MainContext);
   const { t } = useTypeSafeTranslation();
   const bannedUserIdMap = useRoomChatStore((s) => s.bannedUserIdMap);
   const { debugAudio } = useDebugAudioStore();
@@ -44,6 +44,7 @@ const UserPreview: React.FC<{
     (iAmCreator || iAmMod) &&
     !isCreator &&
     (!roomPermissions?.isMod || iAmCreator);
+    console.log("can do", canDoModStuffOnThisUser);
 
   // [shouldShow, key, onClick, text]
   const buttonData = [
@@ -51,6 +52,7 @@ const UserPreview: React.FC<{
       iAmCreator && !isMe && roomPermissions?.isSpeaker,
       "changeRoomCreator",
       () => {
+        client!!.send("give_owner", {roomId:current_room_id!!, peerId:id});
         onClose();
       },
       t("components.modals.profileModal.makeRoomCreator"),
@@ -59,6 +61,7 @@ const UserPreview: React.FC<{
       !isMe && iAmCreator,
       "makeMod",
       () => {
+        client!!.send("change_user_mod_status",{new_status:roomPermissions!!.isMod, user_id:id});
         onClose();
       },
       roomPermissions?.isMod
