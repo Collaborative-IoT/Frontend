@@ -34,25 +34,25 @@ const UserPreview: React.FC<{
   onClose,
 }) => {
 
-  const {user,all_users_in_room ,client,current_room_id} = useContext(MainContext);
+  const {user,all_users_in_room ,client,current_room_id, current_room_permissions} = useContext(MainContext);
   const { t } = useTypeSafeTranslation();
   const bannedUserIdMap = useRoomChatStore((s) => s.bannedUserIdMap);
   const { debugAudio } = useDebugAudioStore();
-
+const curr_permissions = current_room_permissions!![id]!!;
   const canDoModStuffOnThisUser =
     !isMe &&
     (iAmCreator || iAmMod) &&
     !isCreator &&
-    (!roomPermissions?.isMod || iAmCreator);
+    (curr_permissions.is_mod || iAmCreator);
     console.log("can do", canDoModStuffOnThisUser);
 
   // [shouldShow, key, onClick, text]
   const buttonData = [
     [
-      iAmCreator && !isMe && roomPermissions?.isSpeaker,
+      iAmCreator && !isMe && curr_permissions.is_speaker ,
       "changeRoomCreator",
       () => {
-        client!!.send("give_owner", {roomId:current_room_id!!, peerId:id});
+        client!!.send("give_owner", {roomId:current_room_id!!, peerId:+id});
         onClose();
       },
       t("components.modals.profileModal.makeRoomCreator"),
@@ -61,17 +61,17 @@ const UserPreview: React.FC<{
       !isMe && iAmCreator,
       "makeMod",
       () => {
-        client!!.send("change_user_mod_status",{new_status:roomPermissions!!.isMod, user_id:id});
+        client!!.send("change_user_mod_status",{new_status:curr_permissions.is_mod? false:true, user_id:+id});
         onClose();
       },
-      roomPermissions?.isMod
+      curr_permissions.is_mod
         ? t("components.modals.profileModal.unmod")
         : t("components.modals.profileModal.makeMod"),
     ],
     [
       canDoModStuffOnThisUser &&
-        !roomPermissions?.isSpeaker &&
-        roomPermissions?.askedToSpeak,
+        !curr_permissions.is_speaker &&
+        curr_permissions.asked_to_speak,
       "addSpeakerButton",
       () => {
         onClose();
@@ -79,7 +79,7 @@ const UserPreview: React.FC<{
       t("components.modals.profileModal.addAsSpeaker"),
     ],
     [
-      canDoModStuffOnThisUser && roomPermissions?.isSpeaker,
+      canDoModStuffOnThisUser && curr_permissions.is_speaker,
       "moveToListenerButton",
       () => {
         onClose();
@@ -89,7 +89,7 @@ const UserPreview: React.FC<{
     [
       canDoModStuffOnThisUser &&
         !(id in bannedUserIdMap) &&
-        (iAmCreator || !roomPermissions?.isMod),
+        (iAmCreator || !curr_permissions.is_mod),
       "banFromChat",
       () => {
         onClose();
@@ -99,7 +99,7 @@ const UserPreview: React.FC<{
     [
       canDoModStuffOnThisUser &&
         id in bannedUserIdMap &&
-        (iAmCreator || !roomPermissions?.isMod),
+        (iAmCreator || !curr_permissions.is_mod),
       "unbanFromChat",
       () => {
         onClose();
@@ -107,7 +107,7 @@ const UserPreview: React.FC<{
       t("components.modals.profileModal.unBanFromChat"),
     ],
     [
-      canDoModStuffOnThisUser && (iAmCreator || !roomPermissions?.isMod),
+      canDoModStuffOnThisUser && (iAmCreator ||!curr_permissions.is_mod),
       "banFromRoom",
       () => {
         onClose();
@@ -115,7 +115,7 @@ const UserPreview: React.FC<{
       t("components.modals.profileModal.banFromRoom"),
     ],
     [
-      canDoModStuffOnThisUser && (iAmCreator || !roomPermissions?.isMod),
+      canDoModStuffOnThisUser && (iAmCreator || !curr_permissions.is_mod),
       "banIpFromRoom",
       () => {
         onClose();
@@ -125,7 +125,7 @@ const UserPreview: React.FC<{
     [
       isMe &&
         !iAmCreator &&
-        (roomPermissions?.askedToSpeak || roomPermissions?.isSpeaker),
+        (curr_permissions.asked_to_speak || curr_permissions.is_speaker),
       "goBackToListener",
       () => {
         onClose();
@@ -152,7 +152,7 @@ const UserPreview: React.FC<{
           idOrUsernameUsedForQuery={id}
         />
       </div>
-      {!isMe && (isCreator || roomPermissions?.isSpeaker) ? (
+      {!isMe && (isCreator || curr_permissions.is_speaker) ? (
         <div className={`flex pb-3 bg-primary-800`}>
           <VolumeSliderController userId={id} />
         </div>

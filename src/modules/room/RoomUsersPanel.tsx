@@ -136,12 +136,14 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
     }
 
     client!!.client_sub.new_mod = (user_id:String) =>{
+      console.log("new_mod");
       if(set_all_room_permissions){
         set_all_room_permissions((prev:any)=>{
           let new_data = {...prev};
           new_data[user_id].is_mod= true;
           return new_data;
-        })
+        });
+        console.log("new_mod_inside");
       }
     }
     client!!.client_sub.removed_mod = (user_id:String) =>{
