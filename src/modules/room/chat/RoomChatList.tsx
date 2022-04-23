@@ -33,7 +33,8 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
     setMessage,
   } = useRoomChatStore();
   const { t } = useTypeSafeTranslation();
-  const {user,client, all_users_in_room,set_all_room_permissions,set_all_users_in_room,current_room_id} = useContext(MainContext);
+  const {user,client, 
+    all_users_in_room,set_all_room_permissions,set_all_users_in_room,current_room_id,current_room_permissions} = useContext(MainContext);
 
   // Only scroll into view if not manually scrolled to top
   useEffect(() => {
@@ -107,9 +108,14 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
 
   const getBadgeIcon = (m: Message) => {
     let badge: React.ReactNode | null = null;
+    let permissions = current_room_permissions[m.userId];
+
+
       badge = (
-        <Emote title="Admin" alt="admin" size="small" emote="coolhouse" />
+        <Emote title="Admin" alt="admin" size="small" emote="ez" />
       );
+    
+
     
     return <span style={{ marginRight: 4 }}>{badge}</span>;
   };

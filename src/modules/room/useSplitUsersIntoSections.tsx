@@ -68,7 +68,7 @@ export const useSplitUsersIntoSections = ({
             if (isCreator || per!![u.user_id]!!.is_mod) {
               flair = (
                 <Emote
-                  emote={isCreator ? "coolhouse" : "dogehouse"}
+                  emote={isCreator ?"dogecool" : "ez" }
                   alt={isCreator ? `admin` : `mod`}
                   title={isCreator ? `Admin` : `Mod`}
                   style={{ marginLeft: 4 }}
