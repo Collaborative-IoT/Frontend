@@ -49,7 +49,7 @@ const curr_permissions = current_room_permissions!![id]!!;
   // [shouldShow, key, onClick, text]
   const buttonData = [
     [
-      iAmCreator && !isMe && curr_permissions.is_speaker ,
+      iAmCreator && !isMe,
       "changeRoomCreator",
       () => {
         client!!.send("give_owner", {roomId:current_room_id!!, peerId:+id});

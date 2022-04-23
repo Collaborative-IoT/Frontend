@@ -129,21 +129,20 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
       if(current_room_base_data && set_base_room_data){
         set_base_room_data((prev:InitRoomData)=>{
           //should be owner_id but fine now as creator id
-          prev.creator_id = ++user_id;
+          console.log("new =", +user_id)
+          prev.creator_id = +user_id;
           return prev;
         });
       }
     }
 
     client!!.client_sub.new_mod = (user_id:String) =>{
-      console.log("new_mod");
       if(set_all_room_permissions){
         set_all_room_permissions((prev:any)=>{
           let new_data = {...prev};
           new_data[user_id].is_mod= true;
           return new_data;
         });
-        console.log("new_mod_inside");
       }
     }
     client!!.client_sub.removed_mod = (user_id:String) =>{
