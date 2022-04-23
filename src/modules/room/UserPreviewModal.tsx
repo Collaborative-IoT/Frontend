@@ -74,6 +74,7 @@ const curr_permissions = current_room_permissions!![id]!!;
         curr_permissions.asked_to_speak,
       "addSpeakerButton",
       () => {
+        client!!.send("add_speaker", {roomId:current_room_id!!, peerId:+id});
         onClose();
       },
       t("components.modals.profileModal.addAsSpeaker"),
@@ -82,6 +83,7 @@ const curr_permissions = current_room_permissions!![id]!!;
       canDoModStuffOnThisUser && curr_permissions.is_speaker,
       "moveToListenerButton",
       () => {
+        client!!.send("remove_speaker",{roomId:current_room_id!!, peerId:+id});
         onClose();
       },
       t("components.modals.profileModal.moveToListener"),
@@ -128,6 +130,13 @@ const curr_permissions = current_room_permissions!![id]!!;
         (curr_permissions.asked_to_speak || curr_permissions.is_speaker),
       "goBackToListener",
       () => {
+        if (curr_permissions.asked_to_speak){
+          client!!.send("lower_hand",{roomId:current_room_id!!, peerId:+id});
+        }
+        else{
+          client!!.send("remove_speaker",{roomId:current_room_id!!, peerId:+id});
+        }
+        
         onClose();
       },
       t("components.modals.profileModal.goBackToListener"),

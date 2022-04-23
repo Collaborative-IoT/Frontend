@@ -14,6 +14,7 @@ import { isWebRTCEnabled } from "../../lib/isWebRTCEnabled";
 import { useIsElectronMobile } from "../../global-stores/useElectronMobileStore";
 import { MainContext } from "../../api_context/api_based";
 import { InitRoomData, RoomUpdate, SingleUserDataResults, SingleUserPermissionResults, User } from "@collaborative/arthur";
+import { fail } from "assert";
 
 interface RoomUsersPanelProps extends JoinRoomAndGetInfoResponse {}
 
@@ -150,6 +151,46 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
         set_all_room_permissions((prev:any)=>{
           let new_data = {...prev};
           new_data[user_id].is_mod = false;
+          return new_data;
+        })
+      }
+    }
+
+    client!!.client_sub.speaker_removed = (user_id:String) =>{
+      if(set_all_room_permissions){
+        set_all_room_permissions((prev:any)=>{
+          let new_data = {...prev};
+          new_data[user_id].is_speaker = false;
+          return new_data;
+        })
+      }
+    }
+
+    client!!.client_sub.user_hand_raised =(user_id:String) =>{
+      if(set_all_room_permissions){
+        set_all_room_permissions((prev:any)=>{
+          let new_data = {...prev};
+          new_data[user_id].asked_to_speak = true;
+          return new_data;
+        })
+      }
+    }
+
+    client!!.client_sub.user_hand_lowered =(user_id:String) =>{
+      if(set_all_room_permissions){
+        set_all_room_permissions((prev:any)=>{
+          let new_data = {...prev};
+          new_data[user_id].asked_to_speak = false;
+          return new_data;
+        })
+      }
+    }
+
+    client!!.client_sub.new_speaker = (user_id:String) =>{
+      if(set_all_room_permissions){
+        set_all_room_permissions((prev:any)=>{
+          let new_data = {...prev};
+          new_data[user_id].is_speaker = true;
           return new_data;
         })
       }

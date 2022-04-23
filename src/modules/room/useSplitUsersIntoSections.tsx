@@ -19,7 +19,7 @@ export const useSplitUsersIntoSections = ({
   const askingToSpeak: React.ReactNode[] = [];
   const listeners: React.ReactNode[] = [];
   const {setData} = useContext(UserPreviewModalContext);
-  const {user,all_users_in_room, current_room_base_data,current_room_permissions} = useContext(MainContext);
+  const {user,all_users_in_room, current_room_base_data,current_room_permissions, client, current_room_id} = useContext(MainContext);
   let canIAskToSpeak = false;
   if (user && all_users_in_room && current_room_base_data && current_room_permissions){
       let all_users_plus_me:User[] = [{
@@ -108,6 +108,7 @@ export const useSplitUsersIntoSections = ({
             <BoxedIcon
               onClick={() => {
                 modalConfirm("Would you like to ask to speak?", () => {
+                  client!!.send("raise_hand", {roomId:current_room_id, peerId:user!!.user_id});
                 });
               }}
               style={{ width: 60, height: 60 }}
