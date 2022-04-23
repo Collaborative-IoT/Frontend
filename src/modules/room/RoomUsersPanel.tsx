@@ -82,7 +82,7 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
     }
 
     client!!.client_sub.single_user_data = (data:SingleUserDataResults) =>{
-        if(set_all_users_in_room){
+        if(set_all_users_in_room && data.user_id != user!!.user_id){
           set_all_users_in_room((prev:Map<String,User>)=>{
             prev.set(data.user_id.toString(), data.data);
             return prev;
