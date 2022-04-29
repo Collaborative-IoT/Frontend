@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   SolidChatBubble,
   SolidDeafened,
@@ -7,12 +7,18 @@ import {
   SolidMicrophone,
   SolidMicrophoneOff,
   SolidSettings,
+  SolidMoon,
+  SolidNew,
+  BotIcon,
+  SolidWarning,
+  OutlineGlobe
 } from "../icons";
+import SvgSolidMoon from "../icons/SolidMoon";
 import { useScreenType } from "../shared-hooks/useScreenType";
 import { useTypeSafeTranslation } from "../shared-hooks/useTypeSafeTranslation";
 import { BoxedIcon } from "./BoxedIcon";
 import { Button } from "./Button";
-
+import {ModeContext} from "../mode_context/room_mode";
 interface RoomPanelIconBarProps {
   mute?: {
     isMuted: boolean;
@@ -38,7 +44,7 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
 }) => {
   const { t } = useTypeSafeTranslation();
   const screenType = useScreenType();
-  const [board_status, set_board_status] = useState(false);
+  const {integration_mode_activated, set_integration_mode} = useContext(ModeContext);
   return (
     <div className="flex flex-wrap justify-center bg-primary-700 rounded-b-8 py-3 px-4 w-full sm:justify-between">
       <div className="flex my-1 justify-between w-full sm:my-0 sm:w-auto">
@@ -117,18 +123,32 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
             <SolidSettings width="20" height="20" />
           </BoxedIcon>
         ) : null}
+
+          <BoxedIcon
+            transition
+            className="mx-1 h-6.5 w-6.5"
+            color="800"
+            title={t("components.bottomVoiceControl.settings")}
+            onClick={()=>{}}
+            data-testid="room-settings"
+          >
+           <SolidNew  width="40" height="20" ></SolidNew>
+          </BoxedIcon>
+
+          <BoxedIcon
+            transition
+            className={`mx-1 h-6.5 w-6.5 ${
+              integration_mode_activated ? `bg-accent hover:bg-accent-hover text-button` : ``
+            }`}
+            color="800"
+            title={t("components.bottomVoiceControl.settings")}
+            onClick={()=>{if (integration_mode_activated){set_integration_mode(false)}else{set_integration_mode(true)}}}
+            data-testid="room-settings"
+          >
+           <SolidWarning  width="20" height="20" ></SolidWarning>
+          </BoxedIcon>
       </div>
-      <Button
-      transition
-      className="my-1 mx-1 w-full text-base sm:my-0 sm:mx-0 sm:w-15"
-      color= {board_status? "secondary-800":"accent-secondary" as any}
-      title={t("components.bottomVoiceControl.settings")}
-      onClick={()=>{if (board_status){set_board_status(false)}else{set_board_status(true)}}}
-      data-testid="room-settings"
-      >
-       Board 
-      </Button>
-       
+
       <Button
         transition
         className={`my-1 mx-1 w-full text-base sm:my-0 sm:mx-0 sm:w-1`}

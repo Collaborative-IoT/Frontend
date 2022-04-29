@@ -23,6 +23,7 @@ import isElectron from "is-electron";
 import Head from "next/head";
 import { useHostStore } from "../global-stores/useHostStore";
 import { MainContextProvider } from "../api_context/api_based";
+import { ModeContextProvider } from "../mode_context/room_mode";
 
 if (!isServer) {
   init_i18n();
@@ -70,22 +71,24 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <MainContextProvider should_connect ={!!(Component as PageComponent<unknown>).ws}>
-          <Head>
-            <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-            <link rel="manifest" href="/manifest.json" />
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1, user-scalable=no, user-scalable=0"
-            />
-            <link rel="apple-touch-icon" href="/img/doge.png"></link>
-            <link rel="apple-touch-startup-image" href="img/doge512.png" />
-          </Head>
-          <Component {...pageProps} />
-          <SoundEffectPlayer />
-          <ErrorToastController />
-          <WebRtcApp />
-          <InvitedToJoinRoomModal />
-          <ConfirmModal />
+      <ModeContextProvider>
+            <Head>
+              <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+              <link rel="manifest" href="/manifest.json" />
+              <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1, user-scalable=no, user-scalable=0"
+              />
+              <link rel="apple-touch-icon" href="/img/doge.png"></link>
+              <link rel="apple-touch-startup-image" href="img/doge512.png" />
+            </Head>
+            <Component {...pageProps} />
+            <SoundEffectPlayer />
+            <ErrorToastController />
+            <WebRtcApp />
+            <InvitedToJoinRoomModal />
+            <ConfirmModal />
+          </ModeContextProvider>
       </MainContextProvider>
   );
 }

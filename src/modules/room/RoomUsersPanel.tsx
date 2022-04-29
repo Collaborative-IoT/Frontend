@@ -161,6 +161,9 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
         set_all_room_permissions((prev:any)=>{
           let new_data = {...prev};
           new_data[user_id].is_speaker = false;
+          //the server doesn't broadcast this update
+          //so we need to handle it on the FE automatically.
+          new_data[user_id].asked_to_speak = false;
           return new_data;
         })
       }
