@@ -44,7 +44,7 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
 }) => {
   const { t } = useTypeSafeTranslation();
   const screenType = useScreenType();
-  const {integration_mode_activated, set_integration_mode} = useContext(ModeContext);
+  const {integration_mode_activated, set_integration_mode, integration_add_open, set_integration_add} = useContext(ModeContext);
   return (
     <div className="flex flex-wrap justify-center bg-primary-700 rounded-b-8 py-3 px-4 w-full sm:justify-between">
       <div className="flex my-1 justify-between w-full sm:my-0 sm:w-auto">
@@ -123,17 +123,17 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
             <SolidSettings width="20" height="20" />
           </BoxedIcon>
         ) : null}
-
-          <BoxedIcon
+          {integration_mode_activated?    <BoxedIcon
             transition
             className="mx-1 h-6.5 w-6.5"
             color="800"
             title={t("components.bottomVoiceControl.settings")}
-            onClick={()=>{}}
+            onClick={()=>{set_integration_add(true)}}
             data-testid="room-settings"
           >
            <SolidNew  width="40" height="20" ></SolidNew>
-          </BoxedIcon>
+          </BoxedIcon>:null }
+      
 
           <BoxedIcon
             transition
