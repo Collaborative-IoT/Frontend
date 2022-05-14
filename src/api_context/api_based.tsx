@@ -1,4 +1,4 @@
-import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions, InitRoomData, JoinTypeInfo } from "@collaborative/arthur";
+import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions, InitRoomData, JoinTypeInfo, NewIoTController, PassiveData, RemovedIoTController, ExistingIotServer } from "@collaborative/arthur";
 import React, { useEffect, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 type Nullable<T> = T | null;
 
 export const MainContext = React.createContext<{
+    //normal room data
     dash_live_rooms:Nullable<CommunicationRoom[]>;
     client: Nullable<Client>;
     user:Nullable<BaseUser>;
@@ -20,6 +21,11 @@ export const MainContext = React.createContext<{
     set_all_room_permissions:any,
     set_base_room_data:any,
     current_room_base_data:Nullable<InitRoomData>,
+    //iot integrations
+    iot_server_passive_data:Nullable<Map<String,any>>,
+    iot_server_owners:Nullable<Map<String,number>>,
+    iot_server_controllers:Nullable<Map<String,Set<number>>>,
+    
   }>({
       dash_live_rooms:[],
       client: null, 
@@ -34,7 +40,10 @@ export const MainContext = React.createContext<{
       current_room_base_data:null,
       set_all_users_in_room:null,
       set_all_room_permissions:null,
-      set_base_room_data:null
+      set_base_room_data:null,
+      iot_server_passive_data:null,
+      iot_server_owners:null,
+      iot_server_controllers:null,
   });  
 
   const initClient = (
@@ -46,6 +55,9 @@ export const MainContext = React.createContext<{
       set_dash_live_rooms:React.Dispatch<React.SetStateAction<CommunicationRoom[] | null>>,
       set_all_users_in_room:React.Dispatch<React.SetStateAction<Map<string,User> | null>>,
       set_my_following:React.Dispatch<React.SetStateAction<Array<FollowInfo> | null>>,
+      set_iot_server_controllers:React.Dispatch<React.SetStateAction<Map<String, Set<number>> | null>>,
+      set_iot_server_owners:React.Dispatch<React.SetStateAction<Map<String, Set<number>> | null>>,
+      set_iot_server_passive_data:React.Dispatch<React.SetStateAction<Map<String, any> | null>>,
       push:any)=>{
     
     if (typeof window !== 'undefined'){
@@ -128,6 +140,55 @@ export const MainContext = React.createContext<{
             }
             push(`room/${data.room_id}`);
         }
+        subscriber.new_hoi_controller= (data:NewIoTController)=>{
+            set_iot_server_controllers( prev=>{
+                prev?.get(data.external_id)?.add(data.user_id);
+            });
+        }
+        subscriber.new_iot_server= (data:NewIoTController)=>{
+            set_iot_server_owners(prev=>{
+                prev?.set(data.external_id,data.user_id);
+            });
+        }
+        subscriber.passive_data = (data:PassiveData) =>{
+            set_iot_server_passive_data(prev=>{
+                prev?.set(data.external_id, data.passive_data);
+            })
+        }
+        subscriber.removed_hoi_controller = (data:RemovedIoTController) =>{
+            set_iot_server_controllers( prev=>{
+                prev?.get(data.external_id)?.delete(data.user_id);
+            });
+        }
+        subscriber.hoi_server_disconnected = (external_id:String) =>{
+            set_iot_server_passive_data(prev=>{
+                prev?.delete(external_id);
+            });
+            set_iot_server_controllers( prev=>{
+                prev?.delete(external_id);
+            });
+            set_iot_server_owners(prev=>{
+                prev?.delete(external_id);
+            });
+        }
+        subscriber.existing_iot_data = (data:Array<ExistingIotServer>) =>{
+            for (var entry of data){
+                set_iot_server_passive_data(prev=>{
+                    prev?.set(entry.external_id,entry.passive_data_snap_shot)
+                });
+                set_iot_server_controllers( prev=>{
+                    for (controller of entry.controllers_of_room){
+                        if (!prev?.has(entry.external_id)){
+                            prev?.set(entry.external_id,new Set());
+                        }
+                        prev.get(entry.external_id)?.add(controller);
+                    }
+                });
+                set_iot_server_owners(prev=>{
+                    prev?.set(entry.external_id, entry.owner_id);
+                });
+            }
+        }
         // begin routing incoming data + auth
         client.begin();
         return client;
@@ -152,7 +213,10 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [current_room_permissions, set_current_permissions] = useState<Map<number,RoomPermissions>|null>(null);
     const [current_room_id, set_current_room_id] = useState<number|null>(null);
     const [current_room_base_data, set_current_room_base_data] = useState<InitRoomData|null>(null);
-    
+    const [iot_server_controllers, set_iot_server_controllers] = useState<Map<String,Set<number>>|null>(new Map());
+    const [iot_server_owners, set_iot_server_owners] = useState<Map<String,number>|null>(new Map());
+    const [iot_server_passive_data, set_iot_server_passive_data] = useState<Map<String,any>|null>(new Map());
+
     // for the main interval triggered in the "my_data" callback of the subscriber above.
     // we need to clear it when needed.
     const [interval_handle, set_interval_handle] = useState<NodeJS.Timeout |null>(null);
@@ -169,7 +233,11 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
                 set_dash_live_rooms,
                 set_all_users_in_room,
                 set_my_following,
-                push)!!;
+                push,
+                set_iot_server_controllers,
+                set_iot_server_owners,
+                set_iot_server_passive_data
+                )!!;
             set_client((_prev:any)=>{              
                 return temp_client;
             })
@@ -197,7 +265,9 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
             current_room_base_data,
             set_all_users_in_room,
             set_all_room_permissions:set_current_permissions,
-            set_base_room_data:set_current_room_base_data
+            set_base_room_data:set_current_room_base_data,
+            iot_server_controllers,
+
         }
       }>
           {children}
