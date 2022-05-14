@@ -29,7 +29,6 @@ export const ConnectModal: React.FC<{}> = ({
         validateOnChange={false}
         validate={()=>{}}
         onSubmit={(data)=>{
-            console.log(data);
             client!!.send("connect_hoi" , 
             {"connection_str":data.connection_string , 
             "name_and_type":JSON.stringify({"name":data.name , "type":"non-bot"}), 
