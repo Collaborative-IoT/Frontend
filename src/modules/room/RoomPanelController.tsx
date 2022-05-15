@@ -13,8 +13,10 @@ import { RoomPanelIconBarController } from "./RoomPanelIconBarController";
 import { RoomUsersPanel } from "./RoomUsersPanel";
 import { useGetRoomByQueryParam } from "./useGetRoomByQueryParam";
 import { UserPreviewModal } from "./UserPreviewModal";
+import { ConnectedServersModal } from "./ConnectedServersModal";
 import { ConnectModal } from "./ServerConnectModal";
 import { MainContext } from "../../api_context/api_based";
+import { ConnectedServers } from "./ConnectedServers";
 
 interface RoomPanelControllerProps {
   setRoomData?: React.Dispatch<
@@ -77,6 +79,7 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
       }
     >
       <ConnectModal/>
+      <ConnectedServersModal/>
       <UserPreviewModal />
       {screenType === "fullscreen" && open ? null : (
         <RoomUsersPanel />

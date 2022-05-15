@@ -27,6 +27,7 @@ export const MainContext = React.createContext<{
     iot_server_controllers:Nullable<Map<String,Set<number>>>,
     iot_server_outside_names:Nullable<Map<String,String>>,
     selected_iot_server: Nullable<number>,
+    set_selected_iot_server:any,
 
     
   }>({
@@ -49,6 +50,7 @@ export const MainContext = React.createContext<{
       iot_server_controllers:null,
       iot_server_outside_names:null,
       selected_iot_server:null,
+      set_selected_iot_server:null,
   });  
 
   const initClient = (
@@ -149,45 +151,56 @@ export const MainContext = React.createContext<{
         subscriber.new_hoi_controller= (data:NewIoTController)=>{
             set_iot_server_controllers( prev=>{
                 prev?.get(data.external_id)?.add(data.user_id);
+                return prev;
             });
         }
         subscriber.new_iot_server= (data:NewIoTController)=>{
             set_iot_server_owners(prev=>{
                 prev?.set(data.external_id,data.user_id);
+                return prev;
             });
             set_iot_server_outside_names(prev=>{
+                console.log("setting:", data);
                 prev?.set(data.external_id, data.outside_name);
+                return prev;
             });
         }
         subscriber.passive_data = (data:PassiveData) =>{
-            console.log("data for it:", data)
             set_iot_server_passive_data(prev=>{
                 prev?.set(data.external_id, data.passive_data);
+                return prev;
             })
         }
         subscriber.removed_hoi_controller = (data:RemovedIoTController) =>{
             set_iot_server_controllers( prev=>{
                 prev?.get(data.external_id)?.delete(data.user_id);
+                return prev;
             });
         }
         subscriber.hoi_server_disconnected = (external_id:String) =>{
             set_iot_server_passive_data(prev=>{
                 prev?.delete(external_id);
+                return prev;
             });
             set_iot_server_controllers( prev=>{
                 prev?.delete(external_id);
+                return prev;
             });
             set_iot_server_owners(prev=>{
                 prev?.delete(external_id);
+                return prev;
             });
             set_iot_server_outside_names(prev=>{
+                console.log("setting-d:", external_id);
                 prev?.delete(external_id);
+                return prev;
             })
         }
         subscriber.existing_iot_data = (data:Array<ExistingIotServer>) =>{
             for (var entry of data){
                 set_iot_server_passive_data(prev=>{
                     prev?.set(entry.external_id,entry.passive_data_snap_shot)
+                    return prev;
                 });
                 set_iot_server_controllers( prev=>{
                     for (controller of entry.controllers_of_room){
@@ -196,12 +209,16 @@ export const MainContext = React.createContext<{
                         }
                         prev.get(entry.external_id)?.add(controller);
                     }
+                    return prev;
                 });
                 set_iot_server_owners(prev=>{
                     prev?.set(entry.external_id, entry.owner_id);
+                    return prev;
                 });
                 set_iot_server_outside_names(prev=>{
+                    console.log("setting-e:", data);
                     prev?.set(entry.external_id, entry.outside_name);
+                    return prev;
                 });
             }
         }
@@ -251,11 +268,11 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
                 set_dash_live_rooms,
                 set_all_users_in_room,
                 set_my_following,
-                push,
                 set_iot_server_controllers,
                 set_iot_server_owners,
                 set_iot_server_passive_data,
-                set_iot_server_outside_names
+                set_iot_server_outside_names,
+                push,
                 )!!;
             set_client((_prev:any)=>{              
                 return temp_client;
@@ -286,7 +303,8 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
             set_all_room_permissions:set_current_permissions,
             set_base_room_data:set_current_room_base_data,
             iot_server_controllers,
-            iot_server_outside_names
+            iot_server_outside_names,
+            set_selected_iot_server
         }
       }>
           {children}
