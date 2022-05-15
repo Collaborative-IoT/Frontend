@@ -123,18 +123,8 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
             <SolidSettings width="20" height="20" />
           </BoxedIcon>
         ) : null}
-          {integration_mode_activated?    <BoxedIcon
-            transition
-            className="mx-1 h-6.5 w-6.5"
-            color="800"
-            title={t("components.bottomVoiceControl.settings")}
-            onClick={()=>{set_integration_add(true)}}
-            data-testid="room-settings"
-          >
-           <SolidNew  width="40" height="20" ></SolidNew>
-          </BoxedIcon>:null }
-      
 
+        
           <BoxedIcon
             transition
             className={`mx-1 h-6.5 w-6.5 ${
@@ -147,6 +137,18 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
           >
            <SolidWarning  width="20" height="20" ></SolidWarning>
           </BoxedIcon>
+          {integration_mode_activated?    <BoxedIcon
+            transition
+            className="mx-1 h-6.5 w-6.5"
+            color="800"
+            title={t("components.bottomVoiceControl.settings")}
+            onClick={()=>{set_integration_add(true)}}
+            data-testid="room-settings"
+          >
+           <SolidNew  width="40" height="20" ></SolidNew>
+          </BoxedIcon>:null }
+      
+
       </div>
 
       <Button

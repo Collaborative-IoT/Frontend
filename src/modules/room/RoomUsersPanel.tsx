@@ -4,6 +4,7 @@ import React, { useEffect, useContext } from "react";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { RoomSectionHeader } from "../../ui/RoomSectionHeader";
 import { useSplitUsersIntoSections } from "./useSplitUsersIntoSections";
+import { useSplitPassiveData } from "./useSplitPassiveData";
 import { useScreenType } from "../../shared-hooks/useScreenType";
 import { useMediaQuery } from "react-responsive";
 import { AudioDebugPanel } from "../debugging/AudioDebugPanel";
@@ -15,6 +16,7 @@ import { useIsElectronMobile } from "../../global-stores/useElectronMobileStore"
 import { MainContext } from "../../api_context/api_based";
 import { InitRoomData, RoomUpdate, SingleUserDataResults, SingleUserPermissionResults, User } from "@collaborative/arthur";
 import { fail } from "assert";
+import { ModeContext } from "../../mode_context/room_mode";
 
 interface RoomUsersPanelProps extends JoinRoomAndGetInfoResponse {}
 
@@ -30,6 +32,7 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
     speakers,
     canIAskToSpeak,
   } = useSplitUsersIntoSections({});
+  const {bots} = useSplitPassiveData();
   const { t } = useTypeSafeTranslation();
   const me = {};
   const {
@@ -40,7 +43,9 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
     set_all_users_in_room,
     current_room_base_data,
     current_room_id,
-    set_base_room_data} = useContext(MainContext);
+    set_base_room_data,} = useContext(MainContext);
+  const {integration_mode_activated} = useContext(ModeContext);
+
   const muted = useMuteStore().muted;
   const deafened = useDeafStore().deafened;
   let gridTemplateColumns = "repeat(5, minmax(0, 1fr))";
@@ -225,26 +230,26 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
           className={`w-full grid gap-5`}
         >
           <RoomSectionHeader
-            title={t("pages.room.speakers")}
+            title={integration_mode_activated? "Bots":t("pages.room.speakers")}
             tagText={
-              "" + (canIAskToSpeak ? speakers.length - 1 : speakers.length)
+              integration_mode_activated? bots.length:"" + (canIAskToSpeak ? speakers.length - 1 : speakers.length)
             }
           />
-          {speakers}
-          {askingToSpeak.length ? (
+          {integration_mode_activated? bots : speakers}
+          {askingToSpeak.length && !integration_mode_activated ? (
             <RoomSectionHeader
               title={t("pages.room.requestingToSpeak")}
               tagText={"" + askingToSpeak.length}
             />
           ) : null}
-          {askingToSpeak}
-          {listeners.length ? (
+          {!integration_mode_activated?askingToSpeak:null}
+          {listeners.length && !integration_mode_activated ? (
             <RoomSectionHeader
               title={t("pages.room.listeners")}
               tagText={"" + listeners.length}
             />
           ) : null}
-          {listeners}
+          { integration_mode_activated? null:listeners}
           <div className={`flex h-3 w-full col-span-full`}></div>
         </div>
       </div>

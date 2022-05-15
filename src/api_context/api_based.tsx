@@ -25,6 +25,8 @@ export const MainContext = React.createContext<{
     iot_server_passive_data:Nullable<Map<String,any>>,
     iot_server_owners:Nullable<Map<String,number>>,
     iot_server_controllers:Nullable<Map<String,Set<number>>>,
+    selected_iot_server: Nullable<number>,
+
     
   }>({
       dash_live_rooms:[],
@@ -44,6 +46,7 @@ export const MainContext = React.createContext<{
       iot_server_passive_data:null,
       iot_server_owners:null,
       iot_server_controllers:null,
+      selected_iot_server:null,
   });  
 
   const initClient = (
@@ -151,6 +154,7 @@ export const MainContext = React.createContext<{
             });
         }
         subscriber.passive_data = (data:PassiveData) =>{
+            console.log("data for it:", data)
             set_iot_server_passive_data(prev=>{
                 prev?.set(data.external_id, data.passive_data);
             })
@@ -216,7 +220,8 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [iot_server_controllers, set_iot_server_controllers] = useState<Map<String,Set<number>>|null>(new Map());
     const [iot_server_owners, set_iot_server_owners] = useState<Map<String,number>|null>(new Map());
     const [iot_server_passive_data, set_iot_server_passive_data] = useState<Map<String,any>|null>(new Map());
-
+    const [selected_iot_server, set_selected_iot_server] = useState<number|null>(null);
+    
     // for the main interval triggered in the "my_data" callback of the subscriber above.
     // we need to clear it when needed.
     const [interval_handle, set_interval_handle] = useState<NodeJS.Timeout |null>(null);
