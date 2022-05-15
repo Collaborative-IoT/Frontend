@@ -160,7 +160,6 @@ export const MainContext = React.createContext<{
                 return prev;
             });
             set_iot_server_outside_names(prev=>{
-                console.log("setting:", data);
                 prev?.set(data.external_id, data.outside_name);
                 return prev;
             });
@@ -191,7 +190,6 @@ export const MainContext = React.createContext<{
                 return prev;
             });
             set_iot_server_outside_names(prev=>{
-                console.log("setting-d:", external_id);
                 prev?.delete(external_id);
                 return prev;
             })
@@ -216,7 +214,6 @@ export const MainContext = React.createContext<{
                     return prev;
                 });
                 set_iot_server_outside_names(prev=>{
-                    console.log("setting-e:", data);
                     prev?.set(entry.external_id, entry.outside_name);
                     return prev;
                 });
@@ -304,7 +301,10 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
             set_base_room_data:set_current_room_base_data,
             iot_server_controllers,
             iot_server_outside_names,
-            set_selected_iot_server
+            iot_server_passive_data,
+            iot_server_owners,
+            set_selected_iot_server,
+            selected_iot_server
         }
       }>
           {children}

@@ -25,9 +25,10 @@ export const useSplitPassiveData = () => {
       iot_server_passive_data && 
       iot_server_owners){
       let all_bots = [];
+ 
       if (iot_server_passive_data.has(selected_iot_server)){
-        let bot_data = JSON.parse(iot_server_passive_data.get(selected_iot_server));
-        if (bot_data["bots"]){
+        let bot_data =  JSON.parse(JSON.parse(iot_server_passive_data.get(selected_iot_server)));
+        if (bot_data["bots"]  != null){
             for(let bot_obj of bot_data["bots"]){
                 all_bots.push({"name":bot_obj["device_name"], "type":bot_obj["type"]});
             }
@@ -43,7 +44,7 @@ export const useSplitPassiveData = () => {
                 canSpeak={false}
                 isMe={false}
                 key={data["name"]}
-                src="https://github.com/House-of-IoT/HOI-WebClient/blob/master/Frontend/src/Img/bot.png"
+                src="https://github.com/House-of-IoT/HOI-WebClient/blob/8459cfee7970d53a916ce478a4f3acf4efc1e9ed/Frontend/src/Img/bot.png?raw=true"
                 username={data["name"]}
                 isBot={false}
                 activeSpeaker={false }
