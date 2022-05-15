@@ -25,6 +25,7 @@ export const MainContext = React.createContext<{
     iot_server_passive_data:Nullable<Map<String,any>>,
     iot_server_owners:Nullable<Map<String,number>>,
     iot_server_controllers:Nullable<Map<String,Set<number>>>,
+    iot_server_outside_names:Nullable<Map<String,String>>,
     selected_iot_server: Nullable<number>,
 
     
@@ -46,6 +47,7 @@ export const MainContext = React.createContext<{
       iot_server_passive_data:null,
       iot_server_owners:null,
       iot_server_controllers:null,
+      iot_server_outside_names:null,
       selected_iot_server:null,
   });  
 
@@ -61,6 +63,7 @@ export const MainContext = React.createContext<{
       set_iot_server_controllers:React.Dispatch<React.SetStateAction<Map<String, Set<number>> | null>>,
       set_iot_server_owners:React.Dispatch<React.SetStateAction<Map<String, Set<number>> | null>>,
       set_iot_server_passive_data:React.Dispatch<React.SetStateAction<Map<String, any> | null>>,
+      set_iot_server_outside_names:React.Dispatch<React.SetStateAction<Map<String, String> | null>>,
       push:any)=>{
     
     if (typeof window !== 'undefined'){
@@ -152,6 +155,9 @@ export const MainContext = React.createContext<{
             set_iot_server_owners(prev=>{
                 prev?.set(data.external_id,data.user_id);
             });
+            set_iot_server_outside_names(prev=>{
+                prev?.set(data.external_id, data.outside_name);
+            });
         }
         subscriber.passive_data = (data:PassiveData) =>{
             console.log("data for it:", data)
@@ -174,6 +180,9 @@ export const MainContext = React.createContext<{
             set_iot_server_owners(prev=>{
                 prev?.delete(external_id);
             });
+            set_iot_server_outside_names(prev=>{
+                prev?.delete(external_id);
+            })
         }
         subscriber.existing_iot_data = (data:Array<ExistingIotServer>) =>{
             for (var entry of data){
@@ -190,6 +199,9 @@ export const MainContext = React.createContext<{
                 });
                 set_iot_server_owners(prev=>{
                     prev?.set(entry.external_id, entry.owner_id);
+                });
+                set_iot_server_outside_names(prev=>{
+                    prev?.set(entry.external_id, entry.outside_name);
                 });
             }
         }
@@ -220,6 +232,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
     const [iot_server_controllers, set_iot_server_controllers] = useState<Map<String,Set<number>>|null>(new Map());
     const [iot_server_owners, set_iot_server_owners] = useState<Map<String,number>|null>(new Map());
     const [iot_server_passive_data, set_iot_server_passive_data] = useState<Map<String,any>|null>(new Map());
+    const [iot_server_outside_names, set_iot_server_outside_names] = useState<Map<String,any>|null>(new Map());
     const [selected_iot_server, set_selected_iot_server] = useState<number|null>(null);
     
     // for the main interval triggered in the "my_data" callback of the subscriber above.
@@ -241,7 +254,8 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
                 push,
                 set_iot_server_controllers,
                 set_iot_server_owners,
-                set_iot_server_passive_data
+                set_iot_server_passive_data,
+                set_iot_server_outside_names
                 )!!;
             set_client((_prev:any)=>{              
                 return temp_client;
@@ -272,7 +286,7 @@ export const MainContextProvider: React.FC<{should_connect:boolean}> = ({
             set_all_room_permissions:set_current_permissions,
             set_base_room_data:set_current_room_base_data,
             iot_server_controllers,
-
+            iot_server_outside_names
         }
       }>
           {children}
