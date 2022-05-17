@@ -30,29 +30,41 @@ export const useSplitPassiveData = () => {
         let bot_data =  JSON.parse(JSON.parse(iot_server_passive_data.get(selected_iot_server)));
         if (bot_data["bots"]  != null){
             for(let bot_obj of bot_data["bots"]){
-                all_bots.push({"name":bot_obj["device_name"], "type":bot_obj["type"]});
+                all_bots.push(bot_obj);
             }
         }
       }
 
       all_bots!!.forEach((data:any) => {
+          console.log(data);
+    
       //does the permission for this user exist?
       //only display users with permissions.     
             bots.push(
-              <RoomAvatar
-                id={data["name"]}
-                canSpeak={false}
-                isMe={false}
-                key={data["name"]}
-                src="https://github.com/House-of-IoT/HOI-WebClient/blob/8459cfee7970d53a916ce478a4f3acf4efc1e9ed/Frontend/src/Img/bot.png?raw=true"
-                username={data["name"]}
-                isBot={false}
-                activeSpeaker={false }
-                muted={false}
-                deafened={false}
-                onClick={() => {
-                }}
-              />
+                <div className="flex flex-col w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
+                    <RoomAvatar
+                        id={data["device_name"]}
+                        canSpeak={false}
+                        isMe={false}
+                        key={data["device_name"]}
+                        src="https://github.com/House-of-IoT/HOI-WebClient/blob/8459cfee7970d53a916ce478a4f3acf4efc1e9ed/Frontend/src/Img/bot.png?raw=true"
+                        username={data["device_name"]}
+                        isBot={false}
+                        activeSpeaker={false }
+                        muted={false}
+                        deafened={false}
+                        onClick={() => {
+                        }}
+                    />
+                    
+                    {Object.keys(data).map((key)=>{
+                       return ( key != "data" && key != "device_name" && key != "message" && key != "alert_status"? <div className="text-primary-200 text-sm ">
+                            {key + ":" + data[key]}
+                        </div>:null )
+                    })} 
+
+                </div>
+  
             );
       });
   }

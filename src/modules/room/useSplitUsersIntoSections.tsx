@@ -10,6 +10,7 @@ import { useScreenType } from "../../shared-hooks/useScreenType";
 import { User } from "@collaborative/arthur";
 import { MainContext } from "../../api_context/api_based";
 import { UserPreviewModalContext } from "./UserPreviewModalProvider";
+import { InfoText } from "../../ui/InfoText";
 export const useSplitUsersIntoSections = ({
 }) => {
   const { muted } = useMuteStore();
@@ -98,6 +99,7 @@ export const useSplitUsersIntoSections = ({
                 }}
                 flair={flair}
               />
+
             );
         // }
       }});
