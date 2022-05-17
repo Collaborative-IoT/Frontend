@@ -37,7 +37,8 @@ export const useSplitPassiveData = () => {
 
       all_bots!!.forEach((data:any) => {
           console.log(data);
-    
+      let bot_specific_data = data["data"];
+
       //does the permission for this user exist?
       //only display users with permissions.     
             bots.push(
@@ -62,6 +63,13 @@ export const useSplitPassiveData = () => {
                             {key + ":" + data[key]}
                         </div>:null )
                     })} 
+
+                    {bot_specific_data == ""? <p className="text-accent">No Data</p>: Object.keys(bot_specific_data).map((key)=>{
+                        return (<div className="text-primary-200 text-sm ">
+                            {key + ":" + bot_specific_data[key]}
+                        </div>)
+
+                    })}
 
                 </div>
   
