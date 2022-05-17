@@ -89,18 +89,7 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
             )}
           </BoxedIcon>
         ) : null}
-        {onInvitePeopleToRoom ? (
-          <BoxedIcon
-            transition
-            className="mx-1 h-6.5 w-6.5"
-            color="800"
-            title={t("components.bottomVoiceControl.inviteUsersToRoomBtn")}
-            onClick={onInvitePeopleToRoom}
-            data-testid="invite-friends"
-          >
-            <SolidFriendsAdd height="20" />
-          </BoxedIcon>
-        ) : null}
+        
         {screenType === "1-cols" ? (
           <BoxedIcon
             transition
