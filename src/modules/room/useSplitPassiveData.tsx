@@ -11,6 +11,7 @@ import { User } from "@collaborative/arthur";
 import { MainContext } from "../../api_context/api_based";
 import { UserPreviewModalContext } from "./UserPreviewModalProvider";
 import { Button } from "../../ui/Button";
+import { ModeContext } from "../../mode_context/room_mode";
 export const useSplitPassiveData = () => {
   const bots: React.ReactNode[] = [];
   let number_of_bots = 0;
@@ -21,6 +22,8 @@ export const useSplitPassiveData = () => {
       iot_server_controllers, 
       iot_server_passive_data, 
       iot_server_owners} = useContext(MainContext);
+
+  const {set_custom_action_open} = useContext(ModeContext);
   if (
       selected_iot_server && 
       iot_server_controllers && 
@@ -46,7 +49,8 @@ export const useSplitPassiveData = () => {
         <div className="flex flex-col h-15.5 w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
             <Button
                 loading={false}
-                size={`small`}>
+                size={`small`}
+                onClick = {()=>{set_custom_action_open(true)}}>
                 Custom Action
             </Button>
             {

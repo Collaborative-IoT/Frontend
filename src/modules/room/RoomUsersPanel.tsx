@@ -75,7 +75,7 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
   // because we will be rendering larger components
   console.log("activated21:", isBigFullscreen && screenType === "fullscreen" && integration_mode_activated == true);
   if (isBigFullscreen && screenType === "fullscreen" && integration_mode_activated == true) {
-    gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
+    gridTemplateColumns = "repeat(3, minmax(0, 1fr))";
   }
   else if (screenType === "fullscreen" && integration_mode_activated== true) {
     gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
