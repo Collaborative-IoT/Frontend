@@ -10,11 +10,12 @@ import { useScreenType } from "../../shared-hooks/useScreenType";
 import { User } from "@collaborative/arthur";
 import { MainContext } from "../../api_context/api_based";
 import { UserPreviewModalContext } from "./UserPreviewModalProvider";
-
+import { Button } from "../../ui/Button";
 export const useSplitPassiveData = () => {
   const bots: React.ReactNode[] = [];
   const {
       client, 
+      user,
       selected_iot_server, 
       iot_server_controllers, 
       iot_server_passive_data, 
@@ -38,11 +39,48 @@ export const useSplitPassiveData = () => {
       all_bots!!.forEach((data:any) => {
           console.log(data);
       let bot_specific_data = data["data"];
+      //Do we have permissions or are we the owner
+      if (iot_server_controllers.get(selected_iot_server)?.has(user?.user_id) || iot_server_owners.get(selected_iot_server) == user?.user_id.toString()) {
+          bots.push(
+        <div className="flex flex-col w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
+            <Button
+                loading={false}
+                size={`small`}>
+                Execute Action
+            </Button>
+            {
+                //only owners of the connection can disconnect from the server
+                iot_server_owners.get(selected_iot_server) == user?.user_id.toString()?     
+                <Button
+                    loading={false}
+                    className = {"mt-2"}
+                    size={`small`}>
+                        Disconnect
+                </Button>:null
+            }
+            {
+                iot_server_owners.get(selected_iot_server) == user?.user_id.toString()?     
+                <Button
+                    loading={false}
+                    className = {"mt-2"}
+                    size={`small`}>
+                    Setup Relation
+                </Button>:null   
+            }
+            <Button
+                loading={false}
+                className = {"mt-2"}
+                size={`small`}>
+                View Relations        
+            </Button>
 
+       
+        </div>);
+      }
       //does the permission for this user exist?
       //only display users with permissions.     
             bots.push(
-                <div className="flex flex-col w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
+                <div className="flex flex-col w-15  rounded-8 bg-primary-700 overflow-scroll p-2">
                     <RoomAvatar
                         id={data["device_name"]}
                         canSpeak={false}
@@ -70,7 +108,6 @@ export const useSplitPassiveData = () => {
                         </div>)
 
                     })}
-
                 </div>
   
             );

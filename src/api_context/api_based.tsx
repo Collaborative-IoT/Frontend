@@ -1,4 +1,4 @@
-import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions, InitRoomData, JoinTypeInfo, NewIoTController, PassiveData, RemovedIoTController, ExistingIotServer } from "@collaborative/arthur";
+import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSubscriber, User, AllUsersInRoomResponse, GetFollowListResponse, FollowInfo, RoomPermissions, InitRoomData, JoinTypeInfo, NewIoTController, PassiveData, RemovedIoTController, ExistingIotServer, NewIoTServer } from "@collaborative/arthur";
 import React, { useEffect, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
@@ -63,7 +63,7 @@ export const MainContext = React.createContext<{
       set_all_users_in_room:React.Dispatch<React.SetStateAction<Map<string,User> | null>>,
       set_my_following:React.Dispatch<React.SetStateAction<Array<FollowInfo> | null>>,
       set_iot_server_controllers:React.Dispatch<React.SetStateAction<Map<String, Set<number>> | null>>,
-      set_iot_server_owners:React.Dispatch<React.SetStateAction<Map<String, Set<number>> | null>>,
+      set_iot_server_owners:React.Dispatch<React.SetStateAction<Map<String, number> | null>>,
       set_iot_server_passive_data:React.Dispatch<React.SetStateAction<Map<String, any> | null>>,
       set_iot_server_outside_names:React.Dispatch<React.SetStateAction<Map<String, String> | null>>,
       push:any)=>{
@@ -146,6 +146,7 @@ export const MainContext = React.createContext<{
             else{
                 client.send("join-as-new-peer",request);
             }
+            client.send("get_iot_passive",{});
             push(`room/${data.room_id}`);
         }
         subscriber.new_hoi_controller= (data:NewIoTController)=>{
@@ -154,9 +155,9 @@ export const MainContext = React.createContext<{
                 return prev;
             });
         }
-        subscriber.new_iot_server= (data:NewIoTController)=>{
+        subscriber.new_iot_server= (data:NewIoTServer)=>{
             set_iot_server_owners(prev=>{
-                prev?.set(data.external_id,data.user_id);
+                prev?.set(data.external_id,data.owner_id);
                 return prev;
             });
             set_iot_server_outside_names(prev=>{

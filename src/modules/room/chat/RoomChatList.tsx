@@ -109,7 +109,7 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
   const getBadgeIcon = (m: Message) => {
     let badge: React.ReactNode | null = null;
     let permissions = current_room_permissions[m.userId];
-    if (permissions.is_mod){
+    if (permissions && permissions.is_mod){
       badge = (
         <Emote title="Admin" alt="admin" size="small" emote="ez" />
       );

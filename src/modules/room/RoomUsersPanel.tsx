@@ -48,7 +48,11 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
 
   const muted = useMuteStore().muted;
   const deafened = useDeafStore().deafened;
-  let gridTemplateColumns = "repeat(5, minmax(0, 1fr))";
+  let gridTemplateColumns = "repeat(3, minmax(0, 1fr))";
+
+  if(!integration_mode_activated){
+    gridTemplateColumns = "repeat(5, minmax(0, 1fr))"
+  }
   const screenType = useScreenType();
   const isBigFullscreen = useMediaQuery({ minWidth: 640 });
 
@@ -66,6 +70,15 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
     gridTemplateColumns = "repeat(4, minmax(0, 1fr))";
   } else if (screenType === "fullscreen") {
     gridTemplateColumns = "repeat(3, minmax(0, 1fr))";
+  }
+  // we need smaller rows(less items in each row) 
+  // because we will be rendering larger components
+  console.log("activated21:", isBigFullscreen && screenType === "fullscreen" && integration_mode_activated == true);
+  if (isBigFullscreen && screenType === "fullscreen" && integration_mode_activated == true) {
+    gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
+  }
+  else if (screenType === "fullscreen" && integration_mode_activated== true) {
+    gridTemplateColumns = "repeat(1, minmax(0, 1fr))";
   }
   useEffect(() => {
     if (isElectron()) {
