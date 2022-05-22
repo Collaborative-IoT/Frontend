@@ -78,7 +78,7 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
     gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
   }
   else if (screenType === "fullscreen" && integration_mode_activated== true) {
-    gridTemplateColumns = "repeat(1, minmax(0, 1fr))";
+    gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
   }
   useEffect(() => {
     if (isElectron()) {

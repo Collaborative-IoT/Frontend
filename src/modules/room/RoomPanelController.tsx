@@ -94,7 +94,6 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
         <RoomPanelIconBarController users={[]} />
       </div>
     </MiddlePanel>
-
 </>
   );
 };
