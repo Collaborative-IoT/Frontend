@@ -32,7 +32,7 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
     speakers,
     canIAskToSpeak,
   } = useSplitUsersIntoSections({});
-  const {bots} = useSplitPassiveData();
+  const {bots, number_of_bots} = useSplitPassiveData();
   const { t } = useTypeSafeTranslation();
   const me = {};
   const {
@@ -245,7 +245,7 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
           <RoomSectionHeader
             title={integration_mode_activated? "Bots":t("pages.room.speakers")}
             tagText={
-              integration_mode_activated? bots.length:"" + (canIAskToSpeak ? speakers.length - 1 : speakers.length)
+              integration_mode_activated? number_of_bots:"" + (canIAskToSpeak ? speakers.length - 1 : speakers.length)
             }
           />
           {integration_mode_activated? bots : speakers}

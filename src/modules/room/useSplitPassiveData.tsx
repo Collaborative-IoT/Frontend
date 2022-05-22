@@ -13,6 +13,7 @@ import { UserPreviewModalContext } from "./UserPreviewModalProvider";
 import { Button } from "../../ui/Button";
 export const useSplitPassiveData = () => {
   const bots: React.ReactNode[] = [];
+  let number_of_bots = 0;
   const {
       client, 
       user,
@@ -35,18 +36,18 @@ export const useSplitPassiveData = () => {
             }
         }
       }
-
+      number_of_bots += all_bots.length;
       all_bots!!.forEach((data:any) => {
           console.log(data);
       let bot_specific_data = data["data"];
       //Do we have permissions or are we the owner
       if (iot_server_controllers.get(selected_iot_server)?.has(user?.user_id) || iot_server_owners.get(selected_iot_server) == user?.user_id.toString()) {
           bots.push(
-        <div className="flex flex-col w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
+        <div className="flex flex-col h-15.5 w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
             <Button
                 loading={false}
                 size={`small`}>
-                Execute Action
+                Custom Action
             </Button>
             {
                 //only owners of the connection can disconnect from the server
@@ -102,16 +103,26 @@ export const useSplitPassiveData = () => {
                         </div>:null )
                     })} 
 
-                    {bot_specific_data == ""? <p className="text-accent">No Data</p>: Object.keys(bot_specific_data).map((key)=>{
-                        return (<div className="text-primary-200 text-sm ">
-                            {key + ":" + bot_specific_data[key]}
-                        </div>)
+                    {bot_specific_data == ""? <p className="text-accent">No Data</p>:        <Button
+                loading={false}
+                className = {"mt-2"}
+                size={`small`}>
+                View Data        
+            </Button>
 
-                    })}
+                    }
+                    <Button
+                        loading={false}
+                        className = {"mt-2"}
+                        size={`small`}>
+                        Execute Actions
+                    </Button>
                 </div>
   
             );
+            
       });
   }
-  return {bots};
+
+  return {bots, number_of_bots};
 };
