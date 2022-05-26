@@ -41,8 +41,7 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
   //just swap messages for current server logs when 
   //we are in integration mode viewing the different 
   //server logs
-  if (integration_mode_activated){
-    console.log("swapping chat messages");
+  if (integration_mode_activated){ 
     messages = current_server_logs
   }
 
