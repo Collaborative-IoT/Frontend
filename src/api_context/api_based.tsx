@@ -29,8 +29,6 @@ export const MainContext = React.createContext<{
     iot_server_outside_names:Nullable<Map<String,String>>,
     selected_iot_server: Nullable<number>,
     set_selected_iot_server:any,
-
-    
   }>({
       dash_live_rooms:[],
       client: null, 

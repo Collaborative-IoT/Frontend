@@ -153,10 +153,6 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
         <Emote title="Admin" alt="admin" size="small" emote="dogecool" />
       );
     }
-
-    
-
-    
     return <span style={{ marginRight: 4 }}>{badge}</span>;
   };
 
