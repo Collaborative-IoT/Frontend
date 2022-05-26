@@ -2,6 +2,7 @@ import { AuthResponse,CommunicationRoom,BaseUser,Client,AuthCredentials,ClientSu
 import React, { useEffect, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
+import { useRoomChatStore } from "../modules/room/chat/useRoomChatStore";
 
 type Nullable<T> = T | null;
 

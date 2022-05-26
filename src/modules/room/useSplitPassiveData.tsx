@@ -40,48 +40,51 @@ export const useSplitPassiveData = () => {
         }
       }
       number_of_bots += all_bots.length;
+
+           //Do we have permissions or are we the owner
+           if (iot_server_controllers.get(selected_iot_server)?.has(user?.user_id) || 
+           iot_server_owners.get(selected_iot_server) == user?.user_id.toString()) {
+               bots.push(
+             <div className="flex flex-col h-15.5 w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
+                 <Button
+                     loading={false}
+                     size={`small`}
+                     onClick = {()=>{set_custom_action_open(true)}}>
+                     Custom Action
+                 </Button>
+                 {
+                     //only owners of the connection can disconnect from the server
+                     iot_server_owners.get(selected_iot_server) == user?.user_id.toString()?     
+                     <Button
+                         loading={false}
+                         className = {"mt-2"}
+                         size={`small`}>
+                             Disconnect
+                     </Button>:null
+                 }
+                 {
+                     iot_server_owners.get(selected_iot_server) == user?.user_id.toString()?     
+                     <Button
+                         loading={false}
+                         className = {"mt-2"}
+                         size={`small`}>
+                         Setup Relation
+                     </Button>:null   
+                 }
+                 <Button
+                     loading={false}
+                     className = {"mt-2"}
+                     size={`small`}>
+                     View Relations        
+                 </Button>
+     
+            
+             </div>);
+           }
       all_bots!!.forEach((data:any) => {
           console.log(data);
       let bot_specific_data = data["data"];
-      //Do we have permissions or are we the owner
-      if (iot_server_controllers.get(selected_iot_server)?.has(user?.user_id) || iot_server_owners.get(selected_iot_server) == user?.user_id.toString()) {
-          bots.push(
-        <div className="flex flex-col h-15.5 w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
-            <Button
-                loading={false}
-                size={`small`}
-                onClick = {()=>{set_custom_action_open(true)}}>
-                Custom Action
-            </Button>
-            {
-                //only owners of the connection can disconnect from the server
-                iot_server_owners.get(selected_iot_server) == user?.user_id.toString()?     
-                <Button
-                    loading={false}
-                    className = {"mt-2"}
-                    size={`small`}>
-                        Disconnect
-                </Button>:null
-            }
-            {
-                iot_server_owners.get(selected_iot_server) == user?.user_id.toString()?     
-                <Button
-                    loading={false}
-                    className = {"mt-2"}
-                    size={`small`}>
-                    Setup Relation
-                </Button>:null   
-            }
-            <Button
-                loading={false}
-                className = {"mt-2"}
-                size={`small`}>
-                View Relations        
-            </Button>
-
-       
-        </div>);
-      }
+ 
       //does the permission for this user exist?
       //only display users with permissions.     
             bots.push(

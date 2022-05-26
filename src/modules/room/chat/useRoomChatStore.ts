@@ -77,6 +77,7 @@ export const useRoomChatStore = create(
       open: false,
       bannedUserIdMap: {} as Record<string, boolean>,
       messages: [] as RoomChatMessage[],
+      current_server_logs:  [] as RoomChatMessage[],
       newUnreadMessages: false,
       message: "" as string,
       isRoomChatScrolledToTop: false,
@@ -103,10 +104,23 @@ export const useRoomChatStore = create(
               : s.messages.slice(0, 100)),
           ],
         })),
+      addServerLog: (m: RoomChatMessage) =>
+        set((s) => ({
+          current_server_logs: [
+            { ...m, color: generateColorFromString("null") },
+            ...(s.current_server_logs.length <= 100 || s.frozen
+              ? s.current_server_logs
+              : s.current_server_logs.slice(0, 100)),
+          ]
+        })),
       setMessages: (messages: RoomChatMessage[]) =>
         set((s) => ({
           messages,
         })),
+      clearServerLogs:() =>
+          set({
+            current_server_logs:[]
+          }),
       clearChat: () =>
         set({
           messages: [],

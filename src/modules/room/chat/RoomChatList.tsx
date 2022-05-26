@@ -10,9 +10,10 @@ import { useRoomChatMentionStore } from "./useRoomChatMentionStore";
 import { useRoomChatStore } from "./useRoomChatStore";
 import { useResize } from "../useResize";
 import { MainContext } from "../../../api_context/api_based";
-import { RoomChatMessageToken } from "./useRoomChatStore";
+import { RoomChatMessageToken , RoomChatMessage } from "./useRoomChatStore";
 import { v4 as uuidv4 } from 'uuid';
 import { SingleUserDataResults, User } from "@collaborative/arthur";
+import { ModeContext } from "../../../mode_context/room_mode";
 interface ChatListProps {
   userMap: Record<string, RoomUser>;
 }
@@ -23,7 +24,7 @@ interface BadgeIconData {
 }
 
 export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
-  const { messages, toggleFrozen } = useRoomChatStore();
+  let { messages,current_server_logs, toggleFrozen } = useRoomChatStore();
   const bottomRef = useRef<null | HTMLDivElement>(null);
   const chatListRef = useRef<null | HTMLDivElement>(null);
   const {
@@ -35,6 +36,15 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
   const { t } = useTypeSafeTranslation();
   const {user,client, 
     all_users_in_room,set_all_room_permissions,set_all_users_in_room,current_room_id,current_room_permissions, current_room_base_data} = useContext(MainContext);
+  const {integration_mode_activated} = useContext(ModeContext);
+
+  //just swap messages for current server logs when 
+  //we are in integration mode viewing the different 
+  //server logs
+  if (integration_mode_activated){
+    console.log("swapping chat messages");
+    messages = current_server_logs
+  }
 
   // Only scroll into view if not manually scrolled to top
   useEffect(() => {
@@ -88,6 +98,30 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
             console.log(e);
         }
     }
+  }
+  client!!.client_sub.action_response_iot = (data:String) =>{
+    let data_obj = JSON.parse(data);
+     data_obj = JSON.parse(data_obj["data"]);
+    console.log("data from action res:", data_obj);
+    if (data_obj["action"] && data_obj["bot_name"] && data_obj["status"] && data_obj["server_name"]){
+      //logs take the form of a chat message and integrates seamlessly with
+      //the user chat when integration mode is activated.
+      let log :RoomChatMessage = {
+        tokens:[ {
+          t: "text",
+          v: `Bot(${data_obj["bot_name"]}) responded with "${data_obj["status"]}"-> ${data_obj["action"]}`
+        }],
+        id:uuidv4(),
+        avatarUrl:"",
+        username:`${data_obj["server_name"]}`,
+        displayName:`${data_obj["server_name"]}`,
+        deleted:false,
+        deleterId:"",
+        sentAt:Date.now(),
+        isWhisper:false};
+      useRoomChatStore.getState().addServerLog(log);
+    }
+
   }
   
 }
