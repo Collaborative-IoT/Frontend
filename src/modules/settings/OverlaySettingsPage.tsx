@@ -15,83 +15,86 @@ import { MiddlePanel } from "../layouts/GridPanels";
 
 interface OverlaySettingsProps {}
 const overlaySettingsStruct = object({
-  appTitle: string(),
+    appTitle: string(),
 });
 const validateData = validateStruct(overlaySettingsStruct);
 const isMac = process.platform === "darwin";
 export const OverlaySettingsPage: PageComponent<OverlaySettingsProps> = () => {
-  const { appTitle } = useOverlayStore.getState();
-  const { push } = useRouter();
-  const { t } = useTypeSafeTranslation();
-  useEffect(() => {
-    if (!isElectron() || isMac) {
-      
-    }
-  }, [push]);
+    const { appTitle } = useOverlayStore.getState();
+    const { push } = useRouter();
+    const { t } = useTypeSafeTranslation();
+    useEffect(() => {
+        if (!isElectron() || isMac) {
+        }
+    }, [push]);
 
-  useEffect(() => {
-    if (isElectron()) {
-      const ipcRenderer = window.require("electron").ipcRenderer;
-      ipcRenderer.send("@rpc/page", {
-        page: "overlay-settings",
-        opened: true,
-        modal: false,
-        data: "",
-      });
-      return () => {
-        ipcRenderer.send("@rpc/page", {
-          page: "overlay-settings",
-          opened: false,
-          modal: false,
-          data: "",
-        });
-      };
-    }
-  }, []);
+    useEffect(() => {
+        if (isElectron()) {
+            const ipcRenderer = window.require("electron").ipcRenderer;
+            ipcRenderer.send("@rpc/page", {
+                page: "overlay-settings",
+                opened: true,
+                modal: false,
+                data: "",
+            });
+            return () => {
+                ipcRenderer.send("@rpc/page", {
+                    page: "overlay-settings",
+                    opened: false,
+                    modal: false,
+                    data: "",
+                });
+            };
+        }
+    }, []);
 
-  return (
-    <DefaultDesktopLayout>
-      <MiddlePanel>
-        <div className="flex flex-col text-primary-100">
-          <OverlayKeybind className={`mb-4`} />
-          <Formik
-            initialValues={{
-              appTitle,
-            }}
-            validateOnChange={false}
-            validate={(values) => {
-              return validateData({
-                ...values,
-                appTitle: values.appTitle.trim(),
-              });
-            }}
-            onSubmit={(data) => {
-              useOverlayStore.getState().setData(data);
-            }}
-          >
-            {({ handleSubmit }) => (
-              <div className="flex">
-                <InputField
-                  errorMsg={t("pages.overlaySettings.input.errorMsg")}
-                  label={t("pages.overlaySettings.input.label")}
-                  name="appTitle"
-                />
-                <div className={`flex mt-12`}>
-                  <Button
-                    type="button"
-                    onClick={() => handleSubmit()}
-                    className={`ml-2`}
-                  >
-                    {t("common.save")}
-                  </Button>
+    return (
+        <DefaultDesktopLayout>
+            <MiddlePanel>
+                <div className="flex flex-col text-primary-100">
+                    <OverlayKeybind className={`mb-4`} />
+                    <Formik
+                        initialValues={{
+                            appTitle,
+                        }}
+                        validateOnChange={false}
+                        validate={(values) => {
+                            return validateData({
+                                ...values,
+                                appTitle: values.appTitle.trim(),
+                            });
+                        }}
+                        onSubmit={(data) => {
+                            useOverlayStore.getState().setData(data);
+                        }}
+                    >
+                        {({ handleSubmit }) => (
+                            <div className="flex">
+                                <InputField
+                                    errorMsg={t(
+                                        "pages.overlaySettings.input.errorMsg"
+                                    )}
+                                    label={t(
+                                        "pages.overlaySettings.input.label"
+                                    )}
+                                    name="appTitle"
+                                />
+                                <div className={`flex mt-12`}>
+                                    <Button
+                                        type="button"
+                                        onClick={() => handleSubmit()}
+                                        className={`ml-2`}
+                                    >
+                                        {t("common.save")}
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </Formik>
                 </div>
-              </div>
-            )}
-          </Formik>
-        </div>
-      </MiddlePanel>
-    </DefaultDesktopLayout>
-  );
+            </MiddlePanel>
+        </DefaultDesktopLayout>
+    );
 };
 
 OverlaySettingsPage.ws = true;

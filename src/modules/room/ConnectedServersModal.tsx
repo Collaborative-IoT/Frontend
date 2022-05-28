@@ -8,19 +8,24 @@ import { Modal } from "../../ui/Modal";
 import { Form, Formik } from "formik";
 import { ButtonLink } from "../../ui/ButtonLink";
 import { InputField } from "../../form-fields/InputField";
-import {ModeContext} from "../../mode_context/room_mode";
+import { ModeContext } from "../../mode_context/room_mode";
 import { MainContext } from "../../api_context/api_based";
 import { ConnectedServers } from "./ConnectedServers";
 
 export const ConnectedServersModal: React.FC<{}> = () => {
-
- const {set_integration_server_select_open, integration_server_select_open} = useContext(ModeContext);
- const {client,user} = useContext(MainContext);
-  return (
-    <Modal isOpen={integration_server_select_open} onRequestClose={() => {set_integration_server_select_open(false)}}>
-      <ConnectedServers/>
-  </Modal>
-  );
+    const {
+        set_integration_server_select_open,
+        integration_server_select_open,
+    } = useContext(ModeContext);
+    const { client, user } = useContext(MainContext);
+    return (
+        <Modal
+            isOpen={integration_server_select_open}
+            onRequestClose={() => {
+                set_integration_server_select_open(false);
+            }}
+        >
+            <ConnectedServers />
+        </Modal>
+    );
 };
-
-

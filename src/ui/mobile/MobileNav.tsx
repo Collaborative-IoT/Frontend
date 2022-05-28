@@ -3,74 +3,77 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 export interface MobileNavContainerProps {
-  className?: string;
+    className?: string;
 }
 
 export const MobileNavContainer: React.FC<MobileNavContainerProps> = ({
-  className,
-  children,
+    className,
+    children,
 }) => {
-  return (
-    <div
-      className={`flex fixed inset-x-0 justify-around items-center bottom-0 w-full h-7 bg-primary-900 border-t border-primary-700 ${className}`}
-    >
-      {children}
-    </div>
-  );
+    return (
+        <div
+            className={`flex fixed inset-x-0 justify-around items-center bottom-0 w-full h-7 bg-primary-900 border-t border-primary-700 ${className}`}
+        >
+            {children}
+        </div>
+    );
 };
 
 export interface MobileNavItemProps {
-  targetPath: string;
+    targetPath: string;
 }
 
 export const MobileNavItem: React.FC<MobileNavItemProps> = ({
-  children,
-  targetPath,
+    children,
+    targetPath,
 }) => {
-  const router = useRouter();
-  const isActive = router ? router.asPath.includes(targetPath) : false;
+    const router = useRouter();
+    const isActive = router ? router.asPath.includes(targetPath) : false;
 
-  return (
-    <Link href={targetPath}>
-      <div className="flex cursor-pointer">
-        {children &&
-          React.Children.map(children, (child) => {
-            return React.cloneElement(child as React.ReactElement, {
-              className: isActive
-                ? "text-accent h-4 w-4"
-                : "text-primary-100 h-4 w-4",
-            });
-          })}
-      </div>
-    </Link>
-  );
+    return (
+        <Link href={targetPath}>
+            <div className="flex cursor-pointer">
+                {children &&
+                    React.Children.map(children, (child) => {
+                        return React.cloneElement(child as React.ReactElement, {
+                            className: isActive
+                                ? "text-accent h-4 w-4"
+                                : "text-primary-100 h-4 w-4",
+                        });
+                    })}
+            </div>
+        </Link>
+    );
 };
 
 export interface NavItem {
-  targetPath: string;
-  icon: JSX.Element;
+    targetPath: string;
+    icon: JSX.Element;
 }
 
 export interface MobileNavProps {
-  items: NavItem[];
+    items: NavItem[];
 }
 
 export const MobileNav: React.FC<MobileNavProps> = ({ items }) => {
-  const { asPath } = useRouter();
+    const { asPath } = useRouter();
 
-  if (asPath.startsWith("/room")) {
-    return null;
-  }
+    if (asPath.startsWith("/room")) {
+        return null;
+    }
 
-  return (
-    <MobileNavContainer>
-      {items.map((item) => {
-        return (
-          <MobileNavItem key={item.targetPath} targetPath={item.targetPath}>
-            {item.icon}
-          </MobileNavItem>
-        );
-      })}
-    </MobileNavContainer>
-  );
+    return (
+        <MobileNavContainer>
+            {items.map((item) => {
+                return (
+                    <MobileNavItem
+                        key={item.targetPath}
+                        targetPath={item.targetPath}
+                    >
+                        {item.icon}
+                    </MobileNavItem>
+                );
+            })}
+        </MobileNavContainer>
+    );
 };

@@ -9,15 +9,15 @@ import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslatio
 interface LoungePageProps {}
 
 export const DashboardPage: PageComponent<LoungePageProps> = ({}) => {
-  const { t } = useTypeSafeTranslation();
-  return (
-      <>
-      <HeaderController embed={{}} title={"Collab on IoT"} />
-      <DefaultDesktopLayout>
-        <FeedController />
-      </DefaultDesktopLayout>
-      </>
-  );
+    const { t } = useTypeSafeTranslation();
+    return (
+        <>
+            <HeaderController embed={{}} title={"Collab on IoT"} />
+            <DefaultDesktopLayout>
+                <FeedController />
+            </DefaultDesktopLayout>
+        </>
+    );
 };
 
 DashboardPage.ws = true;

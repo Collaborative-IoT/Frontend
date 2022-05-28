@@ -4,11 +4,11 @@ import { Unitoken } from "./tokens";
 import { MessageToken } from "./util/types/tokenTypes";
 
 interface RootMethodResponse {
-	encoded: MessageToken[],
-	decoded: string
+    encoded: MessageToken[];
+    decoded: string;
 }
 
-export * from './util/types/tokenTypes';
+export * from "./util/types/tokenTypes";
 
 // export default function dolma(values?: Array<Unitoken | MessageToken | string> | string): RootMethodResponse {
 // 	return {
@@ -21,12 +21,12 @@ export * from './util/types/tokenTypes';
 // dolma['decode'] = decodeTokens;
 
 export default class dolma {
-  public readonly emotes: {name: string}[];
+    public readonly emotes: { name: string }[];
 
-  constructor(emotes: {name: string}[]) {
-    this.emotes = emotes;
-  }
+    constructor(emotes: { name: string }[]) {
+        this.emotes = emotes;
+    }
 
-  public decode = decodeTokens;
-  public encode = encodeTokens;
+    public decode = decodeTokens;
+    public encode = encodeTokens;
 }

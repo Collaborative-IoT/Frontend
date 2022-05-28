@@ -22,58 +22,57 @@ import { FeedHeader } from "../../ui/FeedHeader";
 interface InviteRoomPageProps {}
 
 const InviteButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const [invited, setInvited] = useState(false);
-  const { t } = useTypeSafeTranslation();
-  return (
-    <Button
-      size="small"
-      disabled={invited}
-      onClick={() => {
-        onClick();
-        setInvited(true);
-      }}
-    >
-      {invited
-        ? t("components.inviteButton.invited")
-        : t("components.inviteButton.inviteToRoom")}
-    </Button>
-  );
+    const [invited, setInvited] = useState(false);
+    const { t } = useTypeSafeTranslation();
+    return (
+        <Button
+            size="small"
+            disabled={invited}
+            onClick={() => {
+                onClick();
+                setInvited(true);
+            }}
+        >
+            {invited
+                ? t("components.inviteButton.invited")
+                : t("components.inviteButton.inviteToRoom")}
+        </Button>
+    );
 };
 
 const Page = ({
-  cursor,
-  isLastPage,
-  onLoadMore,
+    cursor,
+    isLastPage,
+    onLoadMore,
 }: {
-  cursor: number;
-  isLastPage: boolean;
-  isOnlyPage: boolean;
-  onLoadMore: (o: number) => void;
+    cursor: number;
+    isLastPage: boolean;
+    isOnlyPage: boolean;
+    onLoadMore: (o: number) => void;
 }) => {
-  const conn = useWrappedConn();
-  const { t } = useTypeSafeTranslation();
+    const conn = useWrappedConn();
+    const { t } = useTypeSafeTranslation();
 
-  return (
-    <>
-      <HeaderController embed={{}} title="Invite" />
-    </>
-  );
+    return (
+        <>
+            <HeaderController embed={{}} title="Invite" />
+        </>
+    );
 };
 
 export const InviteRoomPage: PageComponent<InviteRoomPageProps> = ({}) => {
-  const { t } = useTypeSafeTranslation();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [copied, setCopied] = useState(false);
-  const [cursors, setCursors] = useState([0]);
+    const { t } = useTypeSafeTranslation();
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [copied, setCopied] = useState(false);
+    const [cursors, setCursors] = useState([0]);
 
     return (
-      <DefaultDesktopLayout>
-        <MiddlePanel>
-          <CenterLoader />
-        </MiddlePanel>
-      </DefaultDesktopLayout>
+        <DefaultDesktopLayout>
+            <MiddlePanel>
+                <CenterLoader />
+            </MiddlePanel>
+        </DefaultDesktopLayout>
     );
-  
 };
 
 InviteRoomPage.ws = true;

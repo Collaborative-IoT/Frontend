@@ -9,24 +9,22 @@ import { MainContext } from "../../api_context/api_based";
 import { useRouter } from "next/router";
 
 interface DefaultDesktopLayoutProps {
-  mobileHeader?: React.ReactNode
+    mobileHeader?: React.ReactNode;
 }
 
 export const DefaultDesktopLayout: React.FC<DefaultDesktopLayoutProps> = ({
-  children,
-  mobileHeader = undefined,
+    children,
+    mobileHeader = undefined,
 }) => {
-  return (
-
-      <MainLayout
-        floatingRoomInfo={<FloatingRoomInfo />}
-        tabletSidebar={<TabletSidebar />}
-        leftPanel={<FollowingOnlineController />}
-        rightPanel={<ProfileBlockController />}
-        mobileHeader={mobileHeader}
-      >
-        {children}
-      </MainLayout>
-
-  );
+    return (
+        <MainLayout
+            floatingRoomInfo={<FloatingRoomInfo />}
+            tabletSidebar={<TabletSidebar />}
+            leftPanel={<FollowingOnlineController />}
+            rightPanel={<ProfileBlockController />}
+            mobileHeader={mobileHeader}
+        >
+            {children}
+        </MainLayout>
+    );
 };

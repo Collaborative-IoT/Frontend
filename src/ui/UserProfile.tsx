@@ -11,64 +11,65 @@ import { useRouter } from "next/router";
 import { User } from "@collaborative/arthur";
 
 interface UserProfileProps {
-  user: User;
-  isCurrentUser?: boolean;
+    user: User;
+    isCurrentUser?: boolean;
 }
 
 export const UserProfile: React.FC<UserProfileProps> = ({
-  isCurrentUser,
-  user
+    isCurrentUser,
+    user,
 }) => {
-  const { t } = useTypeSafeTranslation();
-  const badges: badge[] = [];
-  const tags: UserBadgeLgProps[] = [];
-  const truncateString = (str:string, num:number) => {
-    if (str.length <= num) {
-      return str
-    }
-    return str.slice(0, num) + '...'
-  }
-    if(user.user_id == 1 && user.user_id == 2){
-      badges.push({
-        content: <StaffBadge />,
-        variant: "primary",
-        color: "white",
-        title: t("components.userBadges.dhStaff"),
-        naked: true,
-      });
-      tags.push({
-        icon: "dogeStaff",
-        children: t("components.userBadges.dhStaff"),
-      });
-    }
-
-    if(user.contributions > 0) {
+    const { t } = useTypeSafeTranslation();
+    const badges: badge[] = [];
+    const tags: UserBadgeLgProps[] = [];
+    const truncateString = (str: string, num: number) => {
+        if (str.length <= num) {
+            return str;
+        }
+        return str.slice(0, num) + "...";
+    };
+    if (user.user_id == 1 && user.user_id == 2) {
         badges.push({
-          content: <ContributorBadge contributions={user.contributions} />,
-          variant: "primary",
-          color: "white",
-          title: `${t("components.userBadges.dhContributor")} (${40} ${t("pages.admin.contributions")})`,
-          naked: true,
+            content: <StaffBadge />,
+            variant: "primary",
+            color: "white",
+            title: t("components.userBadges.dhStaff"),
+            naked: true,
         });
         tags.push({
-          icon: "dogeContributor",
-          contributions: 40,
-          children: t("components.userBadges.dhContributor"),
+            icon: "dogeStaff",
+            children: t("components.userBadges.dhStaff"),
         });
     }
-  
-  return (
-    <>
-      <ProfileHeader
-        user_data={user}
-        pfp={user!!.avatar_url}
-        displayName={truncateString(user?.display_name,12)}
-        isCurrentUser={isCurrentUser}
-        username={truncateString(user.username,12)}
-        badges={badges}
-      />
-      <ProfileTabs user={user} className="mt-4" aboutTags={tags} />
-    </>
 
-  );
+    if (user.contributions > 0) {
+        badges.push({
+            content: <ContributorBadge contributions={user.contributions} />,
+            variant: "primary",
+            color: "white",
+            title: `${t("components.userBadges.dhContributor")} (${40} ${t(
+                "pages.admin.contributions"
+            )})`,
+            naked: true,
+        });
+        tags.push({
+            icon: "dogeContributor",
+            contributions: 40,
+            children: t("components.userBadges.dhContributor"),
+        });
+    }
+
+    return (
+        <>
+            <ProfileHeader
+                user_data={user}
+                pfp={user!!.avatar_url}
+                displayName={truncateString(user?.display_name, 12)}
+                isCurrentUser={isCurrentUser}
+                username={truncateString(user.username, 12)}
+                badges={badges}
+            />
+            <ProfileTabs user={user} className="mt-4" aboutTags={tags} />
+        </>
+    );
 };

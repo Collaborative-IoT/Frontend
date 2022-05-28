@@ -5,27 +5,29 @@ import { v4 } from "uuid";
 import { ToastDurations } from "../../ui/ErrorToast";
 
 type Toast = {
-  id: string;
-  button?: React.ReactNode;
-  duration?: ToastDurations;
-  message: string;
+    id: string;
+    button?: React.ReactNode;
+    duration?: ToastDurations;
+    message: string;
 };
 
 export const useErrorToastStore = create(
-  combine(
-    {
-      toasts: [] as Toast[],
-    },
-    (set) => ({
-      hideToast: (id: string) =>
-        set((x) => ({ toasts: x.toasts.filter((y) => y.id !== id) })),
-      showToast: (t: Omit<Toast, "id">) =>
-        set((x) => {
-          const currentRemovedToasts: Toast[] = x.toasts.filter((y) => y.message !== t.message);
-          return {
-            toasts: [...currentRemovedToasts, { ...t, id: v4() }]
-          };
-        }),
-    })
-  )
+    combine(
+        {
+            toasts: [] as Toast[],
+        },
+        (set) => ({
+            hideToast: (id: string) =>
+                set((x) => ({ toasts: x.toasts.filter((y) => y.id !== id) })),
+            showToast: (t: Omit<Toast, "id">) =>
+                set((x) => {
+                    const currentRemovedToasts: Toast[] = x.toasts.filter(
+                        (y) => y.message !== t.message
+                    );
+                    return {
+                        toasts: [...currentRemovedToasts, { ...t, id: v4() }],
+                    };
+                }),
+        })
+    )
 );

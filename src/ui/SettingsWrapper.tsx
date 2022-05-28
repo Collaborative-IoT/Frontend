@@ -1,16 +1,16 @@
 import React, { ReactNode } from "react";
 
 export interface SettingsWrapperProps {
-  children: ReactNode;
+    children: ReactNode;
 }
 
 export const SettingsWrapper: React.FC<SettingsWrapperProps> = ({
-  children,
-  ...props
+    children,
+    ...props
 }) => {
-  return (
-    <div className="bg-primary-800 rounded-8 p-4" {...props}>
-      {children}
-    </div>
-  );
+    return (
+        <div className="bg-primary-800 rounded-8 p-4" {...props}>
+            {children}
+        </div>
+    );
 };

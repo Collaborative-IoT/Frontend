@@ -12,20 +12,23 @@ import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslatio
 interface UserPageProps {}
 
 export const FollowingOnlinePage: PageComponent<UserPageProps> = ({}) => {
-  const { t } = useTypeSafeTranslation();
-  return (
-    <WaitForWsAndAuth>
-      <HeaderController embed={{}} title={t("pages.followingOnlineList.title")} />
-      <MainLayout
-        leftPanel={<FollowingOnlineController />}
-        rightPanel={<ProfileBlockController />}
-      >
-        <div className="mt-4">
-          <FollowingOnlineController></FollowingOnlineController>
-        </div>
-      </MainLayout>
-    </WaitForWsAndAuth>
-  );
+    const { t } = useTypeSafeTranslation();
+    return (
+        <WaitForWsAndAuth>
+            <HeaderController
+                embed={{}}
+                title={t("pages.followingOnlineList.title")}
+            />
+            <MainLayout
+                leftPanel={<FollowingOnlineController />}
+                rightPanel={<ProfileBlockController />}
+            >
+                <div className="mt-4">
+                    <FollowingOnlineController></FollowingOnlineController>
+                </div>
+            </MainLayout>
+        </WaitForWsAndAuth>
+    );
 };
 
 FollowingOnlinePage.ws = true;

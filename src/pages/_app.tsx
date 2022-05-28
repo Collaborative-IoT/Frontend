@@ -26,11 +26,11 @@ import { MainContextProvider } from "../api_context/api_based";
 import { ModeContextProvider } from "../mode_context/room_mode";
 
 if (!isServer) {
-  init_i18n();
+    init_i18n();
 }
 
 Router.events.on("routeChangeStart", () => {
-  NProgress.start();
+    NProgress.start();
 });
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
@@ -38,59 +38,68 @@ Router.events.on("routeChangeError", () => NProgress.done());
 ReactModal.setAppElement("#__next");
 
 function App({ Component, pageProps }: AppProps) {
-  // keep this here as long as this version is still in dev.
-  // baklava listens to this event to re-size it's window
-  useEffect(() => {
-    if (isElectron()) {
-      const ipcRenderer = window.require("electron").ipcRenderer;
-      ipcRenderer.send("@dogehouse/loaded", "kibbeh");
-      ipcRenderer.send("@app/hostPlatform");
-      ipcRenderer.on(
-        "@app/hostPlatform",
-        (
-          event: any,
-          platform: { isLinux: boolean; isWin: boolean; isMac: boolean }
-        ) => {
-          useHostStore.getState().setData(platform);
+    // keep this here as long as this version is still in dev.
+    // baklava listens to this event to re-size it's window
+    useEffect(() => {
+        if (isElectron()) {
+            const ipcRenderer = window.require("electron").ipcRenderer;
+            ipcRenderer.send("@dogehouse/loaded", "kibbeh");
+            ipcRenderer.send("@app/hostPlatform");
+            ipcRenderer.on(
+                "@app/hostPlatform",
+                (
+                    event: any,
+                    platform: {
+                        isLinux: boolean;
+                        isWin: boolean;
+                        isMac: boolean;
+                    }
+                ) => {
+                    useHostStore.getState().setData(platform);
+                }
+            );
+            document.documentElement.style.setProperty(
+                "--screen-height-reduction",
+                "38px"
+            );
         }
-      );
-      document.documentElement.style.setProperty(
-        "--screen-height-reduction",
-        "38px"
-      );
+    }, []);
+
+    if (
+        isServer &&
+        !Component.getInitialProps &&
+        (Component as PageComponent<unknown>).ws
+    ) {
+        return null;
     }
-  }, []);
 
-  if (
-    isServer &&
-    !Component.getInitialProps &&
-    (Component as PageComponent<unknown>).ws
-  ) {
-    return null;
-  }
-
-  return (
-    <MainContextProvider should_connect ={!!(Component as PageComponent<unknown>).ws}>
-      <ModeContextProvider>
-            <Head>
-              <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-              <link rel="manifest" href="/manifest.json" />
-              <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1, user-scalable=no, user-scalable=0"
-              />
-              <link rel="apple-touch-icon" href="/img/doge.png"></link>
-              <link rel="apple-touch-startup-image" href="img/doge512.png" />
-            </Head>
-            <Component {...pageProps} />
-            <SoundEffectPlayer />
-            <ErrorToastController />
-            <WebRtcApp />
-            <InvitedToJoinRoomModal />
-            <ConfirmModal />
-          </ModeContextProvider>
-      </MainContextProvider>
-  );
+    return (
+        <MainContextProvider
+            should_connect={!!(Component as PageComponent<unknown>).ws}
+        >
+            <ModeContextProvider>
+                <Head>
+                    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+                    <link rel="manifest" href="/manifest.json" />
+                    <meta
+                        name="viewport"
+                        content="width=device-width, initial-scale=1, user-scalable=no, user-scalable=0"
+                    />
+                    <link rel="apple-touch-icon" href="/img/doge.png"></link>
+                    <link
+                        rel="apple-touch-startup-image"
+                        href="img/doge512.png"
+                    />
+                </Head>
+                <Component {...pageProps} />
+                <SoundEffectPlayer />
+                <ErrorToastController />
+                <WebRtcApp />
+                <InvitedToJoinRoomModal />
+                <ConfirmModal />
+            </ModeContextProvider>
+        </MainContextProvider>
+    );
 }
 
 export default App;

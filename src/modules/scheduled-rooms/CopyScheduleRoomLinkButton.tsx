@@ -5,22 +5,22 @@ import { BoxedIcon } from "../../ui/BoxedIcon";
 import { copyTextToClipboard } from "./copyToClipboard";
 
 interface CopyLinkButtonProps {
-  text: string;
+    text: string;
 }
 
 export const CopyScheduleRoomLinkButton: React.FC<CopyLinkButtonProps> = ({
-  text,
+    text,
 }) => {
-  const [copied, setCopied] = useState(false);
-  return (
-    <BoxedIcon
-      onClick={() => {
-        if (copyTextToClipboard(text)) {
-          setCopied(true);
-        }
-      }}
-    >
-      <Link2 size={18} />
-    </BoxedIcon>
-  );
+    const [copied, setCopied] = useState(false);
+    return (
+        <BoxedIcon
+            onClick={() => {
+                if (copyTextToClipboard(text)) {
+                    setCopied(true);
+                }
+            }}
+        >
+            <Link2 size={18} />
+        </BoxedIcon>
+    );
 };

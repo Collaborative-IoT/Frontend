@@ -17,61 +17,68 @@ import { EditProfileModal } from "./EditProfileModal";
 import { VerticalUserInfoWithFollowButton } from "./VerticalUserInfoWithFollowButton";
 
 interface UserProfileControllerProps {
-  user_data:User|null
+    user_data: User | null;
 }
 
 const isMac = process.platform === "darwin";
 
-export const UserProfileController: React.FC<UserProfileControllerProps> = ({user_data}) => {
-  const { t } = useTypeSafeTranslation();
-  const { push } = useRouter();
-  const { query } = useRouter();
-  const {user} = useContext(MainContext);
+export const UserProfileController: React.FC<UserProfileControllerProps> = ({
+    user_data,
+}) => {
+    const { t } = useTypeSafeTranslation();
+    const { push } = useRouter();
+    const { query } = useRouter();
+    const { user } = useContext(MainContext);
 
+    if (!user_data) {
+        return <InfoText>{t("pages.myProfile.couldNotFindUser")}</InfoText>;
+    } else if (user_data!!.they_blocked_you) {
+        return <InfoText>You have been blocked by this user.</InfoText>;
+    }
 
-  if (!user_data) {
-    return <InfoText>{t("pages.myProfile.couldNotFindUser")}</InfoText>;
-  } else if (user_data!!.they_blocked_you) {
-     return <InfoText>You have been blocked by this user.</InfoText>;
-  }
+    if (!user) {
+        return <InfoText>Fatal Error Encountered Try Again!</InfoText>;
+    }
 
-  if (!user){
-    return <InfoText>Fatal Error Encountered Try Again!</InfoText>;
-  }
-
-  return (
-    <>
-      <UserProfile user={user_data!!} isCurrentUser={user_data.user_id == user!!.user_id} />
-      {user_data.user_id == user!!.user_id && (
-        <div className={`pt-6 pb-6 flex`}>
-          <Button
-            style={{ marginRight: "10px" }}
-            size="small"
-            onClick={() => push(`/voice-settings`)}
-          >
-            {t("pages.myProfile.voiceSettings")}
-          </Button>
-          {isElectron() && !isMac ? (
-            <Button
-              style={{ marginRight: "10px" }}
-              size="small"
-              onClick={() => push(`/overlay-settings`)}
-            >
-              {t("pages.myProfile.overlaySettings")}
-            </Button>
-          ) : null}
-          <Button
-            style={{ marginRight: "10px" }}
-            size="small"
-            onClick={() => push(`/sound-effect-settings`)}
-          >
-            {t("pages.myProfile.soundSettings")}
-          </Button>
-          <Button size="small" onClick={() => push(`/privacy-settings`)}>
-            {t("pages.myProfile.privacySettings")}
-          </Button>
-        </div>
-      )}
-    </>
-  );
-}
+    return (
+        <>
+            <UserProfile
+                user={user_data!!}
+                isCurrentUser={user_data.user_id == user!!.user_id}
+            />
+            {user_data.user_id == user!!.user_id && (
+                <div className={`pt-6 pb-6 flex`}>
+                    <Button
+                        style={{ marginRight: "10px" }}
+                        size="small"
+                        onClick={() => push(`/voice-settings`)}
+                    >
+                        {t("pages.myProfile.voiceSettings")}
+                    </Button>
+                    {isElectron() && !isMac ? (
+                        <Button
+                            style={{ marginRight: "10px" }}
+                            size="small"
+                            onClick={() => push(`/overlay-settings`)}
+                        >
+                            {t("pages.myProfile.overlaySettings")}
+                        </Button>
+                    ) : null}
+                    <Button
+                        style={{ marginRight: "10px" }}
+                        size="small"
+                        onClick={() => push(`/sound-effect-settings`)}
+                    >
+                        {t("pages.myProfile.soundSettings")}
+                    </Button>
+                    <Button
+                        size="small"
+                        onClick={() => push(`/privacy-settings`)}
+                    >
+                        {t("pages.myProfile.privacySettings")}
+                    </Button>
+                </div>
+            )}
+        </>
+    );
+};

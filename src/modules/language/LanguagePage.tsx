@@ -12,23 +12,26 @@ interface LanguagePageProps {}
 
 // This is temp until we have the settings page up and running
 export const LanguagePage: PageComponent<LanguagePageProps> = () => {
-  const screenType = useScreenType();
-  if (screenType !== "fullscreen") router.push("/dash");
+    const screenType = useScreenType();
+    if (screenType !== "fullscreen") router.push("/dash");
 
-  return (
-    <WaitForWsAndAuth>
-      <HeaderController embed={{}} title="Language" />
-      <DefaultDesktopLayout
-        mobileHeader={
-          <PageHeader title="Language" onBackClick={() => router.back()} />
-        }
-      >
-        <div className="h-full w-full">
-          <LanguageSelector mobile />
-        </div>
-      </DefaultDesktopLayout>
-    </WaitForWsAndAuth>
-  );
+    return (
+        <WaitForWsAndAuth>
+            <HeaderController embed={{}} title="Language" />
+            <DefaultDesktopLayout
+                mobileHeader={
+                    <PageHeader
+                        title="Language"
+                        onBackClick={() => router.back()}
+                    />
+                }
+            >
+                <div className="h-full w-full">
+                    <LanguageSelector mobile />
+                </div>
+            </DefaultDesktopLayout>
+        </WaitForWsAndAuth>
+    );
 };
 
 LanguagePage.ws = true;

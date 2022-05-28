@@ -5,9 +5,7 @@ import { useRoomChatStore } from "../modules/room/chat/useRoomChatStore";
 import { closeVoiceConnections } from "../modules/webrtc/WebRtcApp";
 
 export const useLeaveRoom = () => {
-
-  return {
-    leaveRoom: useCallback(() => {
-    }, []),
-  };
+    return {
+        leaveRoom: useCallback(() => {}, []),
+    };
 };

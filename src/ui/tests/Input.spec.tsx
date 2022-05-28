@@ -24,23 +24,23 @@ import { Input, InputProps } from "../Input";
 // };
 
 describe("Input", () => {
-  it("should render and input correctly", () => {
-    const { getByTestId } = render(<Input />);
-    const component = getByTestId("input");
+    it("should render and input correctly", () => {
+        const { getByTestId } = render(<Input />);
+        const component = getByTestId("input");
 
-    expect(component).toBeVisible();
-  });
+        expect(component).toBeVisible();
+    });
 
-  it("should render and input correctly", () => {
-    const { getByTestId } = render(<Input textarea={true} />);
-    const component = getByTestId("textarea");
+    it("should render and input correctly", () => {
+        const { getByTestId } = render(<Input textarea={true} />);
+        const component = getByTestId("textarea");
 
-    expect(component).toBeVisible();
-  });
+        expect(component).toBeVisible();
+    });
 
-  it("should match snapshot", () => {
-    const { getByTestId } = render(<Input />);
-    const component = getByTestId("input");
-    expect(component).toMatchSnapshot();
-  });
+    it("should match snapshot", () => {
+        const { getByTestId } = render(<Input />);
+        const component = getByTestId("input");
+        expect(component).toMatchSnapshot();
+    });
 });

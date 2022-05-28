@@ -8,14 +8,14 @@ import { ScheduledRoomsList } from "./ScheduledRoomsList";
 interface LoungePageProps {}
 
 export const ScheduledRoomsPage: PageComponent<LoungePageProps> = ({}) => {
-  return (
-    <WaitForWsAndAuth>
-      <HeaderController embed={{}} title="Scheduled Rooms" />
-      <DefaultDesktopLayout>
-        <ScheduledRoomsList />
-      </DefaultDesktopLayout>
-    </WaitForWsAndAuth>
-  );
+    return (
+        <WaitForWsAndAuth>
+            <HeaderController embed={{}} title="Scheduled Rooms" />
+            <DefaultDesktopLayout>
+                <ScheduledRoomsList />
+            </DefaultDesktopLayout>
+        </WaitForWsAndAuth>
+    );
 };
 
 ScheduledRoomsPage.ws = true;

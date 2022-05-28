@@ -8,82 +8,81 @@ import { EditScheduleRoomModalController } from "../modules/scheduled-rooms/Edit
 import { BaseUser } from "@collaborative/arthur";
 
 export interface ProfileScheduledProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  user: BaseUser;
+    extends React.HTMLAttributes<HTMLDivElement> {
+    user: BaseUser;
 }
 
 const List = ({
-  onLoadMore,
-  cursor,
-  isLastPage,
-  isOnlyPage,
-  userId,
-  onEdit,
+    onLoadMore,
+    cursor,
+    isLastPage,
+    isOnlyPage,
+    userId,
+    onEdit,
 }: {
-  onEdit: (sr: { scheduleRoomToEdit: ScheduledRoom; cursor: string }) => void;
-  userId: string;
-  cursor: string;
-  isLastPage: boolean;
-  isOnlyPage: boolean;
-  onLoadMore: (o: string) => void;
+    onEdit: (sr: { scheduleRoomToEdit: ScheduledRoom; cursor: string }) => void;
+    userId: string;
+    cursor: string;
+    isLastPage: boolean;
+    isOnlyPage: boolean;
+    onLoadMore: (o: string) => void;
 }) => {
-const { t } = useTypeSafeTranslation();
+    const { t } = useTypeSafeTranslation();
 
-  if (isOnlyPage ) {
+    if (isOnlyPage) {
+        return (
+            <div
+                className={`mt-2 bg-primary-800 p-4 rounded-8 w-full leading-8 text-primary-100`}
+            >
+                {t("modules.scheduledRooms.noneFound")}
+            </div>
+        );
+    }
+
     return (
-      <div
-        className={`mt-2 bg-primary-800 p-4 rounded-8 w-full leading-8 text-primary-100`}
-      >
-        {t("modules.scheduledRooms.noneFound")}
-      </div>
+        <div className={`${isLastPage ? "mb-24" : ""}`}>
+            {null}
+            {null}
+        </div>
     );
-  }
-
-  return (
-    <div className={`${isLastPage ? "mb-24" : ""}`}>
-      {null}
-      {null}
-    </div>
-  );
 };
 
 export const ProfileScheduled: React.FC<ProfileScheduledProps> = ({
-  user,
-  className = "",
+    user,
+    className = "",
 }) => {
-  const [{ cursors, userId }, setQueryState] = useState<{
-    cursors: string[];
-    userId: string;
-  }>({ cursors: [""], userId: user.user_id.toString() });
+    const [{ cursors, userId }, setQueryState] = useState<{
+        cursors: string[];
+        userId: string;
+    }>({ cursors: [""], userId: user.user_id.toString() });
 
-  return (
-    <div
-      className={`mt-2 rounded-8 w-full leading-8 ${className}`}
-      style={{ maxWidth: 640 }}
-    >
-      <EditScheduleRoomModalController
-        onScheduledRoom={(editInfo, data, _resp) => {
-        }}
-      >
-        {({ onEdit }) =>
-          cursors.map((cursor, i) => (
-            <List
-              userId={userId}
-              onLoadMore={(o) =>
-                setQueryState({
-                  cursors: [...cursors, o],
-                  userId,
-                })
-              }
-              onEdit={onEdit}
-              isOnlyPage={cursors.length === 1}
-              isLastPage={cursors.length - 1 === i}
-              key={cursor}
-              cursor={cursor}
-            />
-          ))
-        }
-      </EditScheduleRoomModalController>
-    </div>
-  );
+    return (
+        <div
+            className={`mt-2 rounded-8 w-full leading-8 ${className}`}
+            style={{ maxWidth: 640 }}
+        >
+            <EditScheduleRoomModalController
+                onScheduledRoom={(editInfo, data, _resp) => {}}
+            >
+                {({ onEdit }) =>
+                    cursors.map((cursor, i) => (
+                        <List
+                            userId={userId}
+                            onLoadMore={(o) =>
+                                setQueryState({
+                                    cursors: [...cursors, o],
+                                    userId,
+                                })
+                            }
+                            onEdit={onEdit}
+                            isOnlyPage={cursors.length === 1}
+                            isLastPage={cursors.length - 1 === i}
+                            key={cursor}
+                            cursor={cursor}
+                        />
+                    ))
+                }
+            </EditScheduleRoomModalController>
+        </div>
+    );
 };

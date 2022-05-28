@@ -4,19 +4,23 @@ import { isServer } from "../../lib/isServer";
 import { HeaderController } from "../display/HeaderController";
 
 interface RoomOpenGraphPreviewProps {
-  room: Room | null | undefined;
+    room: Room | null | undefined;
 }
 
 export const RoomOpenGraphPreview: React.FC<RoomOpenGraphPreviewProps> = ({
-  room,
-  children,
+    room,
+    children,
 }) => {
-  if (isServer && room) {
-    const { name, description } = room;
-    return (
-      <HeaderController title={name} description={description} embed={{}} />
-    );
-  }
+    if (isServer && room) {
+        const { name, description } = room;
+        return (
+            <HeaderController
+                title={name}
+                description={description}
+                embed={{}}
+            />
+        );
+    }
 
-  return <>{children}</>;
+    return <>{children}</>;
 };

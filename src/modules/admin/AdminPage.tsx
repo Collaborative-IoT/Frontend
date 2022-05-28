@@ -7,13 +7,13 @@ import { AdminPageForm } from "./AdminPageForm";
 interface Props {}
 
 export const AdminPage: PageComponent<Props> = () => {
-  return (
-    <WaitForWsAndAuth>
-      <DefaultDesktopLayout>
-        <AdminPageForm />
-      </DefaultDesktopLayout>
-    </WaitForWsAndAuth>
-  );
+    return (
+        <WaitForWsAndAuth>
+            <DefaultDesktopLayout>
+                <AdminPageForm />
+            </DefaultDesktopLayout>
+        </WaitForWsAndAuth>
+    );
 };
 
 AdminPage.ws = true;

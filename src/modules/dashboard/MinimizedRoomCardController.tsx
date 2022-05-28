@@ -12,44 +12,48 @@ import { MinimizedRoomCard } from "../../ui/MinimizedRoomCard";
 import { MainContext } from "../../api_context/api_based";
 
 export const MinimizedRoomCardController: React.FC = ({}) => {
-  const data = useCurrentRoomFromCache();
-  const { canSpeak } = useCurrentRoomInfo();
-  const { muted } = useMuteStore();
-  const { deafened } = useDeafStore();
-  const setMute = useSetMute();
-  const setDeaf = useSetDeaf();
-  const router = useRouter();
+    const data = useCurrentRoomFromCache();
+    const { canSpeak } = useCurrentRoomInfo();
+    const { muted } = useMuteStore();
+    const { deafened } = useDeafStore();
+    const setMute = useSetMute();
+    const setDeaf = useSetDeaf();
+    const router = useRouter();
 
-  const {current_room_base_data, current_room_id, all_users_in_room} = useContext(MainContext);
+    const { current_room_base_data, current_room_id, all_users_in_room } =
+        useContext(MainContext);
 
-  if (!current_room_base_data || !current_room_id || !all_users_in_room) {
-    return null;
-  }
-  const dt = new Date(current_room_base_data.created_at.slice(0,current_room_base_data.created_at.length-4).concat("Z"));
-  console.log(dt);
+    if (!current_room_base_data || !current_room_id || !all_users_in_room) {
+        return null;
+    }
+    const dt = new Date(
+        current_room_base_data.created_at
+            .slice(0, current_room_base_data.created_at.length - 4)
+            .concat("Z")
+    );
+    console.log(dt);
 
-  return (
-    <MinimizedRoomCard
-      onFullscreenClick={() => router.push(`/room/${current_room_id}`)}
-      leaveLoading={false}
-      room={{
-        name: current_room_base_data.details.name,
-        speakers: [],
-        roomStartedAt: dt,
-        myself: {
-          isDeafened: deafened,
-          isSpeaker: canSpeak,
-          isMuted: muted,
-          leave: () => {
-          },
-          switchDeafened: () => {
-            setDeaf(!deafened);
-          },
-          switchMuted: () => {
-            setMute(!muted);
-          },
-        },
-      }}
-    />
-  );
+    return (
+        <MinimizedRoomCard
+            onFullscreenClick={() => router.push(`/room/${current_room_id}`)}
+            leaveLoading={false}
+            room={{
+                name: current_room_base_data.details.name,
+                speakers: [],
+                roomStartedAt: dt,
+                myself: {
+                    isDeafened: deafened,
+                    isSpeaker: canSpeak,
+                    isMuted: muted,
+                    leave: () => {},
+                    switchDeafened: () => {
+                        setDeaf(!deafened);
+                    },
+                    switchMuted: () => {
+                        setMute(!muted);
+                    },
+                },
+            }}
+        />
+    );
 };

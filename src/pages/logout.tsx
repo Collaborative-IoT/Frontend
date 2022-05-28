@@ -10,27 +10,27 @@ interface logoutProps {}
 // should be done by the component sending the user here
 // then it should redirect to landing page
 const Logout: React.FC<logoutProps> = ({}) => {
-  const [hasTokens, setTokens] = useTokenStore((s) => [
-    !!(s.accessToken && s.refreshToken),
-    s.setTokens,
-  ]);
-  const { replace } = useRouter();
-  useEffect(() => {
-    if (!hasTokens) {
-      replace("/");
-    }
-  }, [hasTokens, replace]);
+    const [hasTokens, setTokens] = useTokenStore((s) => [
+        !!(s.accessToken && s.refreshToken),
+        s.setTokens,
+    ]);
+    const { replace } = useRouter();
+    useEffect(() => {
+        if (!hasTokens) {
+            replace("/");
+        }
+    }, [hasTokens, replace]);
 
-  return (
-    <>
-      <ElectronHeader />
-      <ButtonLink
-        onClick={() => setTokens({ accessToken: "", refreshToken: "" })}
-      >
-        click here if you are not automatically redirected
-      </ButtonLink>
-    </>
-  );
+    return (
+        <>
+            <ElectronHeader />
+            <ButtonLink
+                onClick={() => setTokens({ accessToken: "", refreshToken: "" })}
+            >
+                click here if you are not automatically redirected
+            </ButtonLink>
+        </>
+    );
 };
 
 export default Logout;

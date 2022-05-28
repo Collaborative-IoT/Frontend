@@ -1,25 +1,25 @@
 import { MutableRefObject, useState, useEffect, useCallback } from "react";
 
 function getBoundingClientRect(
-  element: HTMLElement
+    element: HTMLElement
 ): ClientRect | DOMRect | null {
-  return element.getBoundingClientRect();
+    return element.getBoundingClientRect();
 }
 
 function useBoundingClientRect(
-  ref: MutableRefObject<HTMLElement | null>
+    ref: MutableRefObject<HTMLElement | null>
 ): ClientRect | DOMRect | null {
-  const [value, setValue] = useState<ClientRect | DOMRect | null>(null);
+    const [value, setValue] = useState<ClientRect | DOMRect | null>(null);
 
-  const update = useCallback(() => {
-    setValue(ref.current ? getBoundingClientRect(ref.current) : null);
-  }, [ref]);
+    const update = useCallback(() => {
+        setValue(ref.current ? getBoundingClientRect(ref.current) : null);
+    }, [ref]);
 
-  useEffect(() => {
-    update();
-  }, [update]);
+    useEffect(() => {
+        update();
+    }, [update]);
 
-  return value;
+    return value;
 }
 
 export { useBoundingClientRect };

@@ -20,83 +20,95 @@ import { ConnectedServers } from "./ConnectedServers";
 import { CustomActionModal } from "./CustomActionModal";
 
 interface RoomPanelControllerProps {
-  setRoomData?: React.Dispatch<
-    React.SetStateAction<JoinRoomAndGetInfoResponse | undefined>
-  >;
-  showMobileEditModal: boolean;
-  setShowMobileEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setRoomData?: React.Dispatch<
+        React.SetStateAction<JoinRoomAndGetInfoResponse | undefined>
+    >;
+    showMobileEditModal: boolean;
+    setShowMobileEditModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
-  setRoomData,
-  showMobileEditModal,
-  setShowMobileEditModal,
+    setRoomData,
+    showMobileEditModal,
+    setShowMobileEditModal,
 }) => {
-  const { currentRoomId } = useCurrentRoomIdStore();
-  const [showEditModal, setShowEditModal] = useState(false);
-  const open = useRoomChatStore((s) => s.open);
-  const screenType = useScreenType();
-  const {current_room_base_data} = useContext(MainContext);
-  const room_visibility = ()=>{
-    if (current_room_base_data){
-      if (current_room_base_data.details.is_private){
-        return "private";
-      }
-    }
-    return "public";
-  }
-  return (
-    <>
+    const { currentRoomId } = useCurrentRoomIdStore();
+    const [showEditModal, setShowEditModal] = useState(false);
+    const open = useRoomChatStore((s) => s.open);
+    const screenType = useScreenType();
+    const { current_room_base_data } = useContext(MainContext);
+    const room_visibility = () => {
+        if (current_room_base_data) {
+            if (current_room_base_data.details.is_private) {
+                return "private";
+            }
+        }
+        return "public";
+    };
+    return (
+        <>
+            {showEditModal || showMobileEditModal ? (
+                <CreateRoomModal
+                    onRequestClose={() => {
+                        setShowEditModal(false);
+                        setShowMobileEditModal(false);
+                    }}
+                    edit
+                    data={{
+                        name: current_room_base_data
+                            ? current_room_base_data.details.name
+                            : "loading...",
+                        description: current_room_base_data
+                            ? current_room_base_data.details.description
+                            : "loading...",
+                        privacy: room_visibility(),
+                    }}
+                />
+            ) : null}
 
-{showEditModal || showMobileEditModal ? (
-  <CreateRoomModal
-    onRequestClose={() => {
-      setShowEditModal(false);
-      setShowMobileEditModal(false);
-    }}
-    edit
-    data={{
-      name: current_room_base_data? current_room_base_data.details.name:"loading...",
-      description: current_room_base_data? current_room_base_data.details.description:"loading...",
-      privacy:room_visibility(),
-    }}
-  />
-) : null}
-
-
-<HeaderController embed={{}} title="Control" />
-    <MiddlePanel
-      stickyChildren={
-        screenType !== "fullscreen" ? (
-          <RoomHeader
-            onTitleClick={()=>setShowEditModal(true)}
-            title={current_room_base_data? current_room_base_data!!.details.name : "loading..."}
-            description={current_room_base_data? current_room_base_data!!.details.description:"loading..."}
-            names={ [""]}
-          />
-        ) : (
-          ""
-        )
-      }
-    >
-      <ConnectModal/>
-      <ConnectedServersModal/>
-      <CustomActionModal/>
-      <UserPreviewModal />
-      {screenType === "fullscreen" && open ? null : (
-        <RoomUsersPanel />
-      )}
-      <div
-        className={`sticky bottom-0 pb-7 bg-primary-900 ${
-          (screenType === "fullscreen" || screenType === "1-cols") && open
-            ? "flex-1"
-            : ""
-        }`}
-      >
-        <RoomPanelIconBarController users={[]} />
-      </div>
-    </MiddlePanel>
-</>
-  );
+            <HeaderController embed={{}} title="Control" />
+            <MiddlePanel
+                stickyChildren={
+                    screenType !== "fullscreen" ? (
+                        <RoomHeader
+                            onTitleClick={() => setShowEditModal(true)}
+                            title={
+                                current_room_base_data
+                                    ? current_room_base_data!!.details.name
+                                    : "loading..."
+                            }
+                            description={
+                                current_room_base_data
+                                    ? current_room_base_data!!.details
+                                          .description
+                                    : "loading..."
+                            }
+                            names={[""]}
+                        />
+                    ) : (
+                        ""
+                    )
+                }
+            >
+                <ConnectModal />
+                <ConnectedServersModal />
+                <CustomActionModal />
+                <UserPreviewModal />
+                {screenType === "fullscreen" && open ? null : (
+                    <RoomUsersPanel />
+                )}
+                <div
+                    className={`sticky bottom-0 pb-7 bg-primary-900 ${
+                        (screenType === "fullscreen" ||
+                            screenType === "1-cols") &&
+                        open
+                            ? "flex-1"
+                            : ""
+                    }`}
+                >
+                    <RoomPanelIconBarController users={[]} />
+                </div>
+            </MiddlePanel>
+        </>
+    );
 };
-

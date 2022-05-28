@@ -4,12 +4,11 @@ import { useVerifyLoggedIn } from "./useVerifyLoggedIn";
 interface WaitForWsAndAuthProps {}
 
 export const WaitForWsAndAuth: React.FC<WaitForWsAndAuthProps> = ({
-  children,
+    children,
 }) => {
+    if (!useVerifyLoggedIn()) {
+        return null;
+    }
 
-  if (!useVerifyLoggedIn()) {
-    return null;
-  }
-
-  return <>{children}</>;
+    return <>{children}</>;
 };

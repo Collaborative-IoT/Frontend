@@ -19,97 +19,113 @@ import { useConn } from "../../shared-hooks/useConn";
 import { MainContext } from "../../api_context/api_based";
 
 interface RoomPageProps {
-  room?: Room;
+    room?: Room;
 }
 
 export const RoomPage: PageComponent<RoomPageProps> = ({ room }) => {
-  const { query, back } = useRouter();
-  const key = typeof query.id === "string" ? query.id : "";
-  const { leaveRoom } = useLeaveRoom();
-  const conn = useConn();
-  const [roomData, setRoomData] = useState(
-    undefined as JoinRoomAndGetInfoResponse | undefined
-  );
+    const { query, back } = useRouter();
+    const key = typeof query.id === "string" ? query.id : "";
+    const { leaveRoom } = useLeaveRoom();
+    const conn = useConn();
+    const [roomData, setRoomData] = useState(
+        undefined as JoinRoomAndGetInfoResponse | undefined
+    );
 
-  const [showMobileEditModal, setShowMobileEditModal] = useState(false);
+    const [showMobileEditModal, setShowMobileEditModal] = useState(false);
 
-  return (
-    <RoomOpenGraphPreview room={room}>
-        <UserPreviewModalProvider>
-          <MainLayout
-            floatingRoomInfo={null}
-            tabletSidebar={<TabletSidebar />}
-            leftPanel={<FollowingOnlineController />}
-            rightPanel={<RoomChatController />}
-            mobileHeader={
-              <PageHeader
-                title={
-                  <>
-                    <div
-                      className="text-center absolute flex flex-col left-1/2 top-1/2 transform translate-x-n1/2 translate-y-n1/2 w-3/5"
-                      onClick={() => roomData?.room.creatorId === conn.user.id ? setShowMobileEditModal(true) : ""}
-                    >
-                      <span className="line-clamp-1">{roomData?.room.name}</span>
-                      {roomData && (
-                        <span
-                          className={"text-sm text-center font-normal truncate"}
-                        >
-                          with{}
-                          <span className={"font-bold truncate"}>
-                            {
-                              roomData?.users.find(
-                                (x: any) => x.id === roomData?.room.creatorId
-                              )?.username
+    return (
+        <RoomOpenGraphPreview room={room}>
+            <UserPreviewModalProvider>
+                <MainLayout
+                    floatingRoomInfo={null}
+                    tabletSidebar={<TabletSidebar />}
+                    leftPanel={<FollowingOnlineController />}
+                    rightPanel={<RoomChatController />}
+                    mobileHeader={
+                        <PageHeader
+                            title={
+                                <>
+                                    <div
+                                        className="text-center absolute flex flex-col left-1/2 top-1/2 transform translate-x-n1/2 translate-y-n1/2 w-3/5"
+                                        onClick={() =>
+                                            roomData?.room.creatorId ===
+                                            conn.user.id
+                                                ? setShowMobileEditModal(true)
+                                                : ""
+                                        }
+                                    >
+                                        <span className="line-clamp-1">
+                                            {roomData?.room.name}
+                                        </span>
+                                        {roomData && (
+                                            <span
+                                                className={
+                                                    "text-sm text-center font-normal truncate"
+                                                }
+                                            >
+                                                with{}
+                                                <span
+                                                    className={
+                                                        "font-bold truncate"
+                                                    }
+                                                >
+                                                    {
+                                                        roomData?.users.find(
+                                                            (x: any) =>
+                                                                x.id ===
+                                                                roomData?.room
+                                                                    .creatorId
+                                                        )?.username
+                                                    }
+                                                </span>
+                                            </span>
+                                        )}
+                                    </div>
+                                    <button
+                                        className={
+                                            "absolute right-3 top-1/2 transform translate-y-n1/2 font-bold text-accent"
+                                        }
+                                        style={{ fontSize: "14px" }}
+                                        onClick={() => {
+                                            router.push("/dash");
+                                            leaveRoom();
+                                        }}
+                                    >
+                                        Leave
+                                    </button>
+                                </>
                             }
-                          </span>
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      className={
-                        "absolute right-3 top-1/2 transform translate-y-n1/2 font-bold text-accent"
-                      }
-                      style={{ fontSize: "14px" }}
-                      onClick={() => {
-                        router.push("/dash");
-                        leaveRoom();
-                      }}
-                    >
-                      Leave
-                    </button>
-                  </>
-                }
-                onBackClick={() => back()}
-              />
-            }
-          >
-            <RoomPanelController
-              key={key}
-              setRoomData={setRoomData}
-              showMobileEditModal={showMobileEditModal}
-              setShowMobileEditModal={setShowMobileEditModal}
-            />
-          </MainLayout>
-        </UserPreviewModalProvider>
-    </RoomOpenGraphPreview>
-  );
+                            onBackClick={() => back()}
+                        />
+                    }
+                >
+                    <RoomPanelController
+                        key={key}
+                        setRoomData={setRoomData}
+                        showMobileEditModal={showMobileEditModal}
+                        setShowMobileEditModal={setShowMobileEditModal}
+                    />
+                </MainLayout>
+            </UserPreviewModalProvider>
+        </RoomOpenGraphPreview>
+    );
 };
 
 RoomPage.ws = true;
 // ssr
 RoomPage.getInitialProps = async ({ query }) => {
-  const key =
-    typeof query.id === "string" && validate(query.id) ? query.id : "";
-  let room = null;
+    const key =
+        typeof query.id === "string" && validate(query.id) ? query.id : "";
+    let room = null;
 
-  if (isServer && key) {
-    try {
-      const resp = await defaultQueryFn({ queryKey: `/room/${key}` });
-      if ("room" in resp) {
-        room = resp.room;
-      }
-    } catch {}
-  }
+    if (isServer && key) {
+        try {
+            const resp = await defaultQueryFn({ queryKey: `/room/${key}` });
+            if ("room" in resp) {
+                room = resp.room;
+            }
+        } catch {}
+    }
 
-  return { room };
+    return { room };
 };

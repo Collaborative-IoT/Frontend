@@ -5,7 +5,7 @@ import { RoomChat } from "./chat/RoomChat";
 interface RoomChatControllerProps {}
 
 export const RoomChatController: React.FC<RoomChatControllerProps> = ({}) => {
-  const data = useCurrentRoomFromCache();
+    const data = useCurrentRoomFromCache();
 
-  return (<RoomChat users={[]}/>);
+    return <RoomChat users={[]} />;
 };
