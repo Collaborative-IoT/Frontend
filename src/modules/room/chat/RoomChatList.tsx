@@ -54,54 +54,53 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
 
   useEffect(()=>{
     if (client){
-    client!!.client_sub.new_chat_msg = (data:any) =>{
-      if (user && all_users_in_room){
-            try{
-                const { open } = useRoomChatStore.getState();
-                //if me
-                if (data["userId"] == user!!.user_id.toString()){
-                    data["id"] = uuidv4();
-                    data["avatarUrl"] = user.avatar_url;
-                    data["username"] = user.username;
-                    data["displayName"] = user.display_name;
-                    data["deleted"] = false;
-                    data["deleterId"] = "";
-                    data["sentAt"] = Date.now();
-                    data["isWhisper"] = false;
-                }
-                else{
-                    const this_user:User = all_users_in_room!!.get(data["userId"])!!;
-                    data["id"] = uuidv4();
-                    data["avatarUrl"] = this_user.avatar_url;
-                    data["username"] = this_user.username;
-                    data["displayName"] = this_user.display_name;
-                    data["deleted"] = false;
-                    data["deleterId"] = "";
-                    data["sentAt"] = Date.now();
-                    data["isWhisper"] = false;
-                }
-                useRoomChatStore.getState().addMessage(data);
-                const { isRoomChatScrolledToTop } = useRoomChatStore.getState();
-                  if (
-                    (!open || !document.hasFocus() || isRoomChatScrolledToTop) &&
-                    !! data.tokens.filter(
-                      (t: RoomChatMessageToken) =>
-                        t.t === "mention" &&
-                        t.v?.toLowerCase() === user!!.username.toLowerCase()
-                    ).length
-                  ) {
-                    useRoomChatMentionStore.getState().incrementIAmMentioned();
+      client!!.client_sub.new_chat_msg = (data:any) =>{
+        if (user && all_users_in_room){
+              try{
+                  const { open } = useRoomChatStore.getState();
+                  //if me
+                  if (data["userId"] == user!!.user_id.toString()){
+                      data["id"] = uuidv4();
+                      data["avatarUrl"] = user.avatar_url;
+                      data["username"] = user.username;
+                      data["displayName"] = user.display_name;
+                      data["deleted"] = false;
+                      data["deleterId"] = "";
+                      data["sentAt"] = Date.now();
+                      data["isWhisper"] = false;
                   }
-        }
-        catch(e){
-            console.log(e);
-        }
-    }
+                  else{
+                      const this_user:User = all_users_in_room!!.get(data["userId"])!!;
+                      data["id"] = uuidv4();
+                      data["avatarUrl"] = this_user.avatar_url;
+                      data["username"] = this_user.username;
+                      data["displayName"] = this_user.display_name;
+                      data["deleted"] = false;
+                      data["deleterId"] = "";
+                      data["sentAt"] = Date.now();
+                      data["isWhisper"] = false;
+                  }
+                  useRoomChatStore.getState().addMessage(data);
+                  const { isRoomChatScrolledToTop } = useRoomChatStore.getState();
+                    if (
+                      (!open || !document.hasFocus() || isRoomChatScrolledToTop) &&
+                      !! data.tokens.filter(
+                        (t: RoomChatMessageToken) =>
+                          t.t === "mention" &&
+                          t.v?.toLowerCase() === user!!.username.toLowerCase()
+                      ).length
+                    ) {
+                      useRoomChatMentionStore.getState().incrementIAmMentioned();
+                    }
+          }
+          catch(e){
+              console.log(e);
+          }
+      }
   }
   client!!.client_sub.action_response_iot = (data:String) =>{
     let data_obj = JSON.parse(data);
-     data_obj = JSON.parse(data_obj["data"]);
-    console.log("data from action res:", data_obj);
+    data_obj = JSON.parse(data_obj["data"]);
     if (data_obj["action"] && data_obj["bot_name"] && data_obj["status"] && data_obj["server_name"]){
       //logs take the form of a chat message and integrates seamlessly with
       //the user chat when integration mode is activated.
@@ -120,7 +119,6 @@ export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
         isWhisper:false};
       useRoomChatStore.getState().addServerLog(log);
     }
-
   }
   
 }

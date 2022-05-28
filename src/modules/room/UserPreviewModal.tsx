@@ -38,7 +38,7 @@ const UserPreview: React.FC<{
   const { t } = useTypeSafeTranslation();
   const bannedUserIdMap = useRoomChatStore((s) => s.bannedUserIdMap);
   const { debugAudio } = useDebugAudioStore();
-const curr_permissions = current_room_permissions!![id]!!;
+  const curr_permissions = current_room_permissions!![id]!!;
   const canDoModStuffOnThisUser =
     !isMe &&
     (iAmCreator || iAmMod) &&
@@ -112,17 +112,10 @@ const curr_permissions = current_room_permissions!![id]!!;
       canDoModStuffOnThisUser && (iAmCreator ||!curr_permissions.is_mod),
       "banFromRoom",
       () => {
+        client!!.send("block_user_from_room", {user_id:+id, room_id:current_room_id!!});
         onClose();
       },
       t("components.modals.profileModal.banFromRoom"),
-    ],
-    [
-      canDoModStuffOnThisUser && (iAmCreator || !curr_permissions.is_mod),
-      "banIpFromRoom",
-      () => {
-        onClose();
-      },
-      t("components.modals.profileModal.banIPFromRoom"),
     ],
     [
       isMe &&
