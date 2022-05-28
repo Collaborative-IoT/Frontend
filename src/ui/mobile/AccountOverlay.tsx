@@ -193,12 +193,10 @@ export const AccountOverlay: React.FC<AccountOverlyProps> = ({}) => {
                             useCurrentRoomIdStore
                                 .getState()
                                 .setCurrentRoomId(null);
-                            useTokenStore
-                                .getState()
-                                .setTokens({
-                                    accessToken: "",
-                                    refreshToken: "",
-                                });
+                            useTokenStore.getState().setTokens({
+                                accessToken: "",
+                                refreshToken: "",
+                            });
                             router.push("/logout");
                         }}
                     />
