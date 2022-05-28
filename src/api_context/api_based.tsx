@@ -17,6 +17,7 @@ import {
     RemovedIoTController,
     ExistingIotServer,
     NewIoTServer,
+    BlockedUsersForRoom,
 } from "@collaborative/arthur";
 import React, { useEffect, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
@@ -35,6 +36,7 @@ export const MainContext = React.createContext<{
     main_interval_handle: Nullable<NodeJS.Timeout>;
     current_room_permissions: Nullable<Map<number, RoomPermissions>>;
     current_room_id: Nullable<number>;
+    current_room_blocked_users:Nullable<Array<User>>;
     create_client: () => void;
     set_current_room_id: any;
     set_all_users_in_room: any;
@@ -104,6 +106,9 @@ const initClient = (
     set_iot_server_outside_names: React.Dispatch<
         React.SetStateAction<Map<String, String> | null>
     >,
+    set_current_room_blocked_users:React.Dispatch<
+    React.SetStateAction<Array<User>| null>
+>,
     push: any
 ) => {
     if (typeof window !== "undefined") {
@@ -223,6 +228,7 @@ const initClient = (
                 });
             };
             subscriber.hoi_server_disconnected = (external_id: String) => {
+                console.log("server disconnected:" , external_id);
                 set_iot_server_passive_data((prev) => {
                     prev?.delete(external_id);
                     return prev;
@@ -238,6 +244,11 @@ const initClient = (
                 set_iot_server_outside_names((prev) => {
                     prev?.delete(external_id);
                     return prev;
+                });
+            };
+            subscriber.users_blocked_from_room = (data:BlockedUsersForRoom) =>{
+                set_current_room_blocked_users((prev)=>{
+                   return data.users; 
                 });
             };
             subscriber.existing_iot_data = (data: Array<ExistingIotServer>) => {
@@ -322,6 +333,8 @@ export const MainContextProvider: React.FC<{ should_connect: boolean }> = ({
         number | null
     >(null);
 
+    const [current_room_blocked_users, set_current_room_blocked_users] = useState<Array<User> | null>(null);
+
     // for the main interval triggered in the "my_data" callback of the subscriber above.
     // we need to clear it when needed.
     const [interval_handle, set_interval_handle] =
@@ -343,6 +356,7 @@ export const MainContextProvider: React.FC<{ should_connect: boolean }> = ({
                 set_iot_server_owners,
                 set_iot_server_passive_data,
                 set_iot_server_outside_names,
+                set_current_room_blocked_users,
                 push
             )!!;
             set_client((_prev: any) => {
@@ -378,6 +392,7 @@ export const MainContextProvider: React.FC<{ should_connect: boolean }> = ({
                 iot_server_owners,
                 set_selected_iot_server,
                 selected_iot_server,
+                current_room_blocked_users
             }}
         >
             {children}
