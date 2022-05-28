@@ -1,6 +1,6 @@
 import { JoinRoomAndGetInfoResponse, RoomUser } from "../ws/entities";
 import { useRouter } from "next/router";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useCurrentRoomIdStore } from "../../global-stores/useCurrentRoomIdStore";
 import { useDeafStore } from "../../global-stores/useDeafStore";
@@ -30,7 +30,6 @@ export const RoomPanelIconBarController: React.FC<{ users: [] }> = ({
     const { muted } = useMuteStore();
     const setMute = useSetMute();
     const { deafened } = useDeafStore();
-    const conn = useConn();
     const setDeaf = useSetDeaf();
     const { canSpeak, isCreator, canIAskToSpeak } = useCurrentRoomInfo();
     const { push } = useRouter();
@@ -40,11 +39,12 @@ export const RoomPanelIconBarController: React.FC<{ users: [] }> = ({
     const screenType = useScreenType();
     const { set_current_room_id, current_room_id, client } =
         useContext(MainContext);
-    const userMap = useMemo(() => {
-        const map: Record<string, RoomUser> = {};
-        return map;
-    }, [users]);
 
+    useEffect(() => {
+        if (settings_open) {
+            client?.send("get_room_blocked", {});
+        }
+    }, [settings_open]);
     return (
         <div className="flex flex-col w-full">
             <RoomSettingsModal
@@ -125,7 +125,7 @@ export const RoomPanelIconBarController: React.FC<{ users: [] }> = ({
                               <div
                                   className={`flex flex-1 w-full flex-col mt-4`}
                               >
-                                  <RoomChatList userMap={userMap} />
+                                  <RoomChatList />
                                   <RoomChatMentions users={users} />
                                   <RoomChatInput />
                               </div>

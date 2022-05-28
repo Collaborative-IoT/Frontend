@@ -14,16 +14,14 @@ import { RoomChatMessageToken, RoomChatMessage } from "./useRoomChatStore";
 import { v4 as uuidv4 } from "uuid";
 import { SingleUserDataResults, User } from "@collaborative/arthur";
 import { ModeContext } from "../../../mode_context/room_mode";
-interface ChatListProps {
-    userMap: Record<string, RoomUser>;
-}
+interface ChatListProps {}
 
 interface BadgeIconData {
     emoji: string;
     title: string;
 }
 
-export const RoomChatList: React.FC<ChatListProps> = ({ userMap }) => {
+export const RoomChatList: React.FC<ChatListProps> = () => {
     let { messages, current_server_logs, toggleFrozen } = useRoomChatStore();
     const bottomRef = useRef<null | HTMLDivElement>(null);
     const chatListRef = useRef<null | HTMLDivElement>(null);
