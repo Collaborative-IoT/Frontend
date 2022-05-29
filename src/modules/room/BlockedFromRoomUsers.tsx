@@ -22,6 +22,7 @@ const UnbanButton = ({ user_id }: { user_id: number }) => {
                     user_id,
                     room_id: current_room_id,
                 });
+                client?.send("get_room_blocked", {});
             }}
             size={`small`}
         >
