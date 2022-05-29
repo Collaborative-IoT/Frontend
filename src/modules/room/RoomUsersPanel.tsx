@@ -163,10 +163,9 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
             }
         };
         client!!.client_sub.new_owner = (user_id: String) => {
-            if (current_room_base_data && set_base_room_data) {
+            if (set_base_room_data) {
                 set_base_room_data((prev: InitRoomData) => {
                     //should be owner_id but fine now as creator id
-                    console.log("new =", +user_id);
                     prev.creator_id = +user_id;
                     return prev;
                 });

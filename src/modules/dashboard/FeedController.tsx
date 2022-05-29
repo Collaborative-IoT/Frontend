@@ -101,10 +101,9 @@ const Page = ({
         return EmptyRoomsPlaceHolders(
             "No Rooms! Be the first to create one 😎",
             [
-                ["Servers", "2 Supported IoT Servers"],
-                ["2", "Connection Safety"],
-                ["23", "Clubhouse-Esque"],
-                ["-", "Twitch-Esque"],
+                ["2", "Safety"],
+                ["23", "Clubhouse"],
+                ["-", "Twitch"],
             ],
             openRoomModal
         );
