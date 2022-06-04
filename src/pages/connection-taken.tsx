@@ -18,6 +18,7 @@ const ConnectionTaken: React.FC<ConnectionTakenProps> = ({}) => {
                 </h4>
                 <Button
                     onClick={() => {
+                        console.log("redirecting from connection-taken-page");
                         window.location.href = window.location.origin + "/dash";
                     }}
                 >

@@ -87,6 +87,7 @@ export const RoomPage: PageComponent<RoomPageProps> = ({ room }) => {
                                         }
                                         style={{ fontSize: "14px" }}
                                         onClick={() => {
+                                            console.log("redirecting from room-page");
                                             router.push("/dash");
                                             leaveRoom();
                                         }}

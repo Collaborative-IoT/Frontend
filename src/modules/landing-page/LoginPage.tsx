@@ -74,6 +74,7 @@ export const LoginPage: React.FC = () => {
 
     useEffect(() => {
         if (hasTokens) {
+            console.log("redirecting from login-page");
             push("/dash");
         } else {
             setTokensChecked(true);
@@ -161,6 +162,7 @@ export const LoginPage: React.FC = () => {
                                         accessToken: d.accessToken,
                                         refreshToken: d.refreshToken,
                                     });
+                                    console.log("redirecting from login-page");
                                     push("/dash");
                                 }}
                                 data-testid="create-test-user"

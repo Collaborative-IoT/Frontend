@@ -15,6 +15,7 @@ export const SaveCredentials: React.FC<Nothing> = () => {
                 localStorage.setItem("r-ciot", refresh as string);
                 localStorage.setItem("a-ciot", access as string);
                 localStorage.setItem("ciot_auth_status", "good");
+                console.log("redirecting from saving credentials");
                 push("/dash");
             }
         } else {

@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import { Room, UserPreview, UserWithFollowInfo } from "../ws/entities";
 import { useDeafStore } from "../../global-stores/useDeafStore";
 import { useMuteStore } from "../../global-stores/useMuteStore";
-import { useCurrentRoomFromCache } from "../../shared-hooks/useCurrentRoomFromCache";
 import { useCurrentRoomInfo } from "../../shared-hooks/useCurrentRoomInfo";
 import { useLeaveRoom } from "../../shared-hooks/useLeaveRoom";
 import { useSetDeaf } from "../../shared-hooks/useSetDeaf";
@@ -12,7 +11,6 @@ import { MinimizedRoomCard } from "../../ui/MinimizedRoomCard";
 import { MainContext } from "../../api_context/api_based";
 
 export const MinimizedRoomCardController: React.FC = ({}) => {
-    const data = useCurrentRoomFromCache();
     const { canSpeak } = useCurrentRoomInfo();
     const { muted } = useMuteStore();
     const { deafened } = useDeafStore();
