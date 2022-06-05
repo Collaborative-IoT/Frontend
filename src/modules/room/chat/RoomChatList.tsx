@@ -14,6 +14,7 @@ import { RoomChatMessageToken, RoomChatMessage } from "./useRoomChatStore";
 import { v4 as uuidv4 } from "uuid";
 import { SingleUserDataResults, User } from "@collaborative/arthur";
 import { ModeContext } from "../../../mode_context/room_mode";
+import { useRouter } from "next/router";
 interface ChatListProps {}
 
 interface BadgeIconData {
@@ -32,6 +33,7 @@ export const RoomChatList: React.FC<ChatListProps> = () => {
         setMessage,
     } = useRoomChatStore();
     const { t } = useTypeSafeTranslation();
+    const {push} = useRouter();
     const {
         user,
         client,
@@ -245,27 +247,7 @@ export const RoomChatList: React.FC<ChatListProps> = () => {
                                             {badgeIcon}
                                             <button
                                                 onClick={(e) => {
-                                                    // Auto mention on shift click
-                                                    if (
-                                                        e.shiftKey &&
-                                                        messages[index]
-                                                            .userId !==
-                                                            user?.user_id.toString()
-                                                    ) {
-                                                        setMessage(
-                                                            message +
-                                                                "@" +
-                                                                messages[index]
-                                                                    .username
-                                                        );
-                                                        document
-                                                            .getElementById(
-                                                                "room-chat-input"
-                                                            )
-                                                            ?.focus();
-
-                                                        return;
-                                                    }
+                                                    push(`../u/${messages[index].userId}`)
                                                 }}
                                                 // DO NOT CHANGE FONT ON THIS BUTTON, IT CRASHES FIREFOX
                                                 className={`inline hover:underline font-bold focus:outline-none`}

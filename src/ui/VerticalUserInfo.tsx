@@ -11,6 +11,7 @@ import { UserBadge } from "./UserBadge";
 import { badge, Badges } from "./UserSummaryCard";
 import { ContributorBadge, StaffBadge } from "../icons/badges";
 import { User } from "@collaborative/arthur";
+import { useRouter } from "next/router";
 
 interface VerticalUserInfoProps {
     user: User;
@@ -19,6 +20,7 @@ interface VerticalUserInfoProps {
 export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({ user }) => {
     const { t } = useTypeSafeTranslation();
     const badges: badge[] = [];
+    const {push} = useRouter();
     const truncateString = (str: string, num: number) => {
         if (str.length <= num) {
             return str;
@@ -78,6 +80,10 @@ export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({ user }) => {
                     <span
                         data-testid="profile-info-username"
                         className="flex text-primary-300 ml-1 hover:underline"
+                        onClick={
+                            ()=>{push(`../u/${user.user_id}`)}
+                        }
+                        
                     >
                         @{truncateString(user.username, 12)}
                     </span>
