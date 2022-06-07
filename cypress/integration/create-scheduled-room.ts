@@ -22,5 +22,4 @@ describe("create scheduled room then", () => {
     //     cy.dataTestId(`user:${defaultTestUsername}:tab:scheduled`).click();
     //     cy.dataTestId(`scheduledroom:name:${defaultRoomName}`);
     // });
-
 });

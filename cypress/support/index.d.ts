@@ -3,12 +3,12 @@
 /// <reference types="cypress" />
 
 declare namespace Cypress {
-  interface Chainable {
-    dataTestId(value: string, wait?: boolean): Chainable<Element>;
-    byName(value: string): Chainable<Element>;
-    clickSubmit(): Chainable<Element>;
-    closeModal(): Chainable<Element>;
-    loginTestUser(value?: string): Chainable<AUTWindow>;
-    testDeafenSequence(): void;
-  }
+    interface Chainable {
+        dataTestId(value: string, wait?: boolean): Chainable<Element>;
+        byName(value: string): Chainable<Element>;
+        clickSubmit(): Chainable<Element>;
+        closeModal(): Chainable<Element>;
+        loginTestUser(value?: string): Chainable<AUTWindow>;
+        testDeafenSequence(): void;
+    }
 }

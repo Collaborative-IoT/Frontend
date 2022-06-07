@@ -9,6 +9,8 @@ export const ModeContext = React.createContext<{
     set_integration_add: any;
     custom_action_open: boolean;
     set_custom_action_open: any;
+    selected_server_data_open: bool;
+    set_selected_server_data_open: any;
 }>({
     integration_mode_activated: false,
     integration_add_open: false,
@@ -18,6 +20,8 @@ export const ModeContext = React.createContext<{
     set_integration_add: () => {},
     custom_action_open: false,
     set_custom_action_open: () => {},
+    selected_server_data_open: false,
+    set_selected_server_data_open: () => {},
 });
 
 export const ModeContextProvider: React.FC<{}> = ({ children }) => {
@@ -28,6 +32,8 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
     const [integration_server_select_open, set_integration_server_select_open] =
         useState<boolean>(false);
     const [custom_action_open, set_custom_action_open] =
+        useState<boolean>(false);
+    const [selected_server_data_open, set_selected_server_data_open] =
         useState<boolean>(false);
     return (
         <ModeContext.Provider
@@ -40,6 +46,8 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
                 set_integration_server_select_open,
                 custom_action_open,
                 set_custom_action_open,
+                selected_server_data_open,
+                set_selected_server_data_open,
             }}
         >
             {children}

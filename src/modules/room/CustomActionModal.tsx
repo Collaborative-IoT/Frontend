@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { useDebugAudioStore } from "../../global-stores/useDebugAudio";
-import { useConn } from "../../shared-hooks/useConn";
 import { useCurrentRoomInfo } from "../../shared-hooks/useCurrentRoomInfo";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { Button } from "../../ui/Button";

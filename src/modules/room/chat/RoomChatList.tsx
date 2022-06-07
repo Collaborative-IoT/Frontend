@@ -33,7 +33,7 @@ export const RoomChatList: React.FC<ChatListProps> = () => {
         setMessage,
     } = useRoomChatStore();
     const { t } = useTypeSafeTranslation();
-    const {push} = useRouter();
+    const { push } = useRouter();
     const {
         user,
         client,
@@ -247,7 +247,9 @@ export const RoomChatList: React.FC<ChatListProps> = () => {
                                             {badgeIcon}
                                             <button
                                                 onClick={(e) => {
-                                                    push(`../u/${messages[index].userId}`)
+                                                    push(
+                                                        `../u/${messages[index].userId}`
+                                                    );
                                                 }}
                                                 // DO NOT CHANGE FONT ON THIS BUTTON, IT CRASHES FIREFOX
                                                 className={`inline hover:underline font-bold focus:outline-none`}
