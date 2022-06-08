@@ -72,6 +72,7 @@ export const ConnectedServersPage: React.FC<{}> = () => {
                         </div>
                     </div>
                     <SelectButton server_id={server_data.server_id} />
+                    <Button size="small">Test</Button>
                 </div>
             ))}
         </>

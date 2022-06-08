@@ -44,7 +44,7 @@ export const RoomChatList: React.FC<ChatListProps> = () => {
         current_room_permissions,
         current_room_base_data,
     } = useContext(MainContext);
-    const { integration_mode_activated } = useContext(ModeContext);
+    const { integration_mode_activated,set_selected_server_data_open } = useContext(ModeContext);
 
     //just swap messages for current server logs when
     //we are in integration mode viewing the different
@@ -247,9 +247,14 @@ export const RoomChatList: React.FC<ChatListProps> = () => {
                                             {badgeIcon}
                                             <button
                                                 onClick={(e) => {
-                                                    push(
-                                                        `../u/${messages[index].userId}`
-                                                    );
+                                                    if (integration_mode_activated){
+                                                        set_selected_server_data_open(true);
+                                                    }
+                                                    else{
+                                                        push(
+                                                            `../u/${messages[index].userId}`
+                                                        );
+                                                    }
                                                 }}
                                                 // DO NOT CHANGE FONT ON THIS BUTTON, IT CRASHES FIREFOX
                                                 className={`inline hover:underline font-bold focus:outline-none`}
