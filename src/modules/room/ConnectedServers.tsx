@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { MainContext } from "../../api_context/api_based";
+import { ModeContext } from "../../mode_context/room_mode";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { Button } from "../../ui/Button";
 import { CenterLoader } from "../../ui/CenterLoader";
@@ -38,7 +39,7 @@ export const ConnectedServersPage: React.FC<{}> = () => {
         selected_iot_server,
         set_selected_iot_server,
     } = useContext(MainContext);
-
+    const {set_selected_server_data_open, set_integration_server_select_open} = useContext(ModeContext);
     if (
         iot_server_outside_names == null ||
         iot_server_outside_names!!.keys().length == 0
@@ -72,7 +73,10 @@ export const ConnectedServersPage: React.FC<{}> = () => {
                         </div>
                     </div>
                     <SelectButton server_id={server_data.server_id} />
-                    <Button size="small">Test</Button>
+                    <Button onClick={()=>{
+                        set_selected_iot_server(server_data.server_id);
+                        set_integration_server_select_open(false);
+                        set_selected_server_data_open(true);}} className="ml-1" size="small">View Data</Button>
                 </div>
             ))}
         </>
