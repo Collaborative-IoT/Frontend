@@ -24,10 +24,12 @@ export const useSplitPassiveData = () => {
         iot_server_owners,
     } = useContext(MainContext);
 
-    const { set_custom_action_open,
+    const {
+        set_custom_action_open,
         set_selected_bot_name,
         set_selected_bot_type,
-        set_execute_actions_open } = useContext(ModeContext);
+        set_execute_actions_open,
+    } = useContext(ModeContext);
     if (
         selected_iot_server &&
         iot_server_controllers &&
@@ -140,11 +142,16 @@ export const useSplitPassiveData = () => {
                             View Data
                         </Button>
                     )}
-                    <Button onClick={()=>{
-                        set_selected_bot_name(data["device_name"]);
-                        set_selected_bot_type(data["type"]);
-                        set_execute_actions_open(true);
-                    }} loading={false} className={"mt-2"} size={`small`}>
+                    <Button
+                        onClick={() => {
+                            set_selected_bot_name(data["device_name"]);
+                            set_selected_bot_type(data["type"]);
+                            set_execute_actions_open(true);
+                        }}
+                        loading={false}
+                        className={"mt-2"}
+                        size={`small`}
+                    >
                         Execute Actions
                     </Button>
                 </div>

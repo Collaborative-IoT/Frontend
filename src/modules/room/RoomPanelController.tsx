@@ -94,7 +94,7 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
             >
                 <ConnectModal />
                 <ConnectedServersModal />
-                <ExecutableActionsModal/>
+                <ExecutableActionsModal />
                 <CustomActionModal />
                 <ServerDataModal />
                 <UserPreviewModal />

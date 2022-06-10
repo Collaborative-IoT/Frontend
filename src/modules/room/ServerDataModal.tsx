@@ -45,8 +45,10 @@ export const ServerDataModal: React.FC<{}> = ({}) => {
                             {data["server_state_lens"]["devices"]}->Device Total
                         </h5>
                         <h5 className="text-primary-100 font-bold">
-                            {data["server_state_lens"]["alerts_active"].toString()}->Alerts
-                            Active
+                            {data["server_state_lens"][
+                                "alerts_active"
+                            ].toString()}
+                            ->Alerts Active
                         </h5>
                         <h5 className="text-primary-100 font-bold">
                             {

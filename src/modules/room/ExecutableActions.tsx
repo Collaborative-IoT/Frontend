@@ -9,43 +9,50 @@ import { SingleUser } from "../../ui/UserAvatar";
 
 interface ExecutableActionsProps {}
 
-const ExecuteButton: React.FC<{ action_opcode: String , device_name:String, server:String}> = ({ action_opcode , device_name, server }) => {
+const ExecuteButton: React.FC<{
+    action_opcode: String;
+    device_name: String;
+    server: String;
+}> = ({ action_opcode, device_name, server }) => {
     const { t } = useTypeSafeTranslation();
-    const {client} = useContext(MainContext);
+    const { client } = useContext(MainContext);
     return (
         <Button
             loading={false}
-            onClick={()=>{client!!.send("request_hoi_action", {
-                server_id: server,
-                bot_name: device_name,
-                action: action_opcode,
-            })}}
+            onClick={() => {
+                client!!.send("request_hoi_action", {
+                    server_id: server,
+                    bot_name: device_name,
+                    action: action_opcode,
+                });
+            }}
             size={`small`}
         >
-          Execute Action
+            Execute Action
         </Button>
     );
 };
 
 export const ExecutableActionsPage: React.FC<{}> = () => {
     const { t } = useTypeSafeTranslation();
-    const {selected_iot_server,iot_server_passive_data} = useContext(MainContext);
-    const {selected_bot_name, selected_bot_type} = useContext(ModeContext);
-    if (
-        !selected_bot_name || !selected_bot_type
-    ) {
+    const { selected_iot_server, iot_server_passive_data } =
+        useContext(MainContext);
+    const { selected_bot_name, selected_bot_type } = useContext(ModeContext);
+    if (!selected_bot_name || !selected_bot_type) {
         return <InfoText className={`mt-2`}>No Servers Connected</InfoText>;
     }
     let data = [];
-    if (iot_server_passive_data?.get(selected_iot_server)){
-        let passive_obj = JSON.parse(iot_server_passive_data.get(selected_iot_server));
+    if (iot_server_passive_data?.get(selected_iot_server)) {
+        let passive_obj = JSON.parse(
+            iot_server_passive_data.get(selected_iot_server)
+        );
         let accepted_op_codes = JSON.parse(passive_obj)["type_op_codes"];
         let current_type_op_codes = accepted_op_codes[selected_bot_type];
-        if (current_type_op_codes){
+        if (current_type_op_codes) {
             data = current_type_op_codes;
         }
     }
-    
+
     return (
         <>
             {data.map((accepted_op: string) => (
@@ -64,7 +71,11 @@ export const ExecutableActionsPage: React.FC<{}> = () => {
                             {accepted_op}
                         </div>
                     </div>
-                    <ExecuteButton action_opcode={accepted_op} device_name={selected_bot_name} server= {selected_iot_server} />
+                    <ExecuteButton
+                        action_opcode={accepted_op}
+                        device_name={selected_bot_name}
+                        server={selected_iot_server}
+                    />
                 </div>
             ))}
         </>

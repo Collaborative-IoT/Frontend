@@ -13,10 +13,8 @@ import { MainContext } from "../../api_context/api_based";
 import { ExecutableActions } from "./ExecutableActions";
 
 export const ExecutableActionsModal: React.FC<{}> = () => {
-    const {
-        set_execute_actions_open,
-        execute_actions_open,
-    } = useContext(ModeContext);
+    const { set_execute_actions_open, execute_actions_open } =
+        useContext(ModeContext);
     return (
         <Modal
             isOpen={execute_actions_open}
@@ -24,7 +22,7 @@ export const ExecutableActionsModal: React.FC<{}> = () => {
                 set_execute_actions_open(false);
             }}
         >
-            <ExecutableActions/>
+            <ExecutableActions />
         </Modal>
     );
 };
