@@ -19,6 +19,7 @@ import { MainContext } from "../../api_context/api_based";
 import { ConnectedServers } from "./ConnectedServers";
 import { CustomActionModal } from "./CustomActionModal";
 import { ServerDataModal } from "./ServerDataModal";
+import { ExecutableActionsModal } from "./ActionExecutionModal";
 
 interface RoomPanelControllerProps {
     setRoomData?: React.Dispatch<
@@ -93,6 +94,7 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
             >
                 <ConnectModal />
                 <ConnectedServersModal />
+                <ExecutableActionsModal/>
                 <CustomActionModal />
                 <ServerDataModal />
                 <UserPreviewModal />

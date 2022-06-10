@@ -10,21 +10,21 @@ import { ButtonLink } from "../../ui/ButtonLink";
 import { InputField } from "../../form-fields/InputField";
 import { ModeContext } from "../../mode_context/room_mode";
 import { MainContext } from "../../api_context/api_based";
-import { ConnectedServers } from "./ConnectedServers";
+import { ExecutableActions } from "./ExecutableActions";
 
-export const ConnectedServersModal: React.FC<{}> = () => {
+export const ExecutableActionsModal: React.FC<{}> = () => {
     const {
-        set_integration_server_select_open,
-        integration_server_select_open,
+        set_execute_actions_open,
+        execute_actions_open,
     } = useContext(ModeContext);
     return (
         <Modal
-            isOpen={integration_server_select_open}
+            isOpen={execute_actions_open}
             onRequestClose={() => {
-                set_integration_server_select_open(false);
+                set_execute_actions_open(false);
             }}
         >
-            <ConnectedServers />
+            <ExecutableActions/>
         </Modal>
     );
 };
