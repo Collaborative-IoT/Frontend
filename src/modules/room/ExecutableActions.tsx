@@ -9,12 +9,17 @@ import { SingleUser } from "../../ui/UserAvatar";
 
 interface ExecutableActionsProps {}
 
-const ExecuteButton: React.FC<{ action_opcode: String }> = ({ action_opcode }) => {
+const ExecuteButton: React.FC<{ action_opcode: String , device_name:String, server:String}> = ({ action_opcode , device_name, server }) => {
     const { t } = useTypeSafeTranslation();
+    const {client} = useContext(MainContext);
     return (
         <Button
             loading={false}
-            onClick={()=>{}}
+            onClick={()=>{client!!.send("request_hoi_action", {
+                server_id: server,
+                bot_name: device_name,
+                action: action_opcode,
+            })}}
             size={`small`}
         >
           Execute Action
@@ -59,7 +64,7 @@ export const ExecutableActionsPage: React.FC<{}> = () => {
                             {accepted_op}
                         </div>
                     </div>
-                    <ExecuteButton action_opcode={accepted_op} />
+                    <ExecuteButton action_opcode={accepted_op} device_name={selected_bot_name} server= {selected_iot_server} />
                 </div>
             ))}
         </>
