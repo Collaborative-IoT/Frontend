@@ -17,7 +17,7 @@ interface VerticalUserInfoProps {
     user: User;
 }
 
-export const x: React.FC<VerticalUserInfoProps> = ({ user }) => {
+export const VerticalUserInfo: React.FC<VerticalUserInfoProps> = ({ user }) => {
     const { t } = useTypeSafeTranslation();
     const badges: badge[] = [];
     const { push } = useRouter();

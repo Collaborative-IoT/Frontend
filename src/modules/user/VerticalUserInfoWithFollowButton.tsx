@@ -16,7 +16,6 @@ interface VerticalUserInfoControllerProps {
 export const VerticalUserInfoWithFollowButton: React.FC<
     VerticalUserInfoControllerProps
 > = ({}) => {
-    const conn = useConn();
     const { t } = useTypeSafeTranslation();
     const { user, all_users_in_room, client } = useContext(MainContext);
     const { data, setData } = useContext(UserPreviewModalContext);
@@ -32,7 +31,7 @@ export const VerticalUserInfoWithFollowButton: React.FC<
                 <VerticalUserInfo user={convert_base_to_normal(user)} />
             ) : (
                 <VerticalUserInfo
-                    user={all_users_in_room!!.get(data?.userId)}
+                    user={all_users_in_room!!.get(data!!.userId)}
                 />
             )}
 

@@ -14,8 +14,6 @@ import { CenterLoader } from "../../ui/CenterLoader";
 import { InfoText } from "../../ui/InfoText";
 import { UserProfile } from "../../ui/UserProfile";
 import { EditProfileModal } from "./EditProfileModal";
-import { VerticalUserInfoWithFollowButton } from "./VerticalUserInfoWithFollowButton";
-
 interface UserProfileControllerProps {
     user_data: User | null;
 }

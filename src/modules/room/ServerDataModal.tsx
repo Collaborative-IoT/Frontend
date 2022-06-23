@@ -3,7 +3,6 @@ import { useCurrentRoomInfo } from "../../shared-hooks/useCurrentRoomInfo";
 import { useTypeSafeTranslation } from "../../shared-hooks/useTypeSafeTranslation";
 import { Button } from "../../ui/Button";
 import { Modal } from "../../ui/Modal";
-import { VerticalUserInfoWithFollowButton } from "../user/VerticalUserInfoWithFollowButton";
 import { RoomChatMessage, useRoomChatStore } from "./chat/useRoomChatStore";
 import { MainContext } from "../../api_context/api_based";
 import { ModeContext } from "../../mode_context/room_mode";
