@@ -17,6 +17,8 @@ export const ModeContext = React.createContext<{
     set_selected_bot_name: any;
     execute_actions_open: bool;
     set_execute_actions_open: any;
+    give_permissions_open:bool;
+    set_give_permissions_open:any;
 }>({
     integration_mode_activated: false,
     integration_add_open: false,
@@ -34,6 +36,8 @@ export const ModeContext = React.createContext<{
     set_selected_bot_name: () => {},
     set_execute_actions_open: () => {},
     execute_actions_open: false,
+    give_permissions_open:false,
+    set_give_permissions_open: () => {}
 });
 
 export const ModeContextProvider: React.FC<{}> = ({ children }) => {
@@ -55,6 +59,8 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
     );
     const [execute_actions_open, set_execute_actions_open] =
         useState<boolean>(false);
+    const [give_permissions_open, set_give_permissions_open] =
+        useState<boolean>(false);
     return (
         <ModeContext.Provider
             value={{
@@ -74,6 +80,8 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
                 selected_bot_type,
                 execute_actions_open,
                 set_execute_actions_open,
+                set_give_permissions_open,
+                give_permissions_open    
             }}
         >
             {children}

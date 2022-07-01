@@ -173,7 +173,7 @@ const UserPreview: React.FC<{
                 }
             },
             t("components.modals.profileModal.deleteMessage"),
-        ],
+        ]
     ] as const;
 
     return (
