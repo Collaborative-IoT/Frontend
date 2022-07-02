@@ -8,15 +8,23 @@ import { SingleUser } from "../../ui/UserAvatar";
 
 interface ServerPermissionProps {}
 
-const SelectButton: React.FC<{ has_permission: boolean }> = ({
-    has_permission,
-}) => {
+const SelectButton: React.FC<{
+    has_permission: boolean;
+    user_id: number;
+    selected_iot_server: number;
+}> = ({ has_permission, user_id, selected_iot_server }) => {
     const { set_give_permissions_open } = useContext(ModeContext);
+    const { client } = useContext(MainContext);
     return (
         <Button
             loading={false}
             onClick={() => {
                 set_give_permissions_open(false);
+                client?.send("give_or_revoke_controller_iot", {
+                    external_id: selected_iot_server,
+                    user_id,
+                    now_has_permission: has_permission ? false : true,
+                });
             }}
             size={`small`}
         >
@@ -70,6 +78,8 @@ export const ServerPermissionsPage: React.FC<{}> = () => {
                         </div>
                         <SelectButton
                             has_permission={user_data.has_permission}
+                            user_id={user_data.id}
+                            selected_iot_server={selected_iot_server}
                         />
                     </div>
                 )
