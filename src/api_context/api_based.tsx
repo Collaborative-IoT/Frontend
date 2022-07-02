@@ -199,7 +199,13 @@ const initClient = (
             };
             subscriber.new_hoi_controller = (data: NewIoTController) => {
                 set_iot_server_controllers((prev) => {
-                    prev?.get(data.external_id)?.add(data.user_id);
+                    if (prev.has(data.external_id)) {
+                        prev.get(data.external_id).add(data.user_id);
+                    } else {
+                        prev.set(data.external_id, new Set());
+                        prev.get(data.external_id).add(data.user_id);
+                    }
+                    console.log("after_new", data);
                     return prev;
                 });
             };

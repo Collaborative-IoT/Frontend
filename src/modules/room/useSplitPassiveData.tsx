@@ -50,11 +50,14 @@ export const useSplitPassiveData = () => {
             }
         }
         number_of_bots += all_bots.length;
-
+        console.log(
+            "controllers",
+            iot_server_controllers.get(selected_iot_server.toString())
+        );
         //Do we have permissions or are we the owner
         if (
             iot_server_controllers
-                .get(selected_iot_server)
+                .get(selected_iot_server.toString())
                 ?.has(user?.user_id) ||
             iot_server_owners.get(selected_iot_server) ==
                 user?.user_id.toString()
