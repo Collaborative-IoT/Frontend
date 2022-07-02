@@ -20,6 +20,7 @@ import { ConnectedServers } from "./ConnectedServers";
 import { CustomActionModal } from "./CustomActionModal";
 import { ServerDataModal } from "./ServerDataModal";
 import { ExecutableActionsModal } from "./ActionExecutionModal";
+import { ServerPermissionsModal } from "./ServerPermissionsModal";
 
 interface RoomPanelControllerProps {
     setRoomData?: React.Dispatch<
@@ -98,6 +99,8 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
                 <CustomActionModal />
                 <ServerDataModal />
                 <UserPreviewModal />
+                <ServerPermissionsModal />
+
                 {screenType === "fullscreen" && open ? null : (
                     <RoomUsersPanel />
                 )}

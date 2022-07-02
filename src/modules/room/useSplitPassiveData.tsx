@@ -29,6 +29,7 @@ export const useSplitPassiveData = () => {
         set_selected_bot_name,
         set_selected_bot_type,
         set_execute_actions_open,
+        set_give_permissions_open,
     } = useContext(ModeContext);
     if (
         selected_iot_server &&
@@ -90,6 +91,19 @@ export const useSplitPassiveData = () => {
                             size={`small`}
                         >
                             Setup Relation
+                        </Button>
+                    ) : null}
+                    {iot_server_owners.get(selected_iot_server) ==
+                    user?.user_id.toString() ? (
+                        <Button
+                            loading={false}
+                            className={"mt-2"}
+                            size={`small`}
+                            onClick={() => {
+                                set_give_permissions_open(true);
+                            }}
+                        >
+                            Manage Permissions
                         </Button>
                     ) : null}
                     <Button loading={false} className={"mt-2"} size={`small`}>
