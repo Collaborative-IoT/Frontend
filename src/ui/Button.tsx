@@ -23,6 +23,8 @@ const colorClassnames = {
     transparent: "text-button bg-transparent",
     "accent-secondary":
         "text-button bg-secondary hover:bg-secondary-washed-out disabled:text-secondary-washed-out",
+    primary_next:
+        "text-button  bg-primary-400 transition duration-200 ease-in-out hover:bg-accent-hover disabled:text-accent-disabled disabled:bg-accent-hover",
 };
 
 export type ButtonProps = DetailedHTMLProps<

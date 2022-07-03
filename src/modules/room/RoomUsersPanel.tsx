@@ -75,12 +75,6 @@ export const RoomUsersPanel: React.FC<{}> = (props) => {
     }
     // we need smaller rows(less items in each row)
     // because we will be rendering larger components
-    console.log(
-        "activated21:",
-        isBigFullscreen &&
-            screenType === "fullscreen" &&
-            integration_mode_activated == true
-    );
     if (
         isBigFullscreen &&
         screenType === "fullscreen" &&

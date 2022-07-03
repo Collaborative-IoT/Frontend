@@ -23,7 +23,7 @@ import React, { useEffect, useState } from "react";
 import { wsApiBaseUrl } from "../lib/constants";
 import { useRouter } from "next/router";
 import { useRoomChatStore } from "../modules/room/chat/useRoomChatStore";
-
+import { v4 as uuidv4 } from "uuid";
 type Nullable<T> = T | null;
 
 export const MainContext = React.createContext<{
@@ -109,7 +109,8 @@ const initClient = (
     set_current_room_blocked_users: React.Dispatch<
         React.SetStateAction<Array<User> | null>
     >,
-    push: any
+    push: any,
+    add_server_log: any
 ) => {
     if (typeof window !== "undefined") {
         // connect to the server and authenticate
@@ -166,7 +167,6 @@ const initClient = (
             };
             subscriber.followers = (data: GetFollowListResponse) => {
                 set_my_following(data.user_ids);
-                console.log(data);
             };
             subscriber.top_rooms = (data: CommunicationRoom[]) => {
                 set_dash_live_rooms!!(data);
@@ -198,6 +198,23 @@ const initClient = (
                 push(`room/${data.room_id}`);
             };
             subscriber.new_hoi_controller = (data: NewIoTController) => {
+                let log = {
+                    tokens: [
+                        {
+                            t: "text",
+                            v: `New Server Controller:${data.user_id}`,
+                        },
+                    ],
+                    id: uuidv4(),
+                    avatarUrl: "",
+                    username: data.outside_name,
+                    displayName: data.outside_name,
+                    deleted: false,
+                    deleterId: "",
+                    sentAt: Date.now(),
+                    isWhisper: false,
+                };
+                add_server_log(log);
                 set_iot_server_controllers((prev) => {
                     if (prev.has(data.external_id)) {
                         prev.get(data.external_id).add(data.user_id);
@@ -228,6 +245,23 @@ const initClient = (
             subscriber.removed_hoi_controller = (
                 data: RemovedIoTController
             ) => {
+                let log = {
+                    tokens: [
+                        {
+                            t: "text",
+                            v: `Removed Controller:${data.user_id}`,
+                        },
+                    ],
+                    id: uuidv4(),
+                    avatarUrl: "",
+                    username: data.outside_name,
+                    displayName: data.outside_name,
+                    deleted: false,
+                    deleterId: "",
+                    sentAt: Date.now(),
+                    isWhisper: false,
+                };
+                add_server_log(log);
                 set_iot_server_controllers((prev) => {
                     prev?.get(data.external_id)?.delete(data.user_id);
                     return prev;
@@ -349,6 +383,7 @@ export const MainContextProvider: React.FC<{ should_connect: boolean }> = ({
     const [interval_handle, set_interval_handle] =
         useState<NodeJS.Timeout | null>(null);
     let { push } = useRouter();
+    let { addServerLog } = useRoomChatStore();
 
     useEffect(() => {
         if (should_connect) {
@@ -366,7 +401,8 @@ export const MainContextProvider: React.FC<{ should_connect: boolean }> = ({
                 set_iot_server_passive_data,
                 set_iot_server_outside_names,
                 set_current_room_blocked_users,
-                push
+                push,
+                addServerLog
             )!!;
             set_client((_prev: any) => {
                 return temp_client;

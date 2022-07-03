@@ -54,19 +54,24 @@ export const useSplitPassiveData = () => {
             "controllers",
             iot_server_controllers.get(selected_iot_server.toString())
         );
-        //Do we have permissions or are we the owner
-        if (
+
+        const is_owner =
+            iot_server_owners.get(selected_iot_server) ==
+            user?.user_id.toString();
+
+        const is_owner_or_has_permissions =
             iot_server_controllers
                 .get(selected_iot_server.toString())
-                ?.has(user?.user_id) ||
-            iot_server_owners.get(selected_iot_server) ==
-                user?.user_id.toString()
-        ) {
+                ?.has(user?.user_id) || is_owner;
+
+        //Do we have permissions or are we the owner
+        if (is_owner_or_has_permissions) {
             bots.push(
                 <div className="flex flex-col h-15.5 w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
                     <Button
                         loading={false}
                         size={`small`}
+                        color={"primary_next"}
                         onClick={() => {
                             set_custom_action_open(true);
                         }}
@@ -75,41 +80,46 @@ export const useSplitPassiveData = () => {
                     </Button>
                     {
                         //only owners of the connection can disconnect from the server
-                        iot_server_owners.get(selected_iot_server) ==
-                        user?.user_id.toString() ? (
+                        is_owner ? (
                             <Button
                                 loading={false}
                                 className={"mt-2"}
+                                color={"primary_next"}
                                 size={`small`}
                             >
                                 Disconnect
                             </Button>
                         ) : null
                     }
-                    {iot_server_owners.get(selected_iot_server) ==
-                    user?.user_id.toString() ? (
+                    {is_owner ? (
                         <Button
                             loading={false}
                             className={"mt-2"}
                             size={`small`}
+                            color={"primary_next"}
                         >
                             Setup Relation
                         </Button>
                     ) : null}
-                    {iot_server_owners.get(selected_iot_server) ==
-                    user?.user_id.toString() ? (
+                    {is_owner ? (
                         <Button
                             loading={false}
                             className={"mt-2"}
                             size={`small`}
+                            color={"primary_next"}
                             onClick={() => {
                                 set_give_permissions_open(true);
                             }}
                         >
-                            Manage Permissions
+                            Permissions
                         </Button>
                     ) : null}
-                    <Button loading={false} className={"mt-2"} size={`small`}>
+                    <Button
+                        loading={false}
+                        color={"primary_next"}
+                        className={"mt-2"}
+                        size={`small`}
+                    >
                         View Relations
                     </Button>
                 </div>
@@ -159,18 +169,20 @@ export const useSplitPassiveData = () => {
                             View Data
                         </Button>
                     )}
-                    <Button
-                        onClick={() => {
-                            set_selected_bot_name(data["device_name"]);
-                            set_selected_bot_type(data["type"]);
-                            set_execute_actions_open(true);
-                        }}
-                        loading={false}
-                        className={"mt-2"}
-                        size={`small`}
-                    >
-                        Execute Actions
-                    </Button>
+                    {is_owner_or_has_permissions ? (
+                        <Button
+                            onClick={() => {
+                                set_selected_bot_name(data["device_name"]);
+                                set_selected_bot_type(data["type"]);
+                                set_execute_actions_open(true);
+                            }}
+                            loading={false}
+                            className={"mt-2"}
+                            size={`small`}
+                        >
+                            Execute Actions
+                        </Button>
+                    ) : null}
                 </div>
             );
         });
