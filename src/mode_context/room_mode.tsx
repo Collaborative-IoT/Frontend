@@ -20,10 +20,10 @@ export const ModeContext = React.createContext<{
     set_execute_actions_open: any;
     give_permissions_open: bool;
     set_give_permissions_open: any;
-    current_action_for_relation:String|null;
-    current_device_name_for_relation:String|null;
-    set_current_action_for_relation:any;
-    set_current_device_name_for_relation:any;
+    current_action_for_relation: String | null;
+    current_device_name_for_relation: String | null;
+    set_current_action_for_relation: any;
+    set_current_device_name_for_relation: any;
 }>({
     integration_mode_activated: false,
     integration_add_open: false,
@@ -43,10 +43,10 @@ export const ModeContext = React.createContext<{
     execute_actions_open: false,
     give_permissions_open: false,
     set_give_permissions_open: () => {},
-    current_action_for_relation:null,
-    current_device_name_for_relation:null,
-    set_current_action_for_relation:()=>{},
-    set_current_device_name_for_relation:()=>{}
+    current_action_for_relation: null,
+    current_device_name_for_relation: null,
+    set_current_action_for_relation: () => {},
+    set_current_device_name_for_relation: () => {},
 });
 
 export const ModeContextProvider: React.FC<{}> = ({ children }) => {
@@ -66,12 +66,12 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
     const [selected_bot_type, set_selected_bot_type] = useState<String | null>(
         null
     );
-    const [current_action_for_relation, set_current_action_for_relation] = useState<String | null>(
-        null
-    );
-    const [current_device_name_for_relation, set_current_device_name_for_relation] = useState<String | null>(
-        null
-    );
+    const [current_action_for_relation, set_current_action_for_relation] =
+        useState<String | null>(null);
+    const [
+        current_device_name_for_relation,
+        set_current_device_name_for_relation,
+    ] = useState<String | null>(null);
     const [execute_actions_open, set_execute_actions_open] =
         useState<boolean>(false);
     const [give_permissions_open, set_give_permissions_open] =
@@ -100,7 +100,7 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
                 current_device_name_for_relation,
                 current_action_for_relation,
                 set_current_action_for_relation,
-                set_current_device_name_for_relation
+                set_current_device_name_for_relation,
             }}
         >
             {children}
