@@ -20,7 +20,7 @@ export const RelationBuilderModal: React.FC<{}> = ({}) => {
         current_action_for_relation,
         current_device_name_for_relation,
     } = useContext(ModeContext);
-    const { client, user } = useContext(MainContext);
+    const { client, user, selected_iot_server } = useContext(MainContext);
     const [relations, set_relations] = useState<Map<String, RelationCondition>>(
         new Map()
     );
@@ -83,6 +83,19 @@ export const RelationBuilderModal: React.FC<{}> = ({}) => {
                         set_relation_builder_open(false);
                         set_relation_builder_open(true);
                     } else {
+                        let relation_data = combine_and_format_relation_request(
+                            relations,
+                            current_device_name_for_relation,
+                            current_action_for_relation
+                        );
+                        //format request and send directly to the control server
+                        //which gets passed to the integration server
+                        //which gets passed to the HOI server directly
+                        client!!.send("relation_modification", {
+                            modification_op: "add_relation",
+                            data: JSON.stringify(relation_data),
+                            server_id: selected_iot_server,
+                        });
                         set_relation_builder_open(false);
                         set_finished(false);
                     }
