@@ -10,20 +10,22 @@ export const ModeContext = React.createContext<{
     set_integration_add: any;
     custom_action_open: boolean;
     set_custom_action_open: any;
-    selected_server_data_open: bool;
+    selected_server_data_open: boolean;
     set_selected_server_data_open: any;
     selected_bot_type: String | null;
     selected_bot_name: String | null;
     set_selected_bot_type: any;
     set_selected_bot_name: any;
-    execute_actions_open: bool;
+    execute_actions_open: boolean;
     set_execute_actions_open: any;
-    give_permissions_open: bool;
+    give_permissions_open: boolean;
     set_give_permissions_open: any;
     current_action_for_relation: String | null;
     current_device_name_for_relation: String | null;
     set_current_action_for_relation: any;
     set_current_device_name_for_relation: any;
+    relation_builder_open: boolean;
+    set_relation_builder_open: any;
 }>({
     integration_mode_activated: false,
     integration_add_open: false,
@@ -47,6 +49,8 @@ export const ModeContext = React.createContext<{
     current_device_name_for_relation: null,
     set_current_action_for_relation: () => {},
     set_current_device_name_for_relation: () => {},
+    relation_builder_open: false,
+    set_relation_builder_open: () => {},
 });
 
 export const ModeContextProvider: React.FC<{}> = ({ children }) => {
@@ -76,6 +80,8 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
         useState<boolean>(false);
     const [give_permissions_open, set_give_permissions_open] =
         useState<boolean>(false);
+    const [relation_builder_open, set_relation_builder_open] =
+        useState<boolean>(false);
     return (
         <ModeContext.Provider
             value={{
@@ -101,6 +107,8 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
                 current_action_for_relation,
                 set_current_action_for_relation,
                 set_current_device_name_for_relation,
+                relation_builder_open,
+                set_relation_builder_open,
             }}
         >
             {children}

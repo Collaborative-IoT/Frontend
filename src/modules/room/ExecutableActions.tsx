@@ -16,20 +16,39 @@ const ExecuteButton: React.FC<{
 }> = ({ action_opcode, device_name, server }) => {
     const { t } = useTypeSafeTranslation();
     const { client } = useContext(MainContext);
+    const {
+        set_current_action_for_relation,
+        set_current_device_name_for_relation,
+        set_relation_builder_open,
+    } = useContext(ModeContext);
     return (
-        <Button
-            loading={false}
-            onClick={() => {
-                client!!.send("request_hoi_action", {
-                    server_id: server,
-                    bot_name: device_name,
-                    action: action_opcode,
-                });
-            }}
-            size={`small`}
-        >
-            Execute Action
-        </Button>
+        <>
+            <Button
+                loading={false}
+                onClick={() => {
+                    client!!.send("request_hoi_action", {
+                        server_id: server,
+                        bot_name: device_name,
+                        action: action_opcode,
+                    });
+                }}
+                size={`small`}
+            >
+                Execute Action
+            </Button>
+
+            <Button
+                loading={false}
+                onClick={() => {
+                    set_current_action_for_relation(action_opcode);
+                    set_current_device_name_for_relation(device_name);
+                    set_relation_builder_open(true);
+                }}
+                size={`small`}
+            >
+                Relate
+            </Button>
+        </>
     );
 };
 
