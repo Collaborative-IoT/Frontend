@@ -24,6 +24,37 @@ export const RelationBuilderModal: React.FC<{}> = ({}) => {
     const [relations, set_relations] = useState<Map<String, RelationCondition>>(
         new Map()
     );
+
+    const combine_and_format_relation_request = (
+        relations: Map<String, RelationCondition>,
+        relate_device_name: String,
+        relate_action_op: String
+    ) => {
+        let condition_combination_map = new Map();
+        for (key of relations.keys()) {
+            let data = relations.get(key);
+            if (condition_combination_map.has(data!!.device_name)) {
+                condition_combination_map.get(data!!.device_name)[
+                    data!!.field_name
+                ] = data!!.field_value;
+            } else {
+                condition_combination_map.set(data!!.device_name, {
+                    [data!!.field_name]: data!!.field_value,
+                    bot_name: data!!.device_name,
+                });
+            }
+        }
+        let relation_data = {
+            device_name: relate_device_name,
+            active_status: true,
+            conditions: [],
+        };
+        for (key of condition_combination_map.keys()) {
+            relation_data.conditions.push(condition_combination_map.get(key));
+        }
+        return relation_data;
+    };
+
     const [finished, set_finished] = useState<boolean>(false);
     return (
         <Modal
@@ -137,7 +168,14 @@ export const RelationBuilderModal: React.FC<{}> = ({}) => {
                             </div>
                             <Button
                                 loading={false}
-                                onClick={() => {}}
+                                onClick={() => {
+                                    set_relation_builder_open(false);
+                                    set_relations((prev) => {
+                                        prev.delete(data);
+                                        return prev;
+                                    });
+                                    set_relation_builder_open(true);
+                                }}
                                 size={`small`}
                             >
                                 Remove

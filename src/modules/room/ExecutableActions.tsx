@@ -39,6 +39,7 @@ const ExecuteButton: React.FC<{
 
             <Button
                 loading={false}
+                className={"ml-1"}
                 onClick={() => {
                     set_current_action_for_relation(action_opcode);
                     set_current_device_name_for_relation(device_name);
