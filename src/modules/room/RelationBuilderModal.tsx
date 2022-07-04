@@ -30,8 +30,9 @@ export const RelationBuilderModal: React.FC<{}> = ({}) => {
         relate_device_name: String,
         relate_action_op: String
     ) => {
+        try{
         let condition_combination_map = new Map();
-        for (key of relations.keys()) {
+        for (var key of relations.keys()) {
             let data = relations.get(key);
             if (condition_combination_map.has(data!!.device_name)) {
                 condition_combination_map.get(data!!.device_name)[
@@ -40,19 +41,23 @@ export const RelationBuilderModal: React.FC<{}> = ({}) => {
             } else {
                 condition_combination_map.set(data!!.device_name, {
                     [data!!.field_name]: data!!.field_value,
-                    bot_name: data!!.device_name,
+                    device_name: data!!.device_name,
                 });
             }
         }
         let relation_data = {
             device_name: relate_device_name,
-            active_status: true,
+            action:relate_action_op,
             conditions: [],
         };
-        for (key of condition_combination_map.keys()) {
+        for (var key of condition_combination_map.keys()) {
             relation_data.conditions.push(condition_combination_map.get(key));
         }
         return relation_data;
+    }
+    catch(e){
+        console.log(e);
+    }
     };
 
     const [finished, set_finished] = useState<boolean>(false);
@@ -72,6 +77,7 @@ export const RelationBuilderModal: React.FC<{}> = ({}) => {
                 validateOnChange={false}
                 validate={() => {}}
                 onSubmit={(data) => {
+                    console.log("submitteddd");
                     if (!finished) {
                         set_relations((prev) => {
                             prev.set(
@@ -83,6 +89,7 @@ export const RelationBuilderModal: React.FC<{}> = ({}) => {
                         set_relation_builder_open(false);
                         set_relation_builder_open(true);
                     } else {
+                        console.log("submitteddd222");
                         let relation_data = combine_and_format_relation_request(
                             relations,
                             current_device_name_for_relation,
