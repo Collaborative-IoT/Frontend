@@ -30,34 +30,35 @@ export const RelationBuilderModal: React.FC<{}> = ({}) => {
         relate_device_name: String,
         relate_action_op: String
     ) => {
-        try{
-        let condition_combination_map = new Map();
-        for (var key of relations.keys()) {
-            let data = relations.get(key);
-            if (condition_combination_map.has(data!!.device_name)) {
-                condition_combination_map.get(data!!.device_name)[
-                    data!!.field_name
-                ] = data!!.field_value;
-            } else {
-                condition_combination_map.set(data!!.device_name, {
-                    [data!!.field_name]: data!!.field_value,
-                    device_name: data!!.device_name,
-                });
+        try {
+            let condition_combination_map = new Map();
+            for (var key of relations.keys()) {
+                let data = relations.get(key);
+                if (condition_combination_map.has(data!!.device_name)) {
+                    condition_combination_map.get(data!!.device_name)[
+                        data!!.field_name
+                    ] = data!!.field_value;
+                } else {
+                    condition_combination_map.set(data!!.device_name, {
+                        [data!!.field_name]: data!!.field_value,
+                        device_name: data!!.device_name,
+                    });
+                }
             }
+            let relation_data = {
+                device_name: relate_device_name,
+                action: relate_action_op,
+                conditions: [],
+            };
+            for (var key of condition_combination_map.keys()) {
+                relation_data.conditions.push(
+                    condition_combination_map.get(key)
+                );
+            }
+            return relation_data;
+        } catch (e) {
+            console.log(e);
         }
-        let relation_data = {
-            device_name: relate_device_name,
-            action:relate_action_op,
-            conditions: [],
-        };
-        for (var key of condition_combination_map.keys()) {
-            relation_data.conditions.push(condition_combination_map.get(key));
-        }
-        return relation_data;
-    }
-    catch(e){
-        console.log(e);
-    }
     };
 
     const [finished, set_finished] = useState<boolean>(false);
