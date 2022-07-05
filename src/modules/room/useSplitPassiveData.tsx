@@ -30,6 +30,7 @@ export const useSplitPassiveData = () => {
         set_selected_bot_type,
         set_execute_actions_open,
         set_give_permissions_open,
+        set_relation_list_open,
     } = useContext(ModeContext);
     if (
         selected_iot_server &&
@@ -119,6 +120,9 @@ export const useSplitPassiveData = () => {
                         color={"primary_next"}
                         className={"mt-2"}
                         size={`small`}
+                        onClick={() => {
+                            set_relation_list_open(true);
+                        }}
                     >
                         View Relations
                     </Button>

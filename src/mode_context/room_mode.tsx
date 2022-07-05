@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+
+export type Relation = {
+    device_name: String;
+    action: String;
+    conditions: Array<any>;
+};
+
 // Used to switch between integration mode and user mode
 // with the data for integration mode.
 export const ModeContext = React.createContext<{
@@ -26,6 +33,10 @@ export const ModeContext = React.createContext<{
     set_current_device_name_for_relation: any;
     relation_builder_open: boolean;
     set_relation_builder_open: any;
+    set_current_relation_for_modification: any;
+    current_relation_for_modification: Relation | null;
+    relation_list_open: boolean;
+    set_relation_list_open: any;
 }>({
     integration_mode_activated: false,
     integration_add_open: false,
@@ -51,6 +62,10 @@ export const ModeContext = React.createContext<{
     set_current_device_name_for_relation: () => {},
     relation_builder_open: false,
     set_relation_builder_open: () => {},
+    set_current_relation_for_modification: () => {},
+    current_relation_for_modification: null,
+    relation_list_open: () => {},
+    set_relation_list_open: null,
 });
 
 export const ModeContextProvider: React.FC<{}> = ({ children }) => {
@@ -82,6 +97,14 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
         useState<boolean>(false);
     const [relation_builder_open, set_relation_builder_open] =
         useState<boolean>(false);
+
+    const [
+        current_relation_for_modification,
+        set_current_relation_for_modification,
+    ] = useState<Relation | null>(null);
+
+    const [relation_list_open, set_relation_list_open] =
+        useState<boolean>(false);
     return (
         <ModeContext.Provider
             value={{
@@ -109,6 +132,10 @@ export const ModeContextProvider: React.FC<{}> = ({ children }) => {
                 set_current_device_name_for_relation,
                 relation_builder_open,
                 set_relation_builder_open,
+                current_relation_for_modification,
+                set_current_relation_for_modification,
+                relation_list_open,
+                set_relation_list_open,
             }}
         >
             {children}
