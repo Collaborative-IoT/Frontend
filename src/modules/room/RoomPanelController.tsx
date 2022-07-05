@@ -23,6 +23,7 @@ import { ExecutableActionsModal } from "./ActionExecutionModal";
 import { ServerPermissionsModal } from "./ServerPermissionsModal";
 import { RelationBuilderModal } from "./RelationBuilderModal";
 import { RelationListModal } from "./RelationsListModal";
+import { RelationConditionsListModal } from "./RelationConditionsListModal";
 
 interface RoomPanelControllerProps {
     setRoomData?: React.Dispatch<
@@ -104,6 +105,7 @@ export const RoomPanelController: React.FC<RoomPanelControllerProps> = ({
                 <ServerPermissionsModal />
                 <RelationBuilderModal />
                 <RelationListModal />
+                <RelationConditionsListModal />
 
                 {screenType === "fullscreen" && open ? null : (
                     <RoomUsersPanel />

@@ -11,26 +11,28 @@ import { v4 as uuidv4, v4 } from "uuid";
 interface RelationsListProps {}
 
 export const RelationsListPage: React.FC<{}> = () => {
-    const { selected_iot_server, iot_server_passive_data } =
+    const { selected_iot_server, iot_server_passive_data, client } =
         useContext(MainContext);
-    const { set_current_relation_for_modification } = useContext(ModeContext);
+    const { set_current_relation_for_modification, set_relation_list_open } =
+        useContext(ModeContext);
     if (selected_iot_server == null) {
         return <InfoText className={`mt-2`}>No Server Selected</InfoText>;
     }
 
     let data = [];
-    let passive_data = JSON.parse(
-        JSON.parse(iot_server_passive_data.get(selected_iot_server))
-    );
-    console.log(passive_data);
+    if(iot_server_passive_data.has(selected_iot_server)){
 
-    let relation_data = passive_data["external_controller_snapshot"];
-    if (relation_data != null) {
-        //normal list of relations
-        let relation_data_array = JSON.parse(relation_data)["relations"];
-        data = relation_data_array;
-        console.log(data);
+        
+        let passive_data = JSON.parse(
+            JSON.parse(iot_server_passive_data.get(selected_iot_server))
+        );
+        let relation_data = passive_data["external_controller_snapshot"];
+        if (relation_data != null) {
+            //normal list of relations
+            let relation_data_array = JSON.parse(relation_data)["relations"];
+            data = relation_data_array;
     }
+}
 
     return (
         <>
@@ -46,13 +48,24 @@ export const RelationsListPage: React.FC<{}> = () => {
                             <InfoText>{`Conditions->${relation.conditions.length}`}</InfoText>
                             <Button
                                 loading={false}
-                                onClick={() => {}}
+                                onClick={() => {
+                                    set_current_relation_for_modification(
+                                        relation
+                                    );
+                                }}
                                 size={`small`}
                             >
                                 View Conditions List
                             </Button>
                             <Button
-                                onClick={() => {}}
+                                onClick={() => {
+                                    client!!.send("relation_modification", {
+                                        modification_op: "remove_relation",
+                                        data: JSON.stringify(relation),
+                                        server_id: selected_iot_server,
+                                    });
+                                    set_relation_list_open(false);
+                                }}
                                 className=" mt-2"
                                 size="small"
                             >
