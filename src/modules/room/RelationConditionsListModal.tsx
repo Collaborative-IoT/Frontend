@@ -15,7 +15,7 @@ export const RelationConditionsListModal: React.FC<{}> = () => {
         <Modal
             isOpen={current_relation_for_modification != null}
             onRequestClose={() => {
-                set_current_relation_for_modification(null)
+                set_current_relation_for_modification(null);
             }}
         >
             <ConditionsList />

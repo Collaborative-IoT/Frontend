@@ -20,19 +20,20 @@ export const ConditionsListPage: React.FC<{}> = () => {
                 Note: All below must be true for the relation to trigger the
                 action
             </p>
-            {data.map((condition: any) => ( 
-                
+            {data.map((condition: any) => (
                 <>
                     <div
                         className={`flex border-b border-solid w-full py-4 px-2 items-center`}
                         key={v4()}
                     >
                         <div>
-                            {Array.from(Object.keys(condition)).map((key: any) => {
-                                return (
-                                    <InfoText>{`"${key}"->"${condition[key]}"`}</InfoText>
-                                );
-                            })}
+                            {Array.from(Object.keys(condition)).map(
+                                (key: any) => {
+                                    return (
+                                        <InfoText>{`"${key}"->"${condition[key]}"`}</InfoText>
+                                    );
+                                }
+                            )}
                         </div>
                     </div>
                 </>

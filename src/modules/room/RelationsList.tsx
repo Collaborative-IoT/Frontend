@@ -20,9 +20,7 @@ export const RelationsListPage: React.FC<{}> = () => {
     }
 
     let data = [];
-    if(iot_server_passive_data.has(selected_iot_server)){
-
-        
+    if (iot_server_passive_data.has(selected_iot_server)) {
         let passive_data = JSON.parse(
             JSON.parse(iot_server_passive_data.get(selected_iot_server))
         );
@@ -31,8 +29,8 @@ export const RelationsListPage: React.FC<{}> = () => {
             //normal list of relations
             let relation_data_array = JSON.parse(relation_data)["relations"];
             data = relation_data_array;
+        }
     }
-}
 
     return (
         <>
