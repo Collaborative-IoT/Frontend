@@ -1,11 +1,11 @@
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
-import React, {useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LgLogo } from "../../icons";
 import SvgSolidBug from "../../icons/SolidBug";
 import SvgSolidDiscord from "../../icons/SolidDiscord";
 import SvgSolidGitHub from "../../icons/SolidGitHub";
-import { apiBaseUrl} from "../../lib/constants";
+import { apiBaseUrl } from "../../lib/constants";
 import { Button } from "../../ui/Button";
 import { useSaveTokensFromQueryParams } from "../auth/useSaveTokensFromQueryParams";
 import { HeaderController } from "../display/HeaderController";
@@ -83,27 +83,21 @@ export const LoginPage: React.FC = () => {
                         </span>
                         <div className="text-primary-100 flex-wrap">
                             By logging in you accept our&nbsp;
-                            <a
-                                className="text-accent hover:underline"
-                            >
+                            <a className="text-accent hover:underline">
                                 Privacy Policy
                             </a>
                             &nbsp;and&nbsp;
-                            <a
-                                className="text-accent hover:underline"
-                            >
+                            <a className="text-accent hover:underline">
                                 Terms of Service
                             </a>
                             .
                         </div>
                     </div>
                     <div className="flex flex-col gap-4">
-                            <LoginButton
-                               oauthUrl={`${apiBaseUrl}/auth/discord`}
-                            >
-                                <SvgSolidDiscord width={20} height={20} />
-                                Log in with Discord
-                            </LoginButton>
+                        <LoginButton oauthUrl={`${apiBaseUrl}/auth/discord`}>
+                            <SvgSolidDiscord width={20} height={20} />
+                            Log in with Discord
+                        </LoginButton>
                     </div>
                 </div>
                 <div className="flex flex-row absolute bottom-0 w-full justify-between px-5 py-5 mt-auto items-center sm:px-7">
@@ -135,10 +129,7 @@ export const LoginPage: React.FC = () => {
                                     className="ml-2 cursor-pointer hover:text-primary-200"
                                 />
                             </a>
-                            <a
-                                target="_blank"
-                                rel="noreferrer"
-                            >
+                            <a target="_blank" rel="noreferrer">
                                 <SvgSolidDiscord
                                     width={20}
                                     height={20}
