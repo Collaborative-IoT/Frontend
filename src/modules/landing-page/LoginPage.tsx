@@ -1,18 +1,13 @@
 import isElectron from "is-electron";
 import { useRouter } from "next/router";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Url } from "url";
+import React, {useContext, useEffect, useState } from "react";
 import { LgLogo } from "../../icons";
 import SvgSolidBug from "../../icons/SolidBug";
 import SvgSolidDiscord from "../../icons/SolidDiscord";
 import SvgSolidGitHub from "../../icons/SolidGitHub";
-import SvgSolidTwitter from "../../icons/SolidTwitter";
-import redirect from "nextjs-redirect";
-import { apiBaseUrl, isStaging, __prod__ } from "../../lib/constants";
-import { isServer } from "../../lib/isServer";
+import { apiBaseUrl} from "../../lib/constants";
 import { Button } from "../../ui/Button";
 import { useSaveTokensFromQueryParams } from "../auth/useSaveTokensFromQueryParams";
-import { useTokenStore } from "../auth/useTokenStore";
 import { HeaderController } from "../display/HeaderController";
 import { ElectronHeader } from "../layouts/ElectronHeader";
 
@@ -63,30 +58,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({
 
 export const LoginPage: React.FC = () => {
     useSaveTokensFromQueryParams();
-    const hasTokens = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
     const { push } = useRouter();
-    const [tokensChecked, setTokensChecked] = useState(false);
-
-    useEffect(() => {
-        // only want this on mount
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        if (hasTokens) {
-            console.log("redirecting from login-page");
-            push("/dash");
-        } else {
-            setTokensChecked(true);
-        }
-    }, [hasTokens, push]);
-
-    const queryParams =
-        isStaging && !isServer
-            ? "?redirect_after_base=" + window.location.origin
-            : "";
-
-    if (!tokensChecked) return null;
 
     return (
         <>
@@ -107,19 +79,17 @@ export const LoginPage: React.FC = () => {
                 <div className="flex m-auto flex-col p-6 gap-5 bg-primary-800 sm:rounded-8 z-10 sm:w-400 w-full">
                     <div className="flex gap-2 flex-col">
                         <span className="text-3xl text-primary-100 font-bold">
-                            Welcome
+                            Welcome To Collaborative
                         </span>
                         <div className="text-primary-100 flex-wrap">
                             By logging in you accept our&nbsp;
                             <a
-                                href="/privacy-policy.html"
                                 className="text-accent hover:underline"
                             >
                                 Privacy Policy
                             </a>
                             &nbsp;and&nbsp;
                             <a
-                                href="/terms.html"
                                 className="text-accent hover:underline"
                             >
                                 Terms of Service
@@ -128,54 +98,13 @@ export const LoginPage: React.FC = () => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4">
-                        <LoginButton oauthUrl={`${apiBaseUrl}/auth/discord`}>
-                            <SvgSolidGitHub width={20} height={20} />
-                            Log in with GitHub
-                        </LoginButton>
-                        <LoginButton oauthUrl={`${apiBaseUrl}/auth/discord`}>
-                            <SvgSolidTwitter width={20} height={20} />
-                            Log in with Twitter
-                        </LoginButton>
-                        {!isElectron() ? (
                             <LoginButton
-                                oauthUrl={`${apiBaseUrl}/auth/discord`}
+                               oauthUrl={`${apiBaseUrl}/auth/discord`}
                             >
                                 <SvgSolidDiscord width={20} height={20} />
                                 Log in with Discord
                             </LoginButton>
-                        ) : null}
-                        {!__prod__ ? (
-                            <LoginButton
-                                dev
-                                onClick={async () => {
-                                    // eslint-disable-next-line no-alert
-                                    const name = window.prompt("username");
-                                    if (!name) {
-                                        return;
-                                    }
-                                    const r = await fetch(
-                                        `${apiBaseUrl}/dev/test-info?username=` +
-                                            name
-                                    );
-                                    const d = await r.json();
-                                    useTokenStore.getState().setTokens({
-                                        accessToken: d.accessToken,
-                                        refreshToken: d.refreshToken,
-                                    });
-                                    console.log("redirecting from login-page");
-                                    push("/dash");
-                                }}
-                                data-testid="create-test-user"
-                            >
-                                <SvgSolidBug width={20} height={20} />
-                                Create a test user
-                            </LoginButton>
-                        ) : null}
                     </div>
-                    {/* <div className="flex flex-col gap-3 items-center">
-          <span className="text-primary-100">Download the app</span>
-          <span className="text-primary-300">unavailable lol</span>
-        </div> */}
                 </div>
                 <div className="flex flex-row absolute bottom-0 w-full justify-between px-5 py-5 mt-auto items-center sm:px-7">
                     <div className="hidden sm:flex">
@@ -189,14 +118,14 @@ export const LoginPage: React.FC = () => {
                             Privacy policy
                         </a>
                         <a
-                            href="https://github.com/benawad/dogehouse/issues"
+                            href="https://github.com/Collaborative-IoT/Hector/issues"
                             className="ml-2 hover:text-primary-200"
                         >
                             Report a bug
                         </a>
                         <div className="flex flex-row gap-6 sm:gap-4">
                             <a
-                                href="https://github.com/benawad/dogehouse"
+                                href="https://github.com/Collaborative-IoT/Hector"
                                 target="_blank"
                                 rel="noreferrer"
                             >
@@ -207,7 +136,6 @@ export const LoginPage: React.FC = () => {
                                 />
                             </a>
                             <a
-                                href="https://discord.gg/wCbKBZF9cV"
                                 target="_blank"
                                 rel="noreferrer"
                             >
