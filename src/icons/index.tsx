@@ -52,3 +52,4 @@ export { default as SolidFriendsAdd } from "./SolidFriendsAdd";
 export { default as BotIcon } from "./BotIcon";
 export { default as SolidDownload } from "./SolidDownload";
 export { default as DeveloperIcon } from "./DeveloperIcon";
+export { default as ServerIcon } from "./ServerIcon";

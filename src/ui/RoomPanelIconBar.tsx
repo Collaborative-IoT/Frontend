@@ -12,6 +12,7 @@ import {
     SolidCloud,
     SolidMoon,
     OutlineGlobe,
+    ServerIcon
 } from "../icons";
 import SvgSolidMoon from "../icons/SolidMoon";
 import { useScreenType } from "../shared-hooks/useScreenType";
@@ -171,7 +172,7 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
                         }}
                         data-testid="room-settings"
                     >
-                        <SolidMoon width="40" height="20"></SolidMoon>
+                        <ServerIcon width="40" height="20"></ServerIcon>
                     </BoxedIcon>
                 ) : null}
             </div>
