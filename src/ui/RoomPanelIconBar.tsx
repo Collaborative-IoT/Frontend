@@ -12,7 +12,7 @@ import {
     SolidCloud,
     SolidMoon,
     OutlineGlobe,
-    ServerIcon
+    ServerIcon,
 } from "../icons";
 import SvgSolidMoon from "../icons/SolidMoon";
 import { useScreenType } from "../shared-hooks/useScreenType";
