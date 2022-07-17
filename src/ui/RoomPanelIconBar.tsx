@@ -9,7 +9,7 @@ import {
     SolidSettings,
     SolidNew,
     BotIcon,
-    SolidWarning,
+    SolidCloud,
     SolidMoon,
     OutlineGlobe,
 } from "../icons";
@@ -143,7 +143,7 @@ export const RoomPanelIconBar: React.FC<RoomPanelIconBarProps> = ({
                     }}
                     data-testid="room-settings"
                 >
-                    <SolidWarning width="20" height="20"></SolidWarning>
+                    <SolidCloud width="26" height="26"></SolidCloud>
                 </BoxedIcon>
                 {integration_mode_activated ? (
                     <BoxedIcon
