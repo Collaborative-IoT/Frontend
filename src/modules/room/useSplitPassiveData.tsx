@@ -66,9 +66,9 @@ export const useSplitPassiveData = () => {
                 ?.has(user?.user_id) || is_owner;
 
         //Do we have permissions or are we the owner
-        if (is_owner_or_has_permissions) {
-            bots.push(
-                <div className="flex flex-col h-15.5 w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
+        bots.push(
+            <div className="flex flex-col h-15.5 w-15 rounded-8 bg-primary-700 overflow-scroll p-2">
+                {is_owner_or_has_permissions ? (
                     <Button
                         loading={false}
                         size={`small`}
@@ -79,56 +79,47 @@ export const useSplitPassiveData = () => {
                     >
                         Custom Action
                     </Button>
-                    {
-                        //only owners of the connection can disconnect from the server
-                        is_owner ? (
-                            <Button
-                                loading={false}
-                                className={"mt-2"}
-                                color={"primary_next"}
-                                size={`small`}
-                            >
-                                Disconnect
-                            </Button>
-                        ) : null
-                    }
-                    {is_owner ? (
+                ) : null}
+                {
+                    //only owners of the connection can disconnect from the server
+                    is_owner ? (
                         <Button
                             loading={false}
                             className={"mt-2"}
-                            size={`small`}
                             color={"primary_next"}
-                        >
-                            Setup Relation
-                        </Button>
-                    ) : null}
-                    {is_owner ? (
-                        <Button
-                            loading={false}
-                            className={"mt-2"}
                             size={`small`}
-                            color={"primary_next"}
-                            onClick={() => {
-                                set_give_permissions_open(true);
-                            }}
                         >
-                            Permissions
+                            Disconnect
                         </Button>
-                    ) : null}
+                    ) : null
+                }
+                {is_owner ? (
                     <Button
                         loading={false}
-                        color={"primary_next"}
                         className={"mt-2"}
                         size={`small`}
+                        color={"primary_next"}
                         onClick={() => {
-                            set_relation_list_open(true);
+                            set_give_permissions_open(true);
                         }}
                     >
-                        View Relations
+                        Permissions
                     </Button>
-                </div>
-            );
-        }
+                ) : null}
+                <Button
+                    loading={false}
+                    color={"primary_next"}
+                    className={"mt-2"}
+                    size={`small`}
+                    onClick={() => {
+                        set_relation_list_open(true);
+                    }}
+                >
+                    View Relations
+                </Button>
+            </div>
+        );
+
         all_bots!!.forEach((data: any) => {
             console.log(data);
             let bot_specific_data = data["data"];
