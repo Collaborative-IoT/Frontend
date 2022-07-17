@@ -22,6 +22,7 @@ export const useSplitPassiveData = () => {
         iot_server_controllers,
         iot_server_passive_data,
         iot_server_owners,
+        set_selected_iot_server,
     } = useContext(MainContext);
 
     const {
@@ -51,11 +52,6 @@ export const useSplitPassiveData = () => {
             }
         }
         number_of_bots += all_bots.length;
-        console.log(
-            "controllers",
-            iot_server_controllers.get(selected_iot_server.toString())
-        );
-
         const is_owner =
             iot_server_owners.get(selected_iot_server) ==
             user?.user_id.toString();
@@ -88,6 +84,12 @@ export const useSplitPassiveData = () => {
                             className={"mt-2"}
                             color={"primary_next"}
                             size={`small`}
+                            onClick={() => {
+                                set_selected_iot_server(null);
+                                client?.send("disconnect_hoi", {
+                                    server_id: selected_iot_server,
+                                });
+                            }}
                         >
                             Disconnect
                         </Button>
