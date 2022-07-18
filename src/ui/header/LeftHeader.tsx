@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { LgLogo, LogoIcon } from "../../icons";
+import { LgLogo, LogoIcon, BotIcon } from "../../icons";
 import { useScreenType } from "../../shared-hooks/useScreenType";
 
 export interface LeftHeaderProps {}
@@ -10,7 +10,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({}) => {
     return (
         <Link href="/dash">
             <a data-testid="logo-link" className="w-full">
-                <h2 style={{ color: "#ffffff" }}>🚀</h2>
+                <LgLogo></LgLogo>
             </a>
         </Link>
     );

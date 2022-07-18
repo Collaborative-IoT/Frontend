@@ -69,11 +69,9 @@ export const FollowersOnlineWrapper: React.FC<{
             className="pb-5 w-full flex flex-col flex-1 overflow-y-auto"
             data-testid="friends-online"
         >
-            <h4 className="text-primary-100">
-                {t("components.followingOnline.people")}
-            </h4>
+            <h4 className="text-primary-100">Your People</h4>
             <h6 className="text-primary-300 mt-3 text-sm font-bold uppercase">
-                {t("components.followingOnline.online")}{" "}
+                You Follow{" "}
                 {onlineFriendCount !== undefined
                     ? `(${onlineFriendCount})`
                     : null}
