@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useRef } from "react";
+import React, { useRef, useContext } from "react";
 import { useDeafStore } from "../../global-stores/useDeafStore";
 import { SolidDeafened, SolidDeafenedOff, SolidMicrophone } from "../../icons";
 import SvgSolidMicrophoneOff from "../../icons/SolidMicrophoneOff";
@@ -15,10 +15,9 @@ import { useBoundingClientRect } from "../../shared-hooks/useBoundingClientRect"
 import { useLeaveRoom } from "../../shared-hooks/useLeaveRoom";
 import { useMuteStore } from "../../global-stores/useMuteStore";
 import { useMediaQuery } from "react-responsive";
+import { MainContext } from "../../api_context/api_based";
 
 export const FloatingRoomInfo: React.FC = () => {
-    const data = useCurrentRoomFromCache();
-    const { canSpeak } = useCurrentRoomInfo();
     const { muted } = useMuteStore();
     const setMute = useSetMute();
     const { deafened } = useDeafStore();
@@ -30,7 +29,8 @@ export const FloatingRoomInfo: React.FC = () => {
     const [{ y }, api] = useSpring(() => ({ y: 0 }));
     const floatingRef = useRef(null);
     const bbox = useBoundingClientRect(floatingRef);
-
+    const { current_room_id, dash_live_rooms, current_room_base_data } =
+        useContext(MainContext);
     const close = () => {
         api({
             y: bbox ? bbox.height : 60,
@@ -64,19 +64,26 @@ export const FloatingRoomInfo: React.FC = () => {
         }
     );
 
-    if (!data || "error" in data) {
+    if (current_room_id == null || current_room_base_data == null) {
         return null;
     }
 
-    const { room } = data;
-
-    const avatars =
-        "peoplePreviewList" in room
-            ? room.peoplePreviewList
-                  .map((x) => x.avatarUrl!)
-                  .slice(0, 2)
-                  .filter((x) => x !== null)
-            : [];
+    const gather_room_previews = () => {
+        let previews = [];
+        if (dash_live_rooms != null) {
+            for (var room of dash_live_rooms) {
+                if (room.room_id == current_room_id) {
+                    previews = Array.from(
+                        Object.values(room.people_preview_data)
+                    )
+                        .map((x: any) => x.avatar_url!)
+                        .slice(0, 3)
+                        .filter((x) => x !== null);
+                }
+            }
+        }
+        return previews;
+    };
 
     const bgStyles = {
         opacity: y.to([0, bbox ? bbox.height : 60], [1, 0], "clamp"),
@@ -97,38 +104,37 @@ export const FloatingRoomInfo: React.FC = () => {
         >
             <div className="flex overflow-hidden">
                 <div className="mr-2">
-                    <MultipleUsers srcArray={avatars} />
+                    <MultipleUsers srcArray={gather_room_previews()} />
                 </div>
                 <button
                     onClick={() => {
-                        router.push(`/room/${room.id}`);
+                        router.push(`/room/${current_room_id}`);
                     }}
                     style={{ minWidth: 100 }}
                     className="truncate text-primary-100 text-left font-bold mr-3"
                 >
-                    {room.name}
+                    {current_room_base_data!!.details.name}
                 </button>
             </div>
 
             <div className="flex py-2 overflow-hidden">
-                {canSpeak ? (
-                    <BoxedIcon
-                        data-testid="mute"
-                        hover
-                        onClick={() => {
-                            setMute(!muted);
-                        }}
-                        className={`w-7 mr-2 ${
-                            !muted && !deafened ? "bg-accent text-button" : ""
-                        }`}
-                    >
-                        {muted || deafened ? (
-                            <SvgSolidMicrophoneOff />
-                        ) : (
-                            <SolidMicrophone />
-                        )}
-                    </BoxedIcon>
-                ) : null}
+                <BoxedIcon
+                    data-testid="mute"
+                    hover
+                    onClick={() => {
+                        setMute(!muted);
+                    }}
+                    className={`w-7 mr-2 ${
+                        !muted && !deafened ? "bg-accent text-button" : ""
+                    }`}
+                >
+                    {muted || deafened ? (
+                        <SvgSolidMicrophoneOff />
+                    ) : (
+                        <SolidMicrophone />
+                    )}
+                </BoxedIcon>
+
                 <BoxedIcon
                     data-testid="deafen"
                     hover
